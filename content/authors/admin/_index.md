@@ -1,13 +1,13 @@
 ---
 # Display name
-title: 吳健雄
+title: Xinsong Feng
 
 # Name pronunciation (optional)
-name_pronunciation: Chien Shiung Wu
+#name_pronunciation: 
 
 # Full name (for SEO)
-first_name: Shiung Wu
-last_name: Chien
+first_name: Xinsong
+last_name: Feng
 
 # Status emoji
 status:
@@ -21,30 +21,29 @@ role: Professor of Artificial Intelligence
 
 # Organizations/Affiliations to show in About widget
 organizations:
-  - name: Stanford University
-    url: https://www.stanford.edu/
+  - name: University of California, Los Angeles
+    url: https://www.ucla.edu/
 
 # Short bio (displayed in user profile at end of posts)
-bio: My research interests include distributed robotics, mobile computing and programmable matter.
+bio: My research interests include wireless communication and communication networks.
 
 # Interests to show in About widget
 interests:
-  - Artificial Intelligence
-  - Computational Linguistics
-  - Information Retrieval
+  - Wireless Communication
+  - Communication Networks
 
 # Education to show in About widget
 education:
   courses:
-    - course: PhD in Artificial Intelligence
-      institution: Stanford University
-      year: 2012
-    - course: MEng in Artificial Intelligence
-      institution: Massachusetts Institute of Technology
-      year: 2009
-    - course: BSc in Artificial Intelligence
-      institution: Massachusetts Institute of Technology
-      year: 2008
+    #- course: PhD in Artificial Intelligence
+      #institution: Stanford University
+      #year: 2012
+    #- course: MEng in Artificial Intelligence
+      #institution: Massachusetts Institute of Technology
+      #year: 2009
+    - course: BEng in Communication Engineering
+      institution: Chongqing University, China
+      year: 2023
 
 # Skills
 # For available icons, see: https://docs.hugoblox.com/getting-started/page-builder/#icons
@@ -94,15 +93,15 @@ social:
   - icon: envelope
     icon_pack: fas
     link: '/#contact'
-  - icon: twitter
-    icon_pack: fab
-    link: https://twitter.com/GeorgeCushen
-    label: Follow me on Twitter
-    display:
-      header: true
-  - icon: graduation-cap # Alternatively, use `google-scholar` icon from `ai` icon pack
-    icon_pack: fas
-    link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
+  #- icon: twitter
+    #icon_pack: fab
+    #link: https://twitter.com/GeorgeCushen
+    #label: Follow me on Twitter
+    #display:
+      #header: true
+  #- icon: graduation-cap # Alternatively, use `google-scholar` icon from `ai` icon pack
+    #icon_pack: fas
+    #link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
   - icon: github
     icon_pack: fab
     link: https://github.com/gcushen
