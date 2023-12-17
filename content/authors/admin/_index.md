@@ -111,11 +111,11 @@ social:
   # and uncomment the lines below.
   - icon: cv
     icon_pack: ai
-    link: uploads/resume.pdf
+    link: uploads/resume_XFeng.pdf
 
 # Highlight the author in author lists? (true/false)
 highlight_name: true
 ---
 
-Chien Shiung Wu is a professor of artificial intelligence at the Stanford AI Lab. Her research interests include distributed robotics, mobile computing and programmable matter. She leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+Hi, I’m a first-year graduate student in Electrical and Computer Engineering at UCLA. Before joining UCLA, I obtained my Bachelor’s degree from Chongqing University. Currently, I am working on a reinforcement learning project.
 {style="text-align: justify;"}
