@@ -1,14 +1,16 @@
 
-Hi, I’m a first-year graduate student in Electrical and Computer Engineering at UCLA. 
+**Hi, I’m a first-year graduate student in Electrical and Computer Engineering at UCLA.**
 
 Before joining UCLA, I obtained my Bachelor’s degree from Chongqing University. I am a member of both the Wireless Lab at UCLA and the W&M Data-Driven Decision Intelligence (D3I) Lab. 
 
-Currently, I am enhancing foundational capabilities in wireless communications and conducting fundamental research in reinforcement learning.
+Currently, I am expanding my research experience in both wireless communications and reinforcement learning.
 
-My research interest includes:
-- Wireless communications
-- Optimization
-- Artificial Intelligence (AI)
+I am driven by a passion for advancing technology and a long-term goal of contributing to the development of next-generation mobile communication systems and promoting AI-enabled communication network design.
+
+My research interests include:
+- **Wireless communications**: Focusing on the development of efficient, reliable, and secure wireless communication systems.
+- **Optimization**: Exploring advanced algorithms to enhance the performance of complex systems.
+- **Artificial Intelligence (AI)**: Investigating AI techniques to improve decision-making in dynamic environments.
 
 # 🔥 News
 No news!
@@ -18,13 +20,13 @@ No news!
 No publications!
 
 # 🎓 Educations
-- *2023.09 - 2025.06* (expected), MSc in Electrical and Computer Engineering, UCLA, USA.
+- *2023.09 - 2025.06* (Expected), MSc in Electrical and Computer Engineering, UCLA, USA.
 - *2019.09 - 2023.06*, BEng in Communication Engineering, Chongqing University, China.
 
 # 📖 Teaching 
-- Teaching Assistant: Programming Language Design, *Fall 2022*
-- Teaching Assistant: Digital Signal Processing, *Fall 2022*
-- Teaching Assistant: Digital Signal Processing, *Fall 2021*
+- *2022 Fall*, Teaching Assistant: Programming Language Design,  
+- *2022 Fall*, Teaching Assistant: Digital Signal Processing, 
+- *2021 Fall*, Teaching Assistant: Digital Signal Processing, 
 
 # 🎖 Honors and Awards
 - *2023.06*, Outstanding Graduates of Chongqing University
