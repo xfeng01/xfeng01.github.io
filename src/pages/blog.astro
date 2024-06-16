@@ -10,7 +10,7 @@ const pageTitle = "My Blog";
     {
       allPosts.map((post) => (
         <li>
-          <a href={post.url}>{post.frontmatter.title}</a>
+          <a href={post.url}>{post.frontmatter.published.toString().slice(0, 10)}: {post.frontmatter.title}</a>
         </li>
       ))
     }
