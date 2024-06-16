@@ -1,7 +1,14 @@
 ---
-import MainLayout from './MainLayout.astro';
+import MainLayout from "./MainLayout.astro";
+import "/node_modules/katex/dist/katex.min.css";
 const { frontmatter } = Astro.props;
 ---
+
 <MainLayout pageTitle={frontmatter.title}>
-    <slot />
+  <h1><a href="/">Homepage</a> / <a href="/blog">Blog</a></h1>
+  <h1>{frontmatter.title}</h1>
+  <hr />
+  <slot />
 </MainLayout>
+
+
