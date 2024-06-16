@@ -1,12 +1,18 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
-const allPosts = await Astro.glob('./posts/*.md');
+const allPosts = await Astro.glob("./posts/*.md");
 const pageTitle = "My Blog";
 ---
+
 <MainLayout pageTitle={pageTitle}>
-  <h1>{pageTitle}</h1>
-    <ul>
-      {allPosts.map((post) => <li><a href={post.url}>{post.frontmatter.title}</a></li>)}
-    </ul>
-  <h1><a href="/"> Homepage</a></h1>
+  <h1>{pageTitle} / <a href="/"> Homepage</a></h1>
+  <ul>
+    {
+      allPosts.map((post) => (
+        <li>
+          <a href={post.url}>{post.frontmatter.title}</a>
+        </li>
+      ))
+    }
+  </ul>
 </MainLayout>
