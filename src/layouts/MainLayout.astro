@@ -1,27 +1,27 @@
 ---
-import '../styles/global.css';
-import Sidebar from '../components/sidebar.astro';
+import "../styles/global.css";
+import Sidebar from "../components/sidebar.astro";
 const { pageTitle } = Astro.props;
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/icon.png" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{pageTitle}</title>
-	</head>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/icon.png" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+  </head>
 
-	<body>
-		<div class="container">
-			<Sidebar></Sidebar>
+  <body class="w-[70%] my-0 mx-auto mt-[100px]">
+    <div
+      class="max-w-[100%] min-h-screen grid grid-rows-[auto_auto] md:grid-rows-1 md:grid-cols-[12rem_auto] mx-auto gap-4 md:gap-8 relative px-0 md:px-4"
+    >
+      <Sidebar />
 
-			<div class="content">
-				<slot></slot>
-			</div>
-			
-		</div>
-	</body>
-
+      <div class="px-0 md:px-[100px]">
+        <slot />
+      </div>
+    </div>
+  </body>
 </html>
