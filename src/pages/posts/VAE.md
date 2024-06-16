@@ -1,4 +1,5 @@
 ---
+layout: ../../layouts/MarkdownPostLayout.astro
 title: Variational Auto-Encoder (VAE)
 published: 2024-06-09
 description: 关于VAE的一些记录

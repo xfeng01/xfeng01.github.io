@@ -1,10 +1,18 @@
 ---
-import {Content as About} from '../content/about.md';
-import MainLayout from '../layouts/MainLayout.astro';
-const pageTitle = 'Xinsong Feng | 冯欣淞';
+import { Content as About } from "../content/about.md";
+import MainLayout from "../layouts/MainLayout.astro";
+const pageTitle = "Xinsong Feng | 冯欣淞";
 ---
 
 <MainLayout pageTitle={pageTitle}>
   <About />
+
+  <h2><a id="post" href="/blog">Post</a></h2>
 </MainLayout>
 
+<style>
+  #post {
+    color: #ffffff;
+    text-decoration: none;
+  }
+</style>
