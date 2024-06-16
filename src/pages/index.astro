@@ -1,26 +1,10 @@
 ---
 import {Content as About} from '../content/about.md';
-import '../styles/global.css';
-import Sidebar from '../components/sidebar.astro';
+import MainLayout from '../layouts/MainLayout.astro';
+const pageTitle = 'Xinsong Feng | 冯欣淞';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/icon.png" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Xinsong Feng | 冯欣淞</title>
-	</head>
+<MainLayout pageTitle={pageTitle}>
+  <About />
+</MainLayout>
 
-	<body>
-		<div class="container">
-			<Sidebar />
-			<div class="content">
-				<About />
-			</div>
-		</div>
-
-	</body>
-
-</html>
