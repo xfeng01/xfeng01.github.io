@@ -5,13 +5,58 @@
     <p class="text-gray-700">Msc in ECE</p>
   </div>
 
-  <li>Los Angeles</li>
-  <li><a href="mailto:xsfeng@g.ucla.com">Email</a></li>
-  <li><a href="https://github.com/xfeng01">Github</a></li>
-  <li>
-    <a href="https://scholar.google.com/citations?hl=en&user=664D7CoAAAAJ"
-      ><i class="fas fa-fw fa-graduation-cap"></i> Google Scholar</a
-    >
-  </li>
+  <ul>
+    <li>
+      <div class="icon-column"><i class="fas fa-map-marker-alt"></i></div>
+      <div class="text-column">Los Angeles</div>
+    </li>
+    <li>
+      <div class="icon-column"><i class="fas fa-envelope"></i></div>
+      <div class="text-column">
+        <a href="mailto:xsfeng@g.ucla.com">Email</a>
+      </div>
+    </li>
+    <li>
+      <div class="icon-column"><i class="fab fa-github"></i></div>
+      <div class="text-column">
+        <a href="https://github.com/xfeng01">Github</a>
+      </div>
+    </li>
+    <li>
+      <div class="icon-column"><i class="fas fa-graduation-cap"></i></div>
+      <div class="text-column">
+        <a href="https://scholar.google.com/citations?hl=en&user=664D7CoAAAAJ"
+          >Google Scholar</a
+        >
+      </div>
+    </li>
+  </ul>
 </aside>
 
+<style>
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+  }
+  .icon-column {
+    width: 30px; /* 设置图标列宽度 */
+    display: flex;
+    justify-content: center; /* 居中图标 */
+  }
+  .text-column {
+    flex-grow: 1; /* 文本列占据剩余空间 */
+  }
+  a {
+    text-decoration: none;
+    color: #000;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
