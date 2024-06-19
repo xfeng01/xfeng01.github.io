@@ -1,5 +1,5 @@
 h1 {
-  @apply text-3xl font-bold leading-loose;
+  @apply text-2xl font-bold mt-4 mb-1;
 }
 
 h2 {
@@ -7,7 +7,7 @@ h2 {
 }
 
 ul {
-  @apply list-disc list-inside ml-6 mt-4 space-y-2;
+  @apply list-disc list-inside ml-6  space-y-2;
 }
 
 a {

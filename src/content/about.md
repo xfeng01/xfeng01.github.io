@@ -12,23 +12,32 @@ My research interests include:
 - **Optimization**: Exploring advanced algorithms to enhance the performance of complex systems.
 - **Artificial Intelligence (AI)**: Investigating AI techniques to improve decision-making in dynamic environments.
 
-# 🔥 News
-No news!
+# 🔥 News 
+<div id="news"></div>
+
+- *2024.05*, I join the Wireless Lab at UCLA!
 
 # 📝 Publications
+<div id="publications"></div>
 
 No publications!
 
 # 🎓 Educations
+<div id="educations"></div>
+
 - *2023.09 - 2025.06* (Expected), MSc in Electrical and Computer Engineering, UCLA, USA.
 - *2019.09 - 2023.06*, BEng in Communication Engineering, Chongqing University, China.
 
 # 📖 Teaching 
+<div id="teaching"></div>
+
 - *2022 Fall*, Teaching Assistant: Programming Language Design,  
 - *2022 Fall*, Teaching Assistant: Digital Signal Processing, 
 - *2021 Fall*, Teaching Assistant: Digital Signal Processing, 
 
 # 🎖 Honors and Awards
+<div id="honors-and-awards"></div>
+
 - *2023.06*, Outstanding Graduates of Chongqing University
 - *2022.11*, China National Scholarship
 - *2021.12*, First Prize in the Chinese Mathematics Competitions

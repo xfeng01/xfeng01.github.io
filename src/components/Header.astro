@@ -1,0 +1,74 @@
+---
+const Navigation = [
+  {
+    title: "News",
+    url: "#news",
+  },
+  {
+    title: "Publications",
+    url: "#publications",
+  },
+  {
+    title: "Educations",
+    url: "#educations",
+  },
+  {
+    title: "Teaching",
+    url: "#teaching",
+  },
+  {
+    title: "Honors and Awards",
+    url: "#honors-and-awards",
+  },
+];
+---
+
+<nav class="navigation">
+  <ul>
+    <li><a href="/" class="nav-link font-bold mr-10">Homepage</a></li>
+    {
+      Navigation.map((item) => (
+        <li key={item.url}>
+          <a href={item.url} class="nav-link">
+            {item.title}
+          </a>
+        </li>
+      ))
+    }
+    <li>
+      <a href="/blog" class=" ml-10 text-white hover:text-gray-200"
+        >Post</a>
+    </li>
+  </ul>
+</nav>
+
+<style>
+  .navigation {
+    background-color: white;
+    border-bottom: 1px solid #ccc;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 10px 0;
+  }
+
+  .navigation ul {
+    list-style-type: none;
+    display: flex;
+  }
+
+  .navigation li {
+    margin: 0 15px;
+  }
+
+  .nav-link {
+    color: #333;
+    text-decoration: none;
+  }
+
+  .nav-link:hover {
+    color: #000;
+    text-decoration: underline;
+  }
+</style>
