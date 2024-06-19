@@ -23,7 +23,7 @@ const Navigation = [
 ];
 ---
 
-<nav class="navigation">
+<nav class="navigation h-10">
   <ul>
     <li><a href="/" class="nav-link font-bold mr-10">Homepage</a></li>
     {
@@ -36,8 +36,7 @@ const Navigation = [
       ))
     }
     <li>
-      <a href="/blog" class=" ml-10 text-white hover:text-gray-200"
-        >Post</a>
+      <a href="/blog" class="ml-10 text-white hover:text-gray-200">Post</a>
     </li>
   </ul>
 </nav>
@@ -70,5 +69,11 @@ const Navigation = [
   .nav-link:hover {
     color: #000;
     text-decoration: underline;
+  }
+
+  @media screen and (max-width: 768px) {
+    .navigation li {
+      margin: 0 10px;
+    }
   }
 </style>
