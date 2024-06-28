@@ -2,31 +2,47 @@
 const { title, date, description, url } = Astro.props;
 ---
 
-<div class="rounded-xl border px-4 py-4 shadow-lg mb-5">
-  <div class="flex items-center mt-2">
-    <span class="w-1 h-6 bg-blue-600 mr-3 rounded "
-    ></span>
-    <h1
-      class="text-xxl font-bold text-black leading-none mt-1"
-    >
-      <a href={url} class="hover:no-underline hover:text-blue-600 text-black"
-        >{title}</a
+<div
+  class="rounded-xl border px-4 py-4 shadow-lg mb-5 flex justify-between items-center bg-white"
+>
+  <div>
+    <div class="flex items-center mt-2">
+      <span class="w-1 h-6 bg-blue-600 mr-3 rounded"></span>
+      <h1 class="text-xxl font-bold text-black leading-none mt-1">
+        <a href={url} class="hover:no-underline hover:text-blue-600 text-black"
+          >{title}</a
+        >
+      </h1>
+    </div>
+    <div class="flex mt-3 items-center">
+      <svg
+        class="w-5 h-5 text-gray-500 mr-2"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
       >
-    </h1>
+        <path
+          d="M6 2a1 1 0 012 0v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h1V2zM4 7v9a1 1 0 001 1h10a1 1 0 001-1V7H4zm3 4a1 1 0 000 2h6a1 1 0 100-2H7z"
+        ></path>
+      </svg>
+      <p class="text-gray-600 leading-tight mt-2">{date}</p>
+    </div>
+    <p class="mt-2">{description}</p>
   </div>
-  <div class="flex mt-3">
+  <a
+    href={url}
+    class="ml-4 px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-xl flex items-center justify-center h-32"
+  >
     <svg
-      class="w-5 h-5 text-gray-500 mr-2"
+      class="w-5 h-5"
       fill="currentColor"
       viewBox="0 0 20 20"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M6 2a1 1 0 012 0v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h1V2zM4 7v9a1 1 0 001 1h10a1 1 0 001-1V7H4zm3 4a1 1 0 000 2h6a1 1 0 100-2H7z"
-      ></path>
+        fill-rule="evenodd"
+        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+        clip-rule="evenodd"></path>
     </svg>
-    <p class="text-gray-600 leading-tight">{date}</p>
-  </div>
-  <p class="mt-2">{description}</p>
-  <slot />
+  </a>
 </div>
