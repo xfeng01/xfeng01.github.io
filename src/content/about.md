@@ -1,9 +1,9 @@
 
 **Hi, I’m a first-year graduate student in Electrical and Computer Engineering at UCLA.**
 
-Before joining UCLA, I obtained my Bachelor’s degree from Chongqing University. I am a member of both the Wireless Lab at UCLA and the W&M Data-Driven Decision Intelligence (D3I) Lab. 
+Before joining UCLA, I obtained my Bachelor’s degree from Chongqing University. I am a member of both the [**Wireless Lab at UCLA**](https://wireless.ee.ucla.edu/) and the [**W&M Data-Driven Decision Intelligence (D3I) Lab**](https://haipeng-chen.github.io/). 
 
-Currently, I am expanding my research experience in both wireless communications and reinforcement learning.
+Currently, I am expanding my research experience in both wireless communications and artificial intelligence.
 
 I am driven by a passion for advancing technology and a long-term goal of contributing to the development of next-generation mobile communication systems and promoting AI-enabled communication network design.
 
@@ -31,9 +31,9 @@ No publications!
 # 📖 Teaching 
 <div id="teaching"></div>
 
-- *2022 Fall*, Teaching Assistant: Programming Language Design,  
-- *2022 Fall*, Teaching Assistant: Digital Signal Processing, 
-- *2021 Fall*, Teaching Assistant: Digital Signal Processing, 
+- *2022 Fall*, Teaching Assistant: Programming Language Design
+- *2022 Fall*, Teaching Assistant: Digital Signal Processing
+- *2021 Fall*, Teaching Assistant: Digital Signal Processing
 
 # 🎖 Honors and Awards
 <div id="honors-and-awards"></div>
