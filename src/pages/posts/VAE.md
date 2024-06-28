@@ -2,7 +2,7 @@
 layout: ../../layouts/MarkdownPostLayout.astro
 title: Variational Auto-Encoder (VAE)
 published: 2024-06-09
-description: 关于VAE的一些记录
+description: Note for "Tutorial on Diffusion Models for Imaging and Vision"
 tags:
   - 生成式AI
 category: 学习

@@ -1,5 +1,6 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
+import PostCard from "../components/PostCard.astro";
 const allPosts = await Astro.glob("./posts/*.md");
 const pageTitle = "My Blog";
 ---
@@ -8,9 +9,12 @@ const pageTitle = "My Blog";
   <ul>
     {
       allPosts.map((post) => (
-        <li>
-          <a href={post.url}>{post.frontmatter.published.toString().slice(0, 10)}: {post.frontmatter.title}</a>
-        </li>
+        <PostCard
+          title={post.frontmatter.title}
+          date={post.frontmatter.published.toString().slice(0, 10)}
+          description={post.frontmatter.description}
+          url={post.url}
+        />
       ))
     }
   </ul>

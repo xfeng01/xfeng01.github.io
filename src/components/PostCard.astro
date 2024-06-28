@@ -1,0 +1,26 @@
+---
+const { title, date, description, url } = Astro.props;
+---
+
+<div class="rounded-xl border px-4 py-4 shadow-lg mb-5">
+  <h1>
+    <a href={url} class="hover:no-underline hover:text-blue-600 text-black"
+      >{title}</a
+    >
+  </h1>
+  <div class="flex mt-2">
+    <svg
+      class="w-5 h-5 text-gray-500 mr-2"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M6 2a1 1 0 012 0v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h1V2zM4 7v9a1 1 0 001 1h10a1 1 0 001-1V7H4zm3 4a1 1 0 000 2h6a1 1 0 100-2H7z"
+      ></path>
+    </svg>
+    <p class="text-gray-600 leading-tight">{date}</p>
+  </div>
+  <p class="mt-2">{description}</p>
+  <slot />
+</div>
