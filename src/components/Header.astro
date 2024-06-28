@@ -2,34 +2,37 @@
 const Navigation = [
   {
     title: "News",
-    url: "#news",
+    data: "news",
   },
   {
     title: "Publications",
-    url: "#publications",
+    data: "publications",
   },
   {
     title: "Educations",
-    url: "#educations",
+    data: "educations",
   },
   {
     title: "Teaching",
-    url: "#teaching",
+    data: "teaching",
   },
   {
     title: "Honors and Awards",
-    url: "#honors-and-awards",
+    data: "honors-and-awards",
   },
 ];
 ---
 
 <nav class="navigation h-10">
   <ul>
-    <li><a href="/" class="nav-link font-bold mr-10">Homepage</a></li>
+    <li>
+      <a href="/" class="nav-link font-bold mr-10" data-target="home"
+        >Homepage</a>
+    </li>
     {
       Navigation.map((item) => (
         <li>
-          <a href={item.url} class="nav-link">
+          <a data-target={item.data} class="nav-link">
             {item.title}
           </a>
         </li>
