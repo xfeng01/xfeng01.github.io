@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/MarkdownPostLayout.astro
 title: Denoising Diffusion Probabilistic Model (DDPM)
 published: 2024-06-18
 description: Note for "Tutorial on Diffusion Models for Imaging and Vision"

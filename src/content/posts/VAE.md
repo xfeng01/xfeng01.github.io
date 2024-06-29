@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/MarkdownPostLayout.astro
 title: Variational Auto-Encoder (VAE)
 published: 2024-06-09
 description: Note for "Tutorial on Diffusion Models for Imaging and Vision"
