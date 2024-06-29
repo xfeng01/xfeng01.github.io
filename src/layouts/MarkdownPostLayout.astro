@@ -5,9 +5,16 @@ const { frontmatter } = Astro.props;
 ---
 
 <MainLayout pageTitle={frontmatter.title}>
-  <h1 class="text-3xl">{frontmatter.title}</h1>
-  <hr class="my-4" />
-  <slot />
+  <div class="BlogContent">
+    <h1 class="text-3xl">{frontmatter.title}</h1>
+    <hr class="my-4" />
+    <slot />
+  </div>
 </MainLayout>
 
-
+<style>
+  .BlogContent h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+  }
+</style>
