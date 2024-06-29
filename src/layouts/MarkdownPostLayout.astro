@@ -5,8 +5,8 @@ const { frontmatter } = Astro.props;
 ---
 
 <MainLayout pageTitle={frontmatter.title}>
-  <h1>{frontmatter.title}</h1>
-  <hr />
+  <h1 class="text-3xl">{frontmatter.title}</h1>
+  <hr class="my-4" />
   <slot />
 </MainLayout>
 
