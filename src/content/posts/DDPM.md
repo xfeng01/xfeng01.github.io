@@ -86,16 +86,26 @@ $$
 where $\overline{\alpha}_{t}=\prod_{i=1}^{t}\alpha_{i}$.
 
 **Proof.**
-$$\begin{aligned}\mathbf{x}_{t}&=\sqrt{\alpha_t}\mathbf{x}_{t-1}+\sqrt{1-\alpha_t}\boldsymbol{\epsilon}_{t-1}\\&=\sqrt{\alpha_t}(\sqrt{\alpha_{t-1}}\mathbf{x}_{t-2}+\sqrt{1-\alpha_{t-1}}\boldsymbol{\epsilon}_{t-2})+\sqrt{1-\alpha_t}\boldsymbol{\epsilon}_{t-1}\\&=\sqrt{\alpha_t\alpha_{t-1}}\mathbf{x}_{t-2}+\underbrace{\sqrt{\alpha_t}\sqrt{1-\alpha_{t-1}}\boldsymbol{\epsilon}_{t-2}+\sqrt{1-\alpha_t}\boldsymbol{\epsilon}_{t-1}}_{\mathbf{w}_1}.\end{aligned}$$
+$$
+\begin{aligned}\mathbf{x}_{t}&=\sqrt{\alpha_t}\mathbf{x}_{t-1}+\sqrt{1-\alpha_t}\boldsymbol{\epsilon}_{t-1}\\&=\sqrt{\alpha_t}(\sqrt{\alpha_{t-1}}\mathbf{x}_{t-2}+\sqrt{1-\alpha_{t-1}}\boldsymbol{\epsilon}_{t-2})+\sqrt{1-\alpha_t}\boldsymbol{\epsilon}_{t-1}\\&=\sqrt{\alpha_t\alpha_{t-1}}\mathbf{x}_{t-2}+\underbrace{\sqrt{\alpha_t}\sqrt{1-\alpha_{t-1}}\boldsymbol{\epsilon}_{t-2}+\sqrt{1-\alpha_t}\boldsymbol{\epsilon}_{t-1}}_{\mathbf{w}_1}.\end{aligned}
+$$
 The new covariance is
-$$\begin{aligned}\mathbb{E}[\mathbf{w}_{1}\mathbf{w}_{1}^{T}]&=[(\sqrt{\alpha_{t}}\sqrt{1-\alpha_{t-1}})^{2}+(\sqrt{1-\alpha_{t}})^{2}]\mathbf{I}\\&=[\alpha_t(1-\alpha_{t-1})+1-\alpha_t]\mathbf{I}=[1-\alpha_t\alpha_{t-1}]\mathbf{I}.\end{aligned}$$
+$$
+\begin{aligned}\mathbb{E}[\mathbf{w}_{1}\mathbf{w}_{1}^{T}]&=[(\sqrt{\alpha_{t}}\sqrt{1-\alpha_{t-1}})^{2}+(\sqrt{1-\alpha_{t}})^{2}]\mathbf{I}\\&=[\alpha_t(1-\alpha_{t-1})+1-\alpha_t]\mathbf{I}=[1-\alpha_t\alpha_{t-1}]\mathbf{I}.\end{aligned}
+$$
 We can show that the recursion is updated to become a linear combination of
 $\mathbf{x}_{t-2}$ and a noise vector $\boldsymbol\epsilon_t-2:$
-$$\begin{aligned}\mathbf{x}_{t}&=\sqrt{\alpha_{t}\alpha_{t-1}}\mathbf{x}_{t-2}+\sqrt{1-\alpha_{t}\alpha_{t-1}}\boldsymbol{\epsilon}_{t-2}\\&=\sqrt{\alpha_{t}\alpha_{t-1}\alpha_{t-2}}\mathbf{x}_{t-3}+\sqrt{1-\alpha_{t}\alpha_{t-1}\alpha_{t-2}}\boldsymbol{\epsilon}_{t-3}\\&=\vdots\\&=\sqrt{\prod_{i=1}^t\alpha_i}\mathbf{x}_0+\sqrt{1-\prod_{i=1}^t\alpha_i}\boldsymbol{\epsilon}_0.\end{aligned}$$
+$$
+\begin{aligned}\mathbf{x}_{t}&=\sqrt{\alpha_{t}\alpha_{t-1}}\mathbf{x}_{t-2}+\sqrt{1-\alpha_{t}\alpha_{t-1}}\boldsymbol{\epsilon}_{t-2}\\&=\sqrt{\alpha_{t}\alpha_{t-1}\alpha_{t-2}}\mathbf{x}_{t-3}+\sqrt{1-\alpha_{t}\alpha_{t-1}\alpha_{t-2}}\boldsymbol{\epsilon}_{t-3}\\&=\vdots\\&=\sqrt{\prod_{i=1}^t\alpha_i}\mathbf{x}_0+\sqrt{1-\prod_{i=1}^t\alpha_i}\boldsymbol{\epsilon}_0.\end{aligned}
+$$
 So, if we define $\overline{\alpha}_t=\prod_{i=1}^t\alpha_i$, we can show that
-$$\mathbf{x}_{t}=\sqrt{\overline{\alpha}_{t}}\mathbf{x}_{0}+\sqrt{1-\overline{\alpha}_{t}}\epsilon_{0}.$$
+$$
+\mathbf{x}_{t}=\sqrt{\overline{\alpha}_{t}}\mathbf{x}_{0}+\sqrt{1-\overline{\alpha}_{t}}\epsilon_{0}.
+$$
 In other words, the distribution $q_{\boldsymbol{\phi}}(\mathbf{x}_{t}|\mathbf{x}_{0})$ is
-$$\mathbf{x}_t\sim q_{\boldsymbol{\phi}}(\mathbf{x}_t|\mathbf{x}_0)=\mathcal{N}(\mathbf{x}_t\:|\:\sqrt{\overline{\alpha}_t}\mathbf{x}_0,\:(1-\overline{\alpha}_t)\mathbf{I}).$$
+$$
+\mathbf{x}_t\sim q_{\boldsymbol{\phi}}(\mathbf{x}_t|\mathbf{x}_0)=\mathcal{N}(\mathbf{x}_t\:|\:\sqrt{\overline{\alpha}_t}\mathbf{x}_0,\:(1-\overline{\alpha}_t)\mathbf{I}).
+$$
 ![DDPM_5](./images/DDPM_5.png)
 
 ## 4 Evidence Lower Bound
@@ -141,10 +151,14 @@ $$
 \end{aligned}
 $$
 The Reconstruction term can be simplified as
-$$\mathbb{E}_{q_{\boldsymbol{\phi}}(\mathbf{x}_{1:T}|\mathbf{x}_0)}\bigg[\log p(\mathbf{x}_0|\mathbf{x}_1)\bigg]=\mathbb{E}_{q_{\boldsymbol{\phi}}(\mathbf{x}_1|\mathbf{x}_0)}\bigg[\log p(\mathbf{x}_0|\mathbf{x}_1)\bigg],$$
+$$
+\mathbb{E}_{q_{\boldsymbol{\phi}}(\mathbf{x}_{1:T}|\mathbf{x}_0)}\bigg[\log p(\mathbf{x}_0|\mathbf{x}_1)\bigg]=\mathbb{E}_{q_{\boldsymbol{\phi}}(\mathbf{x}_1|\mathbf{x}_0)}\bigg[\log p(\mathbf{x}_0|\mathbf{x}_1)\bigg],
+$$
 where we used the fact that the conditioning $\mathbf{x}_1:T|\mathbf{x}_0$ is equivalent to $\mathbf{x}_1|\mathbf{x}_0.$
 The Prior Matching term is
-$$\begin{aligned}\mathbb{E}_{q_{\boldsymbol{\phi}}(\mathbf{x}_{1:T}|\mathbf{x}_{0})}\left[\log\frac{p(\mathbf{x}_{T})}{q_{\boldsymbol{\phi}}(\mathbf{x}_{T}|\mathbf{x}_{T-1})}\right]&=\mathbb{E}_{q_{\boldsymbol{\phi}}(\mathbf{x}_{T},\mathbf{x}_{T-1}|\mathbf{x}_{0})}\left[\log\frac{p(\mathbf{x}_{T})}{q_{\boldsymbol{\phi}}(\mathbf{x}_{T}|\mathbf{x}_{T-1})}\right]\\&=-\mathbb{E}_{q_{\boldsymbol{\phi}}(\mathbf{x}_{T-1},\mathbf{x}_{T}|\mathbf{x}_{0})}\bigg[\mathbb{D}_{\mathrm{KL}}\left(q_{\boldsymbol{\phi}}(\mathbf{x}_{T}|\mathbf{x}_{T-1})\|p(\mathbf{x}_{T})\right)\bigg],\end{aligned}$$
+$$
+\begin{aligned}\mathbb{E}_{q_{\boldsymbol{\phi}}(\mathbf{x}_{1:T}|\mathbf{x}_{0})}\left[\log\frac{p(\mathbf{x}_{T})}{q_{\boldsymbol{\phi}}(\mathbf{x}_{T}|\mathbf{x}_{T-1})}\right]&=\mathbb{E}_{q_{\boldsymbol{\phi}}(\mathbf{x}_{T},\mathbf{x}_{T-1}|\mathbf{x}_{0})}\left[\log\frac{p(\mathbf{x}_{T})}{q_{\boldsymbol{\phi}}(\mathbf{x}_{T}|\mathbf{x}_{T-1})}\right]\\&=-\mathbb{E}_{q_{\boldsymbol{\phi}}(\mathbf{x}_{T-1},\mathbf{x}_{T}|\mathbf{x}_{0})}\bigg[\mathbb{D}_{\mathrm{KL}}\left(q_{\boldsymbol{\phi}}(\mathbf{x}_{T}|\mathbf{x}_{T-1})\|p(\mathbf{x}_{T})\right)\bigg],\end{aligned}
+$$
 Finally, we can show that
 $$
 \begin{aligned}
@@ -201,21 +215,33 @@ $$
 $$
 
 Therefore, the KL divergence is simplified to
-$$\begin{aligned}&\mathbb{D}_{\mathrm{KL}}\Big(q_{\boldsymbol{\phi}}(\mathbf{x}_{t-1}|\mathbf{x}_t,\mathbf{x}_0)\|p_{\boldsymbol{\theta}}(\mathbf{x}_{t-1}|\mathbf{x}_t)\Big)\\&=\mathbb{D}_{\mathrm{KL}}\Big(\mathcal{N}(\mathbf{x}_{t-1}\mid\boldsymbol{\mu}_q(\mathbf{x}_t,\mathbf{x}_0),\sigma_q^2(t)\mathbf{I})\|\mathcal{N}(\mathbf{x}_{t-1}\mid\boldsymbol{\mu}_{\boldsymbol{\theta}}(\mathbf{x}_t),\sigma_q^2(t)\mathbf{I})\Big)\\&=\frac1{2\sigma_q^2(t)}\|\boldsymbol{\mu}_q(\mathbf{x}_t,\mathbf{x}_0)-\boldsymbol{\mu}_{\boldsymbol{\theta}}(\mathbf{x}_t)\|^2,\end{aligned}$$
+$$
+\begin{aligned}&\mathbb{D}_{\mathrm{KL}}\Big(q_{\boldsymbol{\phi}}(\mathbf{x}_{t-1}|\mathbf{x}_t,\mathbf{x}_0)\|p_{\boldsymbol{\theta}}(\mathbf{x}_{t-1}|\mathbf{x}_t)\Big)\\&=\mathbb{D}_{\mathrm{KL}}\Big(\mathcal{N}(\mathbf{x}_{t-1}\mid\boldsymbol{\mu}_q(\mathbf{x}_t,\mathbf{x}_0),\sigma_q^2(t)\mathbf{I})\|\mathcal{N}(\mathbf{x}_{t-1}\mid\boldsymbol{\mu}_{\boldsymbol{\theta}}(\mathbf{x}_t),\sigma_q^2(t)\mathbf{I})\Big)\\&=\frac1{2\sigma_q^2(t)}\|\boldsymbol{\mu}_q(\mathbf{x}_t,\mathbf{x}_0)-\boldsymbol{\mu}_{\boldsymbol{\theta}}(\mathbf{x}_t)\|^2,\end{aligned}
+$$
 where we used the fact that the KL divergence between two identical-variance Gaussians is just the Euclidean distance square between the two mean vectors.
 If we go back to the definition of ELBO , we can rewrite it as
-$$\begin{aligned}\operatorname{ELBO}_{\boldsymbol{\theta}}(\mathbf{x})&=\mathbb{E}_{q(\mathbf{x}_1|\mathbf{x}_0)}[\log p_{\boldsymbol{\theta}}(\mathbf{x}_0|\mathbf{x}_1)]-\underbrace{\mathbb{D}_{\mathrm{KL}}\left(q(\mathbf{x}_T|\mathbf{x}_0)\|p(\mathbf{x}_T)\right)}_{\text{nothing to train}}\\&-\sum_{t=2}^T\mathbb{E}_{q(\mathbf{x}_t|\mathbf{x}_0)}\bigg[\frac1{2\sigma_q^2(t)}\|\boldsymbol{\mu}_q(\mathbf{x}_t,\mathbf{x}_0)-\boldsymbol{\mu}_{\boldsymbol{\theta}}(\mathbf{x}_t)\|^2\bigg].\end{aligned}$$
+$$
+\begin{aligned}\operatorname{ELBO}_{\boldsymbol{\theta}}(\mathbf{x})&=\mathbb{E}_{q(\mathbf{x}_1|\mathbf{x}_0)}[\log p_{\boldsymbol{\theta}}(\mathbf{x}_0|\mathbf{x}_1)]-\underbrace{\mathbb{D}_{\mathrm{KL}}\left(q(\mathbf{x}_T|\mathbf{x}_0)\|p(\mathbf{x}_T)\right)}_{\text{nothing to train}}\\&-\sum_{t=2}^T\mathbb{E}_{q(\mathbf{x}_t|\mathbf{x}_0)}\bigg[\frac1{2\sigma_q^2(t)}\|\boldsymbol{\mu}_q(\mathbf{x}_t,\mathbf{x}_0)-\boldsymbol{\mu}_{\boldsymbol{\theta}}(\mathbf{x}_t)\|^2\bigg].\end{aligned}
+$$
 - Given $\mathbf{x}_t\sim q(\mathbf{x}_t|\mathbf{x}_0)$, we can calculate $\log p_{\boldsymbol{\theta}}(\mathbf{x}_0|\mathbf{x}_1)$, which is just $\log\mathcal{N}(\mathbf{x}_0|\boldsymbol{\mu}_{\boldsymbol{\theta}}(\mathbf{x}_1),\sigma_q^2(1)\mathbf{I}).$ So, as soon as we know $\mathbf{x}_1$, we can send it to a network $\boldsymbol\mu_{\theta}(\mathbf{x}_1)$ to return us a mean estimate. The mean estimate will then be used to compute the likelihood.
 
 ## 7 Training and Inference
 The ELBO suggests that we need to find a network $\boldsymbol{\mu_\mathrm{\theta}}$ that can somehow minimize this loss:
-$$\frac1{2\sigma_q^2(t)}\|\underbrace{\boldsymbol{\mu}_q(\mathbf{x}_t,\mathbf{x}_0)}_{\text{known}}-\underbrace{\boldsymbol{\mu}_{\boldsymbol{\theta}}(\mathbf{x}_t)}_{\text{network}}\|^2.$$
+$$
+\frac1{2\sigma_q^2(t)}\|\underbrace{\boldsymbol{\mu}_q(\mathbf{x}_t,\mathbf{x}_0)}_{\text{known}}-\underbrace{\boldsymbol{\mu}_{\boldsymbol{\theta}}(\mathbf{x}_t)}_{\text{network}}\|^2.
+$$
 We recall that
-$$\boldsymbol{\mu}_q(\mathbf{x}_t,\mathbf{x}_0)=\frac{(1-\overline{\alpha}_{t-1})\sqrt{\alpha_t}}{1-\overline{\alpha}_t}\mathbf{x}_t+\frac{(1-\alpha_t)\sqrt{\overline{\alpha}_{t-1}}}{1-\overline{\alpha}_t}\mathbf{x}_0.$$
+$$
+\boldsymbol{\mu}_q(\mathbf{x}_t,\mathbf{x}_0)=\frac{(1-\overline{\alpha}_{t-1})\sqrt{\alpha_t}}{1-\overline{\alpha}_t}\mathbf{x}_t+\frac{(1-\alpha_t)\sqrt{\overline{\alpha}_{t-1}}}{1-\overline{\alpha}_t}\mathbf{x}_0.
+$$
 Since $\boldsymbol{\mu_{\theta}}$ is our $design$, there is no reason why we cannot define it as something more convenient. So here is an option:
-$$\underbrace{\boldsymbol{\mu_{\theta}}}_{\mathrm{a~network}}(\mathbf{x}_{t})\stackrel{\mathrm{def}}{=}\frac{(1-\overline{\alpha}_{t-1})\sqrt{\alpha_{t}}}{1-\overline{\alpha}_{t}}\mathbf{x}_{t}+\frac{(1-\alpha_{t})\sqrt{\overline{\alpha}_{t-1}}}{1-\overline{\alpha}_{t}}\underbrace{\widehat{\mathbf{x}}_{\boldsymbol{\theta}}(\mathbf{x}_{t})}_{\mathrm{another~network}}\:.$$
+$$
+\underbrace{\boldsymbol{\mu_{\theta}}}_{\mathrm{a~network}}(\mathbf{x}_{t})\stackrel{\mathrm{def}}{=}\frac{(1-\overline{\alpha}_{t-1})\sqrt{\alpha_{t}}}{1-\overline{\alpha}_{t}}\mathbf{x}_{t}+\frac{(1-\alpha_{t})\sqrt{\overline{\alpha}_{t-1}}}{1-\overline{\alpha}_{t}}\underbrace{\widehat{\mathbf{x}}_{\boldsymbol{\theta}}(\mathbf{x}_{t})}_{\mathrm{another~network}}\:.
+$$
 Then we have
-$$\begin{aligned}\frac{1}{2\sigma_{q}^{2}(t)}\|\boldsymbol{\mu}_{q}(\mathbf{x}_{t},\mathbf{x}_{0})-\boldsymbol{\mu}_{\boldsymbol{\theta}}(\mathbf{x}_{t})\|^{2}&=\frac{1}{2\sigma_{q}^{2}(t)}\left\|\frac{(1-\alpha_{t})\sqrt{\overline{\alpha}_{t-1}}}{1-\overline{\alpha}_{t}}(\widehat{\mathbf{x}}_{\boldsymbol{\theta}}(\mathbf{x}_{t})-\mathbf{x}_{0})\right\|^{2}\\&=\frac1{2\sigma_q^2(t)}\frac{(1-\alpha_t)^2\overline{\alpha}_{t-1}}{(1-\overline{\alpha}_t)^2}\left\|\widehat{\mathbf{x}}_{\boldsymbol{\theta}}(\mathbf{x}_t)-\mathbf{x}_0\right\|^2\end{aligned}$$
+$$
+\begin{aligned}\frac{1}{2\sigma_{q}^{2}(t)}\|\boldsymbol{\mu}_{q}(\mathbf{x}_{t},\mathbf{x}_{0})-\boldsymbol{\mu}_{\boldsymbol{\theta}}(\mathbf{x}_{t})\|^{2}&=\frac{1}{2\sigma_{q}^{2}(t)}\left\|\frac{(1-\alpha_{t})\sqrt{\overline{\alpha}_{t-1}}}{1-\overline{\alpha}_{t}}(\widehat{\mathbf{x}}_{\boldsymbol{\theta}}(\mathbf{x}_{t})-\mathbf{x}_{0})\right\|^{2}\\&=\frac1{2\sigma_q^2(t)}\frac{(1-\alpha_t)^2\overline{\alpha}_{t-1}}{(1-\overline{\alpha}_t)^2}\left\|\widehat{\mathbf{x}}_{\boldsymbol{\theta}}(\mathbf{x}_t)-\mathbf{x}_0\right\|^2\end{aligned}
+$$
 Therefore ELBO can be simplified into
 $$
 \begin{aligned}
@@ -241,7 +267,9 @@ $$
 Therefore, the training of the neural network boils down to a simple loss function:
 
 The loss function for a denoising diffusion probabilistic model:
-$$\boldsymbol{\theta}^*=\underset{\boldsymbol{\theta}}{\operatorname*{argmin}}\sum_{t=1}^T\frac1{2\sigma_q^2(t)}\frac{(1-\alpha_t)^2\overline{\alpha}_{t-1}}{(1-\overline{\alpha}_t)^2}\mathbb{E}_{q(\mathbf{x}_t|\mathbf{x}_0)}\bigg[\left\|\widehat{\mathbf{x}}_{\boldsymbol{\theta}}(\mathbf{x}_t)-\mathbf{x}_0\right\|^2\bigg].$$
+$$
+\boldsymbol{\theta}^*=\underset{\boldsymbol{\theta}}{\operatorname*{argmin}}\sum_{t=1}^T\frac1{2\sigma_q^2(t)}\frac{(1-\alpha_t)^2\overline{\alpha}_{t-1}}{(1-\overline{\alpha}_t)^2}\mathbb{E}_{q(\mathbf{x}_t|\mathbf{x}_0)}\bigg[\left\|\widehat{\mathbf{x}}_{\boldsymbol{\theta}}(\mathbf{x}_t)-\mathbf{x}_0\right\|^2\bigg].
+$$
 ![DDPM_7](./images/DDPM_7.png)
 ![DDPM_8](./images/DDPM_8.png)
 
