@@ -1,6 +1,6 @@
 <div id="home"></div>
 
-**Hi, I’m a first-year graduate student in Electrical and Computer Engineering at UCLA.**
+**Hi, I’m a second-year graduate student in Electrical and Computer Engineering at UCLA.**
 
 Before joining UCLA, I obtained my Bachelor’s degree from Chongqing University. I am a member of both the [**Wireless Lab at UCLA**](https://wireless.ee.ucla.edu/) and the [**W&M Data-Driven Decision Intelligence (D3I) Lab**](https://haipeng-chen.github.io/). 
 
@@ -16,7 +16,7 @@ My research interests include:
 # 🔥 News 
 <div id="news"></div>
 
-- *2024.05*, I join the Wireless Lab at UCLA!
+- *2024.05*: I join the Wireless Lab at UCLA!
 
 # 📝 Publications
 <div id="publications"></div>

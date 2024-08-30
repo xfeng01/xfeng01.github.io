@@ -23,29 +23,27 @@ const Navigation = [
 ];
 ---
 
-<nav class="navigation h-10">
-  <ul>
-    <li>
-      <a href="/" class="nav-link font-bold mr-10" data-target="home"
-        >Homepage</a
-      >
-    </li>
-    {
-      Navigation.map((item) => (
-        <li>
-          <a data-target={item.data} class="nav-link cursor-pointer">
-            {item.title}
-          </a>
-        </li>
-      ))
-    }
-    <!-- <li>
-      <a href="/blog" class="ml-10 text-white hover:text-gray-200">Post</a>
-    </li> -->
-    <li class="border-l-2 border-black pl-6">
-      <a href="/blog" class="">Post</a>
-    </li>
-  </ul>
+<nav class="navigation h-14">
+  <div class="mx-auto max-w-[1300px] h-full flex items-center">
+    <ul class="flex items-center">
+      <li>
+        <a
+          href="/"
+          class="nav-link font-bold mr-10 text-gray-100"
+          data-target="home">Homepage</a
+        >
+      </li>
+      {
+        Navigation.map((item) => (
+          <li>
+            <a data-target={item.data} class="nav-link cursor-pointer ">
+              {item.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </nav>
 
 <style>
@@ -54,14 +52,18 @@ const Navigation = [
     border-bottom: 1px solid #ccc;
     position: fixed;
     top: 0;
-    width: 100%;
+    left: 0;
+    right: 0;
+    width: 100vw;
     z-index: 1000;
-    padding: 10px 0;
+    padding: 0; /* 仅设置左右内边距 */
   }
 
   .navigation ul {
     list-style-type: none;
     display: flex;
+    padding: 0; /* 移除内边距 */
+    margin: 0; /* 移除外边距 */
   }
 
   .navigation li {
@@ -69,7 +71,7 @@ const Navigation = [
   }
 
   .nav-link {
-    color: #333;
+    color: #4b5563;
     text-decoration: none;
   }
 

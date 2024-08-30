@@ -2,11 +2,10 @@
 import { getCollection } from "astro:content";
 import MainLayout from "../layouts/MainLayout.astro";
 import PostCard from "../components/PostCard.astro";
-const pageTitle = "My Blog";
 const allPosts = await getCollection("posts");
 ---
 
-<MainLayout pageTitle={pageTitle}>
+<MainLayout>
   <ul>
     {
       allPosts.map((post) => (
