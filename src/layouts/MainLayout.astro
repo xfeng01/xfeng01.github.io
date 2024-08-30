@@ -12,20 +12,18 @@ import BaseHead from "../components/BaseHead.astro";
 
   <body class="w-[90%] my-0 mx-auto md:mt-[100px] max-w-[1300px]">
     <Header />
-    <div
+    <main
       class="max-w-[100%] min-h-screen grid grid-rows-[auto_auto] md:grid-rows-1 mx-auto gap-4 md:gap-8 relative px-0 md:px-4"
     >
-      <Sidebar />
-
-      <div class="px-0 md:px-[100px] md:ml-36 content">
-        <slot />
-      </div>
-    </div>
+        <Sidebar />
+        <div class="px-0 md:px-[100px] md:ml-36 content">
+          <slot />
+        </div>
+    </main>
   </body>
 </html>
 
 <style>
   .content {
-    
   }
 </style>
