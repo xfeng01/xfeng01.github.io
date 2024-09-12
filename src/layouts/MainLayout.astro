@@ -10,17 +10,17 @@ import BaseHead from "../components/BaseHead.astro";
     <BaseHead />
   </head>
 
-  <body class="w-[100%] my-0 mx-auto md:mt-[100px] max-w-[1300px] text-gray-600 text-[14px]">
+  <body
+    class="w-[100%] mx-auto md:mt-[100px] max-w-[1300px] text-gray-600 text-[14px]"
+  >
     <Header />
     <main
-      class="max-w-[100%] min-h-screen grid grid-rows-[auto_auto] md:grid-rows-1 mx-auto gap-4 md:gap-8 relative px-0 md:px-4"
+      class="max-w-[90%] min-h-screen grid grid-rows-[auto_auto] md:grid-rows-1 mx-auto gap-4 md:gap-8 relative px-0 md:px-4 my-8 md:my-0"
     >
-        <Sidebar />
-        <div class="px-0 md:px-[100px] md:ml-36">
-          <slot />
-        </div>
+      <Sidebar />
+      <div class="px-0 md:px-[100px] md:ml-36">
+        <slot />
+      </div>
     </main>
   </body>
 </html>
-
-
