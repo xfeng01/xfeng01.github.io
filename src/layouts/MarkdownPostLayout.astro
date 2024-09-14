@@ -5,31 +5,79 @@ const { frontmatter } = Astro.props;
 ---
 
 <MainLayout>
-  <div class="BlogContent">
-    <h1 class="text-4xl font-bold mb-4">{frontmatter.title}</h1>
-    <hr class="my-4 border-t border-gray-200" />
-    <slot />
-  </div>
+  <article class="blog-post max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">
+        {frontmatter.title}
+      </h1>
+      <div class="flex items-center text-gray-500 mb-4">
+        <svg
+          class="h-5 w-5 text-gray-400 mr-2"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M6 2a1 1 0 000 2h1v1a1 1 0 102 0V4h4v1a1 1 0 102 0V4h1a1 1 0 100-2h-1V1a1 1 0 10-2 0v1H9V1a1 1 0 10-2 0v1H6z"
+          ></path>
+          <path
+            fill-rule="evenodd"
+            d="M4 5a2 2 0 012-2h8a2 2 0 012 2v1H4V5zm0 3h12v9a2 2 0 01-2 2H6a2 2 0 01-2-2V8z"
+            clip-rule="evenodd"></path>
+        </svg>
+        <span>{frontmatter.date}</span>
+        <span class="mx-2 text-gray-400">|</span>
+        <span>{frontmatter.published.toLocaleDateString()}</span>
+      </div>
+      <hr class="border-t border-gray-300" />
+    </header>
+    <section class="prose prose-lg max-w-none">
+      <slot />
+    </section>
+  </article>
 </MainLayout>
 
 <style>
-  .BlogContent h2 {
-    font-size: 2rem;
-    margin-top: 3rem;
-    font-weight: bold;
-    color: #333;
+  .blog-post h2 {
+    @apply text-2xl font-semibold mt-10 mb-4 text-gray-800;
   }
-  .BlogContent p {
-    margin-top: 1rem;
-    line-height: 1.6;
-    color: #555;
+
+  .blog-post p {
+    @apply mt-6 leading-8 text-gray-700;
   }
-  .BlogContent a {
-    text-decoration: none;
-    color: #007bff;
-    transition: color 0.3s ease;
+
+  .blog-post a {
+    @apply text-blue-600 underline;
   }
-  .BlogContent a:hover {
-    color: #0056b3;
+
+  .blog-post a:hover {
+    @apply text-blue-800;
+  }
+
+  /* 日期样式 */
+  .blog-post header .date {
+    @apply flex items-center text-gray-500 mb-4;
+  }
+
+  .blog-post header .date svg {
+    @apply h-5 w-5 text-gray-400 mr-2;
+  }
+
+  /* 图片样式 */
+  .blog-post img {
+    @apply rounded-lg shadow-lg my-8;
+  }
+
+  /* 代码块样式 */
+  .blog-post pre {
+    @apply bg-gray-800 text-white p-4 rounded-lg overflow-x-auto;
+  }
+
+  .blog-post code {
+    @apply font-mono text-sm text-yellow-300;
+  }
+
+  /* 数学公式样式（如果使用了 KaTeX） */
+  .katex {
+    font-size: 1em;
   }
 </style>

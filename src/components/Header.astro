@@ -24,13 +24,30 @@ const Navigation = [
 ---
 
 <nav class="navigation h-14">
-  <div class="mx-auto max-w-[1300px] h-full flex items-center justify-between px-4">
-    <a href="/" class="nav-link font-bold text-xl text-gray-800" data-target="home">
+  <div
+    class="mx-auto max-w-[1300px] h-full flex items-center justify-between px-4"
+  >
+    <a
+      href="/"
+      class="nav-link font-bold text-xl text-gray-800"
+      data-target="home"
+    >
       Xinsong Feng
     </a>
+    <a href="/blog" style="color: white; transition: color 0.3s ease;" onmouseover="this.style.color='black'" onmouseout="this.style.color='white'">Blog</a>
     <button class="md:hidden" id="menu-toggle" aria-label="Toggle menu">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"></path>
       </svg>
     </button>
     <ul class="hidden md:flex items-center" id="nav-menu">
@@ -58,7 +75,7 @@ const Navigation = [
     right: 0;
     width: 100vw;
     z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .navigation ul {
@@ -86,7 +103,7 @@ const Navigation = [
     .navigation li {
       margin: 10px 0;
     }
-    
+
     #nav-menu {
       position: absolute;
       top: 100%;
@@ -106,13 +123,13 @@ const Navigation = [
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', (event) => {
-    const menuToggle = document.getElementById('menu-toggle');
-    const navMenu = document.getElementById('nav-menu');
+  document.addEventListener("DOMContentLoaded", (event) => {
+    const menuToggle = document.getElementById("menu-toggle");
+    const navMenu = document.getElementById("nav-menu");
 
     if (menuToggle && navMenu) {
-      menuToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('show');
+      menuToggle.addEventListener("click", () => {
+        navMenu.classList.toggle("show");
       });
     }
   });

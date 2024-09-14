@@ -14,6 +14,7 @@
     "@astrojs/markdown-remark": "^5.1.0",
     "@astrojs/tailwind": "^5.1.0",
     "astro": "^4.11.3",
+    "google-scholar": "^1.5.1",
     "gray-matter": "^4.0.3",
     "katex": "^0.16.10",
     "rehype-katex": "^7.0.0",
