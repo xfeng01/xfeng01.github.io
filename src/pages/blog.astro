@@ -11,7 +11,7 @@ const allPosts = await getCollection("posts");
       allPosts.map((post) => (
         <PostCard
           title={post.data.title}
-          date={post.data.published.toLocaleDateString('default').slice(0, 10)}
+          date={post.data.published.toLocaleDateString("default").slice(0, 10)}
           description={post.data.description}
           url={`/posts/${post.slug}/`}
         />

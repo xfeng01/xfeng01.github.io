@@ -1,28 +1,50 @@
 html {
     scroll-behavior: smooth;
+    background-color: #ffffff;
+    color: #333333;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 h1 {
-  @apply text-xl font-bold mt-4 mb-1;
+    @apply text-2xl font-bold mt-6 mb-3;
+    color: #2c3e50;
 }
 
 h2 {
-  @apply text-xl font-bold mt-4 mb-2;
+    @apply text-xl font-bold mt-5 mb-2;
+    color: #34495e;
 }
 
 h3 {
-  @apply text-xl font-bold mb-1;
+    @apply text-lg font-bold mt-4 mb-2;
+    color: #34495e;
 }
 
 ul {
-  @apply list-disc list-inside ml-6  space-y-2;
+    @apply list-disc list-inside ml-6 space-y-2;
 }
 
 a {
-  @apply hover:underline;
+    color: #3498db;
+    text-decoration: none;
+    @apply hover:underline;
 }
 
 p {
-  @apply mb-2;
+    @apply mb-3;
+}
+
+.container {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
