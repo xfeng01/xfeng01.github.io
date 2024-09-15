@@ -24,7 +24,7 @@ const filteredPosts = allPosts.filter(post => post.data.tags.includes(tag));
 ---
 
 <MainLayout>
-  <h1 class="text-3xl font-bold text-center text-gray-800">{tag}</h1>
+  <h1 class="text-2xl font-bold text-center text-gray-800">{tag}</h1>
   <ul>
     {filteredPosts.length > 0 ? (
       filteredPosts.map((post) => (
