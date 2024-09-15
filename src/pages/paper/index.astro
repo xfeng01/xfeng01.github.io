@@ -1,0 +1,21 @@
+---
+import { getCollection } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+const allPapers = await getCollection("paper");
+---
+
+<MainLayout>
+  <ul>
+    {
+      allPapers.map((paper) => (
+        <PostCard
+          title={paper.data.title}
+          date={paper.data.published.toLocaleDateString("default").slice(0, 10)}
+          description={paper.data.description}
+          url={`/paper/${paper.slug}/`}
+        />
+      ))
+    }
+  </ul></MainLayout
+>
