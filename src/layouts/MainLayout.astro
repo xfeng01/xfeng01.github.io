@@ -12,14 +12,13 @@ import BaseHead from "../components/BaseHead.astro";
 
   <body class="w-full mx-auto md:mt-[100px] max-w-[1300px] text-gray-600">
     <Header />
-<main
-  class="max-w-full min-h-screen grid grid-rows-[auto_auto] md:grid-rows-1 mx-auto gap-4 md:gap-8 relative px-0 md:px-4 my-8 md:my-0"
->
-  <Sidebar />
-  <div class="px-0 md:px-[100px] md:ml-36">
-    <slot />
-  </div>
-</main>
+    <main
+      class="max-w-full min-h-screen md:grid md:grid-rows-1 mx-auto gap-4 md:gap-8 relative px-0 md:px-4 my-8 md:my-0"
+    >
+      <Sidebar />
+      <div class="px-0 md:px-[100px] md:ml-36">
+        <slot />
+      </div>
+    </main>
   </body>
 </html>
-
