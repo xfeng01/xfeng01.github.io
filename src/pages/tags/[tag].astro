@@ -16,7 +16,7 @@ export async function getStaticPaths() {
   }));
 }
 
-const { tag } = Astro.params; // 获取动态路由参数
+const { tag } = Astro.params as { tag: string }; // 获取动态路由参数并指定类型
 const allPosts = await getCollection("posts");
 
 // 根据标签过滤文章
