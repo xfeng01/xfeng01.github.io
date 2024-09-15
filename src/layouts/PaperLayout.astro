@@ -1,0 +1,124 @@
+---
+import MainLayout from "./MainLayout.astro";
+import "/node_modules/katex/dist/katex.min.css";
+
+interface Props {
+  frontmatter: any;
+  hideSidebar?: boolean;
+}
+const { frontmatter, hideSidebar = false } = Astro.props;
+---
+
+<MainLayout hideSidebar={hideSidebar}>
+  <article
+    class={`blog-post w-full ${hideSidebar ? "max-w-5xl" : "max-w-4xl"} mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12`}
+  >
+    <header class="mb-6 sm:mb-8">
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+        {frontmatter.title}
+      </h1>
+      <div class="flex flex-wrap items-center text-gray-500 mb-4">
+        <span class="mr-2">Authors:</span>
+        {
+          frontmatter.authors.map((author: string, index: number) => (
+            <span key={author} class="mr-2">
+              {author}
+              {index < frontmatter.authors.length - 1 ? ", " : ""}
+            </span>
+          ))
+        }
+      </div>
+      <!-- <div class="flex flex-wrap items-center text-gray-500 mb-4">
+        <svg
+          class="h-5 w-5 text-gray-400 mr-2"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M6 2a1 1 0 000 2h1v1a1 1 0 102 0V4h4v1a1 1 0 102 0V4h1a1 1 0 100-2h-1V1a1 1 0 10-2 0v1H9V1a1 1 0 10-2 0v1H6z"
+          ></path>
+          <path
+            fill-rule="evenodd"
+            d="M4 5a2 2 0 012-2h8a2 2 0 012 2v1H4V5zm0 3h12v9a2 2 0 01-2 2H6a2 2 0 01-2-2V8z"
+            clip-rule="evenodd"></path>
+        </svg>
+        <span class="mr-2">{frontmatter.date}</span>
+        <span class="hidden sm:inline mx-2 text-gray-400">|</span>
+        <span>{frontmatter.published.toLocaleDateString()}</span>
+      </div> -->
+      <hr class="border-t border-gray-300" />
+    </header>
+    <div class="prose prose-sm sm:prose lg:prose-lg max-w-none overflow-x-auto">
+      <div
+        class={`max-w-full  mx-auto ${hideSidebar ? "sm:max-w-full" : "sm:max-w-3xl"}`}
+      >
+        <slot />
+      </div>
+    </div>
+  </article>
+</MainLayout>
+
+<style>
+  :global(.blog-post h2) {
+    @apply text-2xl font-semibold mt-10 mb-4 text-gray-800;
+  }
+
+  :global(.blog-post h3) {
+    @apply text-xl font-semibold mt-8 mb-3 text-gray-800;
+  }
+
+  :global(.blog-post p) {
+    @apply mt-6 leading-8 text-gray-700;
+  }
+
+  :global(.blog-post a) {
+    @apply text-blue-600 underline;
+  }
+
+  :global(.blog-post a:hover) {
+    @apply text-blue-800;
+  }
+
+  /* 日期样式 */
+  :global(.blog-post header .date) {
+    @apply flex items-center text-gray-500 mb-4;
+  }
+
+  :global(.blog-post header .date svg) {
+    @apply h-5 w-5 text-gray-400 mr-2;
+  }
+
+  /* 图片样式 */
+  :global(.blog-post img) {
+    @apply rounded-lg shadow-lg my-8;
+  }
+
+  /* 代码块样式 */
+  :global(.blog-post pre) {
+    @apply bg-gray-800 text-white p-4 rounded-lg overflow-x-auto;
+  }
+
+  :global(.blog-post code) {
+    @apply font-mono text-sm text-yellow-300;
+  }
+
+  /* 数学公式样式（如果使用了 KaTeX） */
+  :global(.blog-post .katex) {
+    font-size: 1em;
+  }
+
+  /* 列表样式 */
+  :global(.blog-post ul),
+  :global(.blog-post ol) {
+    @apply mt-4 ml-6 mb-6;
+  }
+
+  :global(.blog-post li) {
+    @apply mb-2;
+  }
+
+  /* 引用样式 */
+  :global(.blog-post blockquote) {
+    @apply pl-4 border-l-4 border-gray-300 italic my-6;
+  }
+</style>

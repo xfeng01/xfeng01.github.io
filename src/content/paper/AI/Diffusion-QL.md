@@ -1,10 +1,13 @@
 ---
 title: Diffusion Policies as an Expressive Policy Class for Offline Reinforcement Learning
 published: 2024-09-10
-description: Note for Diffusion-QL
 tags:
   - diffusion-model
-  - Q-Learning
+  - Q-learning
+authors:
+  - Zhendong Wang
+  - Jonathan J Hunt
+  - Mingyuan Zhou
 draft: false
 ---
 
