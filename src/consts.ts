@@ -4,6 +4,6 @@
 export const site = {
   title: "Xinsong Feng | 冯欣淞 - Homepage", // required
   favicon: "/favicon.png", // required
-  author: "pride7", // required
-  avatar: "/megumi.jpg", // required
+  author: "Xinsong Feng", // required
+  avatar: "/xsfeng.jpg", // required
 };
