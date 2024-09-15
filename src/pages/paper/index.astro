@@ -5,7 +5,7 @@ import PostCard from "../../components/PostCard.astro";
 const allPapers = await getCollection("paper");
 ---
 
-<MainLayout>
+<MainLayout hideSidebar={true}>
   <ul>
     {
       allPapers.map((paper) => (
