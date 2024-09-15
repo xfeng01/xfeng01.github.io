@@ -1,0 +1,23 @@
+---
+import { getCollection } from "astro:content";
+
+const allPosts = await getCollection("posts");
+const tags = new Set();
+
+// 收集所有标签
+allPosts.forEach((post) => {
+  post.data.tags.forEach((tag) => {
+    tags.add(tag);
+  });
+});
+---
+
+<div class="tags-list bg-white shadow-lg rounded-xl p-4">
+  <ul class="list-none flex flex-wrap justify-center">
+    {Array.from(tags).map((tag) => (
+      <li class="m-2">
+        <a href={`/tags/${tag}`} class="text-gray-600 font-semibold py-2 px-3 rounded-full hover:text-gray-900 hover:bg-gray-100">#{tag}</a>
+      </li>
+    ))}
+  </ul>
+</div>

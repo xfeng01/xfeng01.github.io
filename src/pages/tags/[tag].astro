@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection("posts");
+  const tags = new Set();
+  allPosts.forEach((post) => {
+    post.data.tags.forEach((tag) => {
+      tags.add(tag);
+    });
+  });
+  return Array.from(tags).map((tag) => ({
+    params: { tag },
+  }));
+}
+
+const { tag } = Astro.params; // 获取动态路由参数
+const allPosts = await getCollection("posts");
+
+// 根据标签过滤文章
+const filteredPosts = allPosts.filter(post => post.data.tags.includes(tag));
+---
+
+<MainLayout>
+  <h1 class="text-3xl font-bold text-center text-gray-800">{tag}</h1>
+  <ul>
+    {filteredPosts.length > 0 ? (
+      filteredPosts.map((post) => (
+        <PostCard
+          title={post.data.title}
+          date={post.data.published.toLocaleDateString("default").slice(0, 10)}
+          description={post.data.description}
+          url={`/posts/${post.slug}/`}
+        />
+      ))
+    ) : (
+      <li>No posts found for this tag.</li>
+    )}
+  </ul>
+</MainLayout>
