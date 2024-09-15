@@ -32,8 +32,10 @@ const { frontmatter } = Astro.props;
       </div>
       <hr class="border-t border-gray-300" />
     </header>
-    <div class="prose prose-sm sm:prose lg:prose-lg max-w-none">
-      <slot />
+    <div class="prose prose-sm sm:prose lg:prose-lg max-w-none overflow-x-auto">
+      <div class="max-w-full sm:max-w-3xl mx-auto">
+        <slot />
+      </div>
     </div>
   </article>
 </MainLayout>
