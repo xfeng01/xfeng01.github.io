@@ -1,5 +1,5 @@
 ---
-title: "S2AC: energy-based reinforcement learning with stein soft actor critic"
+title: "S2AC: Energy-Based Reinforcement Learning with Stein Soft Actor Critic"
 published: 2024-06-16
 tags:
   - Max-Ent-RL

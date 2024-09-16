@@ -26,7 +26,7 @@ export const info = {
   {
     icon: "fab fa-github",
     color: "text-gray-700",
-    name: "Github",
+    name: "GitHub",
     link: "https://github.com/xfeng01",
   },
   {
