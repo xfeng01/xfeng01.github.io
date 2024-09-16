@@ -4,7 +4,7 @@
 export const site = {
   title: "Xinsong Feng | 冯欣淞 - Homepage", // required
   favicon: "/favicon.png", // required
-  description: "Msc in ECE",
+  description: "MSc in ECE",
   author: "Xinsong Feng", // required
   author_CN: "冯欣淞", // required
   avatar: "/xsfeng.jpg", // required
