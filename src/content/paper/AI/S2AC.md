@@ -55,7 +55,8 @@ Beyond RL, the backbone of S2AC is a **new variational inference algorithm** wit
 ### 2.1 Samplers for energy-based models
 - SVGD is a particle-based Bayesian inference algorithm.
 - SVGD samples a set of m particles $\{a_{j}\}^{m}_{j=1}$ from an initial distribution $q_{0}$ which it then transforms through a sequence of updates to fit the target distribution.
-- SVGD applies a form of functional gradient descent $∆f$ that minimizes the KL-divergence between the target distribution $p$ and the proposal distribution $q^{l}$ induced by the particles. $a_i^{l+1}=a_i^l+\epsilon\Delta f(a_i^l)$. $$
+- SVGD applies a form of functional gradient descent $∆f$ that minimizes the KL-divergence between the target distribution $p$ and the proposal distribution $q^{l}$ induced by the particles. $a_i^{l+1}=a_i^l+\epsilon\Delta f(a_i^l)$. 
+$$
 \Delta f(a_i^l)=\mathbb{E}_{a_j^l\thicksim q^l}\big[k(a_i^l,a_j^l)\nabla_{a_j^l}\log p(a_j^l)+\nabla_{a_j^l}k(a_i^l,a_j^l)\big]
 $$
 
