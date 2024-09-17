@@ -140,7 +140,7 @@ Another approach to accelerate training and inference in diffusion-based policy 
 
 In our experimental setup, this strategy is employed for behavior regularization by
 $$
-\mathcal{L}_{\mathrm{KL}}(\theta)=D_{\mathrm{KL}}[\pi_\theta(\cdot|s)||\mu_\phi(\cdot|s)]=\mathbb{E}_{\boldsymbol{\varepsilon}\sim\mathcal{N}(0,\boldsymbol{I}),\boldsymbol{s}\sim\mathcal{D},\pi_\theta(\boldsymbol{s},\boldsymbol{\varepsilon})}\left[\log\frac{p_\mathrm{fake}(\boldsymbol{a}_\theta|\boldsymbol{s})}{p_\mathrm{real}(\boldsymbol{a}_\theta|\boldsymbol{s})}\right]\
+\mathcal{L}_{\mathrm{KL}}(\theta)=D_{\mathrm{KL}}[\pi_\theta(\cdot|s)||\mu_\phi(\cdot|s)]=\mathbb{E}_{\boldsymbol{\varepsilon}\sim\mathcal{N}(0,\boldsymbol{I}),\boldsymbol{s}\sim\mathcal{D},\pi_\theta(\boldsymbol{s},\boldsymbol{\varepsilon})}\left[\log\frac{p_\mathrm{fake}(\boldsymbol{a}_\theta|\boldsymbol{s})}{p_\mathrm{real}(\boldsymbol{a}_\theta|\boldsymbol{s})}\right]
 $$
 where $\pi_\theta(\boldsymbol{s},\boldsymbol{\varepsilon})$ is instantiates as an one-step Implicit policy.
 
