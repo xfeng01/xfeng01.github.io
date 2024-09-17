@@ -10,7 +10,6 @@ date_created: 2024-08-25-周日
 ---
 ## 1 Langevin Dynamics
 
-
 > [!NOTE] 
 > **How to sample from a distribution**
 > The Langevin dynamics for sampling from a known distribution $p(\mathbf{x})$ is an iterative procedure for $t=1,\ldots,T{:}$
