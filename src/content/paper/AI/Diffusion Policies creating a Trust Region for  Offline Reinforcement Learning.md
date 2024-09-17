@@ -118,7 +118,8 @@ $$
 where $\tau$ is a quantile in [0,1], and $L_2^\tau(u)=|\tau-\mathbf{1}(u<0)|u^2.$ When $\tau=0.5,L_2^\tau$ simplifies to the $L_2$ loss. When $\tau>0.5,L_\psi$ encourages the learning of the $\tau$ quantile values of $Q.$ The loss function for updating the Q-functions, $Q_{\eta_i}$, is given by:
 $$
 \mathcal{L}_Q(\eta_i)=\mathbb{E}_{(\boldsymbol{s},\boldsymbol{a},\boldsymbol{s}^{\prime}\boldsymbol{\sim}\mathcal{D})}\left[||r(\boldsymbol{s},\boldsymbol{a})+\gamma*V_\psi(\boldsymbol{s}^{\prime})-Q_{\eta_i}(\boldsymbol{s},\boldsymbol{a})||^2\right],
-$$where $\gamma$ denotes the discount factor. This setup aims to minimize the error between the predicted Q-values and the target values derived from the value function $V_\psi$ and the rewards. The algorithm is as follows:
+$$
+where $\gamma$ denotes the discount factor. This setup aims to minimize the error between the predicted Q-values and the target values derived from the value function $V_\psi$ and the rewards. The algorithm is as follows:
 
 ---
 **Algorithm 1** Diffusion Trusted Q-Learning
