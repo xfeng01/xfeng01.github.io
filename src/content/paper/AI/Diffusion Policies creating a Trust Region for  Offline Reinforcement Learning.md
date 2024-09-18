@@ -24,8 +24,6 @@ This paper
 - simultaneously <font color="#ff0000">train two cooperative policies</font>: a diffusion policy for pure behavior cloning and a one-step policy for actual deployment.
 - The one-step policy is optimized based on two objectives: the diffusion trust region loss, which ensures safe policy exploration, and the maximization of the Q-value function, guiding the policy to generate actions in high-reward regions.
 
-<font color="#00b050">What's "in-sample"</font>
-
 ## 2 Diffusion Trusted Q-Learning
 
 ### Diffusion Policy
@@ -70,8 +68,6 @@ $$
 \begin{aligned}\max_{\boldsymbol{a}_0}\log p(\boldsymbol{a}_0|\boldsymbol{s})&\geq\max_\theta\mathbb{E}_{\boldsymbol{a}_\theta\sim\pi_\theta(\cdot|\boldsymbol{s})}\left[\log p(\boldsymbol{a}_\theta|\boldsymbol{s})\right]\geq\max_\theta\mathbb{E}_{\boldsymbol{a}_\theta\sim\pi_\theta(\cdot|\boldsymbol{s})}\left[\mathrm{ELBO}(\boldsymbol{a}_\theta|\boldsymbol{s})\right]\\&=\min_\theta\frac12\mathbb{E}_{t\thicksim\mathcal{U}(0,1),\boldsymbol{\varepsilon}\thicksim\mathcal{N}(0,\boldsymbol{I}),\boldsymbol{a}_\theta\thicksim\pi_\theta(\cdot|\boldsymbol{s})}\left[w(t)\|\mu_\phi(\boldsymbol{a}_\theta+\sigma_t\boldsymbol{\varepsilon},t|\boldsymbol{s})-\boldsymbol{a}_\theta\|_2^2\right]\end{aligned}
 $$
 Then, during training, we consider all states $s$ in $\mathcal{D}.$ Thus, by taking the expectation over $s\sim\mathcal{D}$ on both sides and setting $t\sim\mathcal{U}(0,1)$, we derive the loss described in Equation 4.
-
-<font color="#00b050">Not fully understand</font>
 
 ---
 
