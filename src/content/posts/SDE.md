@@ -3,7 +3,7 @@ title: Stochastic Differential Equation (SDE)
 published: 2024-08-27
 description: Note for "Tutorial on Diffusion Models for Imaging and Vision"
 tags:
-  - 生成式AI
+  - generative-AI
 category: 学习
 draft: false
 ---

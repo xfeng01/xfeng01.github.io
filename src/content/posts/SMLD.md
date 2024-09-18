@@ -3,7 +3,7 @@ title: Score-Matching Langevin Dynamics (SMLD)
 published: 2024-08-25
 description: Note for "Tutorial on Diffusion Models for Imaging and Vision"
 tags:
-  - 生成式AI
+  - generative-AI
 category: 学习
 draft: false
 date_created: 2024-08-25-周日
