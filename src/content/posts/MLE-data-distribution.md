@@ -21,9 +21,12 @@ $$
 \end{align}
 $$
 
-Therefore, minimizing $\mathrm{KL}(p_{\mathrm{data}}||p_{\theta})$ is equivalent to maximizing $\mathbb{E}_{p_{\mathrm{data}}(x)} [\log p_{\theta}(x)]$. Notably, we care about the expectation on the whole data distribution.
+Therefore, minimizing $\mathrm{KL}(p_{\mathrm{data}}||p_{\theta})$ is equivalent to maximizing $\mathbb{E}_{p_{\mathrm{data}}(x)} [\log p_{\theta}(x)]$. That is,
+$$
+\min\ \text{KL}(p_{\text{data}} \, \| \, p_{\theta}) \iff \max\ \mathbb{E}_{p_{\text{data}}} [\log p_{\theta}]
+$$
 
-As a result, in practice, we have the dataset $\mathcal{D}=\{ x_{1},x_{2},\dots,x_{n} \}$, and then we use these samples to approximate expected log likelihood:
+Notably, we care about the **expectation on the whole data distribution**. As a result, in practice, we have the dataset $\mathcal{D}=\{ x_{1},x_{2},\dots,x_{n} \}$, and then we use these samples to approximate expected log likelihood:
 
 $$
 \mathcal{L}(\theta)=\frac{1}{n} \sum_{i=1}^{n} \log p_{\theta}(x_{i})

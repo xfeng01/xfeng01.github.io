@@ -1,5 +1,5 @@
 ---
-title: Multi-arm Bandits
+title: Multi-Arm Bandits
 published: 2024-09-18
 description: "Note for Chapter 2 of RL: an introduction"
 tags:
