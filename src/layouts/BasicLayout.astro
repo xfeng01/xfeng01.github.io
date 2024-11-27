@@ -1,0 +1,16 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import BaseHead from "../components/BaseHead.astro";
+---
+
+<html lang="en">
+  <head>
+    <BaseHead />
+  </head>
+
+  <body class="w-full mx-auto md:mt-[100px] max-w-[1300px] text-gray-600">
+    <Header />
+    <slot />
+  </body>
+</html>

@@ -1,5 +1,5 @@
 ---
-import MainLayout from "./MainLayout.astro";
+import PostHigherLayout from "./PostHigherLayout.astro";
 import "/node_modules/katex/dist/katex.min.css";
 
 interface Props {
@@ -9,9 +9,9 @@ interface Props {
 const { frontmatter, hideSidebar = false } = Astro.props;
 ---
 
-<MainLayout hideSidebar={hideSidebar}>
+<PostHigherLayout>
   <article
-    class={`blog-post w-full ${hideSidebar ? "max-w-5xl" : "max-w-4xl"} mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12`}
+    class={`blog-post w-full ${hideSidebar ? "max-w-5xl" : "max-w-4xl"} mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 markdown-body`}
   >
     <header class="mb-6 sm:mb-8">
       <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
@@ -45,7 +45,7 @@ const { frontmatter, hideSidebar = false } = Astro.props;
       </div>
     </div>
   </article>
-</MainLayout>
+</PostHigherLayout>
 
 <style>
   :global(.blog-post h2) {

@@ -1,0 +1,15 @@
+---
+import BasicLayout from "./BasicLayout.astro";
+import Toc from "../components/Toc.astro";
+---
+
+<BasicLayout>
+  <main
+    class={`max-w-full min-h-screen md:grid md:grid-rows-1 mx-auto gap-4 md:gap-8 relative px-0 md:px-4 my-8 md:my-0`}
+  >
+    <Toc />
+    <div class={`px-0 md:px-[100px] md:ml-32 max-md:mt-2`}>
+      <slot />
+    </div>
+  </main>
+</BasicLayout>

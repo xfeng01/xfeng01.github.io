@@ -9,9 +9,9 @@ Currently, I am expanding my research experience in both wireless communications
 I am driven by a passion for advancing technology and a long-term goal of contributing to the development of next-generation mobile communication systems and promoting AI-enabled communication network design.
 
 My research interests include:
-- **Wireless communications**: Focusing on the development of efficient, reliable, and secure wireless communication systems.
-- **Optimization**: Exploring advanced algorithms to enhance the performance of complex systems.
-- **Artificial Intelligence (AI)**: Investigating AI techniques to improve decision-making in dynamic environments.
+- **Wireless communications**: Machine Learning for Wireless Communication, Information Thoery, Full-Duplex Communication, Stochastic Geometry, Joint Communication and Sensing.
+- **Optimization**: Combinatorial Optimization, Intelligent Optimization Algorithms.
+- **Artificial Intelligence (AI)**: Reinforcement Learning, Generative AI, Graph Neural Network, AI theory.
 
 # 📰 News 
 <div id="news"></div>
