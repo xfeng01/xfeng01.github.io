@@ -15,8 +15,8 @@ My research focuses on the intersection of wireless communications, optimization
 For more details about my background and projects, please feel free to check out my [CV](/Xinsong_Feng_CV.pdf).
 
 **Beyond academics**, I enjoy cooking and often hear from my friends that my dishes are exceptionally delicious. 
-To me, the whole process feels like reinforcement learning—adding spices is like tuning model parameters, and the final taste is the reward. 
-The recipe I write down afterward is essentially the saved optimal model parameters. 
+To me, the whole process feels like reinforcement learning—each attempt at cooking the same dish involves a balance of exploration and exploitation. 
+The final taste serves as the reward, and the recipe I write down afterward becomes the saved optimal model parameters.
 I also love drawing, particularly anime characters. 
 Playing the piano is another passion of mine—it became my favorite way to enjoy music since I tend to sing off-key! 
 Table tennis, on the other hand, is the only sport that keeps me active, as I rarely exercise otherwise.
