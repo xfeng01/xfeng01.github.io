@@ -17,23 +17,29 @@ export const info = {
     name: "Los Angeles",
   },
   social: [
-  {
-    icon: "fas fa-envelope",
-    color: "text-green-500",
-    name: "Email",
-    link: "mailto:xsfeng@g.ucla.com",
-  },
-  {
-    icon: "fab fa-github",
-    color: "text-gray-700",
-    name: "GitHub",
-    link: "https://github.com/xfeng01",
-  },
-  {
-    icon: "fas fa-graduation-cap",
-    color: "text-red-500",
-    name: "Google Scholar",
-    link: "https://scholar.google.com/citations?hl=en&user=664D7CoAAAAJ",
-  },
-]
-}
+    {
+      icon: "fas fa-envelope",
+      color: "text-green-500",
+      name: "Email",
+      link: "mailto:xsfeng@g.ucla.com",
+    },
+    {
+      icon: "fas fa-graduation-cap",
+      color: "text-red-500",
+      name: "Google Scholar",
+      link: "https://scholar.google.com/citations?hl=en&user=664D7CoAAAAJ",
+    },
+    {
+      icon: "fab fa-github",
+      color: "text-gray-700",
+      name: "GitHub",
+      link: "https://github.com/xfeng01",
+    },
+    {
+      icon: "fas fa-file-contract",
+      color: "text-blue-500",
+      name: "Resume",
+      link: "/Xinsong_Feng_CV.pdf",
+    },
+  ],
+};

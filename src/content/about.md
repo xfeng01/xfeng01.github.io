@@ -10,8 +10,6 @@ My research focuses on the intersection of wireless communications, optimization
 - **Optimization**: My work focuses on combinatorial and intelligent optimization algorithms, particularly their applications in communication networks and decision-making systems.
 - **AI**: My interests include reinforcement learning, generative AI, graph neural networks, and the theoretical foundations of AI, with a particular focus on AI for wireless communication and wireless communication for AI, such as semantic communication integration.
 
-For more details about my background and projects, please feel free to check out my [CV](/Xinsong_Feng_CV.pdf).
-
 **Beyond academics**, I enjoy cooking and often hear from my friends that my dishes are exceptionally delicious😆. 
 To me, this process feels like reinforcement learning—each attempt at cooking the same dish involves a balance of exploration and exploitation. 
 The final taste serves as the reward, and the recipe I write down afterward becomes the saved optimal model parameters.
