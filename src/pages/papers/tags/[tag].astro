@@ -4,7 +4,7 @@ import MainLayout from "../../../layouts/MainLayout.astro";
 import PaperCard from "../../../components/PaperCard.astro";
 
 export async function getStaticPaths() {
-  const allPapers = await getCollection("paper");
+  const allPapers = await getCollection("papers");
   const tags = new Set();
   allPapers.forEach((paper) => {
     paper.data.tags.forEach((tag) => {
@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 }
 
 const { tag } = Astro.params as { tag: string }; // 获取动态路由参数并指定类型
-const allPapers = await getCollection("paper");
+const allPapers = await getCollection("papers");
 
 // 根据标签过滤文章
 const filteredPosts = allPapers.filter(paper => paper.data.tags.includes(tag));
@@ -32,7 +32,7 @@ const filteredPosts = allPapers.filter(paper => paper.data.tags.includes(tag));
           title={paper.data.title}
           date={paper.data.published.toLocaleDateString("default").slice(0, 10)}
           authors={paper.data.authors}
-          url={`/paper/${paper.slug}/`}
+          url={`/paper/${paper.id}/`}
         />
       ))
     ) : (
