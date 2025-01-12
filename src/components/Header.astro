@@ -2,23 +2,23 @@
 const Navigation = [
   {
     title: "News",
-    data: "news",
+    data: "#-news",
   },
   {
     title: "Publications",
-    data: "publications",
+    data: "#-publications",
   },
   {
     title: "Education",
-    data: "educations",
+    data: "#-educations",
   },
   {
     title: "Teaching",
-    data: "teaching",
+    data: "#-teaching",
   },
   {
     title: "Honors & Awards",
-    data: "honors-and-awards",
+    data: "#-honors-and-awards",
   },
 ];
 ---
@@ -71,7 +71,7 @@ const Navigation = [
       {
         Navigation.map((item) => (
           <li>
-            <a data-target={item.data} class="nav-link cursor-pointer">
+            <a href={item.data} class="new-nav-link cursor-pointer">
               {item.title}
             </a>
           </li>
@@ -106,13 +106,13 @@ const Navigation = [
     margin: 0 15px;
   }
 
-  .nav-link {
+  .new-nav-link {
     color: #4b5563;
     text-decoration: none;
     transition: color 0.3s ease;
   }
 
-  .nav-link:hover {
+  .new-nav-link:hover {
     color: #000;
     text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
   }

@@ -1,5 +1,3 @@
-<div id="home"></div>
-
 **Hi, I’m a second-year graduate student in Electrical and Computer Engineering at UCLA.**
 
 Before joining UCLA, I earned my Bachelor’s degree from Chongqing University. I am a member of both the [**Wireless Lab at UCLA**](https://wireless.ee.ucla.edu/) and the [**W&M Data-Driven Decision Intelligence (D3I) Lab**](https://haipeng-chen.github.io/). 
@@ -22,23 +20,19 @@ Playing the piano is another passion of mine—it became my favorite way to enjo
 Table tennis, on the other hand, is the only sport that keeps me active, as I rarely exercise otherwise.
 
 # 📰 News 
-<div id="news"></div>
 
 - *2024.05*: I join the Wireless Lab at UCLA!
 
 # 📜 Publications
-<div id="publications"></div>
 
 Please check my Google Scholar profile for publications!
 
 # 🎓 Educations
-<div id="educations"></div>
 
 - *2023.09 - 2025.06* (Expected), MSc in Electrical and Computer Engineering, UCLA, USA.
 - *2019.09 - 2023.06*, BEng in Communication Engineering, Chongqing University, China.
 
 # 📚 Teaching 
-<div id="teaching"></div>
 
 - *2024 Spring*, Teaching Assistant: Introduction to Communication Systems, UCLA.
 - *2022 Fall*, Teaching Assistant: Programming Language Design, Chongqing University.
@@ -46,7 +40,6 @@ Please check my Google Scholar profile for publications!
 - *2021 Fall*, Teaching Assistant: Digital Signal Processing, Chongqing University.
 
 # 🏆 Honors and Awards
-<div id="honors-and-awards"></div>
 
 - *2023.05*, Distinguished Student of Chongqing University
 - *2023.01*, Top 10 Outstanding Teaching Assistant of Chongqing University
