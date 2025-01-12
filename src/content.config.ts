@@ -1,8 +1,9 @@
-// Import utilities from `astro:content`
 import { z, defineCollection } from "astro:content";
-// Define a `type` and `schema` for each collection
-const postsCollection = defineCollection({
-  type: "content",
+
+import { glob, file } from "astro/loaders";
+
+const posts = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/posts" }),
   schema: z.object({
     title: z.string(),
     published: z.date(),
@@ -13,8 +14,8 @@ const postsCollection = defineCollection({
   }),
 });
 
-const paperCollection = defineCollection({
-  type: "content",
+const papers = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/papers" }),
   schema: z.object({
     title: z.string(),
     published: z.date(),
@@ -25,8 +26,4 @@ const paperCollection = defineCollection({
   }),
 });
 
-// Export a single `collections` object to register your collection(s)
-export const collections = {
-  posts: postsCollection,
-  paper: paperCollection,
-};
+export const collections = {posts, papers}

@@ -4,7 +4,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
 import PaperCard from "../../components/PaperCard.astro";
 import TagsListPaper from "../../components/TagsListPaper.astro";
 
-const allPapers = await getCollection("paper");
+const allPapers = await getCollection("papers");
 
 const sortedPapers = allPapers.sort(
   (a, b) => b.data.published.getTime() - a.data.published.getTime()
@@ -20,7 +20,7 @@ const sortedPapers = allPapers.sort(
           title={paper.data.title}
           date={paper.data.published.toLocaleDateString("default").slice(0, 10)}
           authors={paper.data.authors}
-          url={`/paper/${paper.slug}/`}
+          url={`/paper/${paper.id}/`}
         />
       ))
     }
