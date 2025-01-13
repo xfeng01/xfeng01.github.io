@@ -30,7 +30,7 @@ const Navigation = [
     <a
       href="/"
       class="nav-link font-bold text-xl text-gray-800"
-      data-target="home"
+      onclick="scrollToTop()"
     >
       Xinsong Feng
     </a>
@@ -143,4 +143,7 @@ const Navigation = [
       });
     }
   });
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 </script>
