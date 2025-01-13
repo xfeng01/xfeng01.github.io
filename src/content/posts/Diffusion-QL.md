@@ -1,7 +1,9 @@
 ---
-title: Diffusion Policies as an Expressive Policy Class for Offline Reinforcement Learning
+title: Paper Notes - Diffusion Policies as an Expressive Policy Class for Offline Reinforcement Learning
 published: 2024-09-10
+description: Notes for this paper.
 tags:
+  - paper-notes
   - diffusion-model
   - Q-learning
 authors:

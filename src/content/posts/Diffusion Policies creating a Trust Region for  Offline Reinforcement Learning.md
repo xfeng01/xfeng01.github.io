@@ -1,9 +1,11 @@
 ---
-title: Diffusion Policies creating a Trust Region for  Offline Reinforcement Learning
+title: Paper Notes - Diffusion Policies creating a Trust Region for  Offline Reinforcement Learning
 published: 2024-09-16
+description: Notes for this paper.
 tags:
+  - paper-notes
   - diffusion-model
-  - offline-RL
+  - RL
 authors:
   - Tianyu Chen
   - Zhendong Wang

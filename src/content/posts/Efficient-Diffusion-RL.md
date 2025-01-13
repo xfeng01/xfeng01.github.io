@@ -1,7 +1,9 @@
 ---
-title: Efficient Diffusion Policies for Offline Reinforcement Learning
+title: Paper Notes - Efficient Diffusion Policies for Offline Reinforcement Learning
 published: 2024-09-12
+description: Notes for this paper.
 tags:
+  - paper-notes
   - diffusion-model
   - RL
 authors: 

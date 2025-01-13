@@ -1,24 +1,58 @@
 ---
 import { getCollection } from "astro:content";
 
+// 获取所有文章
 const allPosts = await getCollection("posts");
-const tags = new Set();
+const tagsSet = new Set<string>();
 
 // 收集所有标签
 allPosts.forEach((post) => {
   post.data.tags.forEach((tag) => {
-    tags.add(tag);
+    tagsSet.add(tag);
   });
 });
+
+// 将 Set 转换为数组并排序（可选）
+const allTags = Array.from(tagsSet).sort((a, b) => a.localeCompare(b));
+
+// 定义置顶标签列表
+const pinnedTags = ["paper-notes", "重要标签1", "重要标签2"];
+
+// 分离置顶标签和其他标签
+const topTags = pinnedTags.filter((tag) => allTags.includes(tag));
+const otherTags = allTags.filter((tag) => !pinnedTags.includes(tag));
 ---
 
 <div class="tags-list bg-white shadow-lg rounded-xl md:p-4 p-2 max-md:mt-2">
   <ul class="list-none flex flex-wrap justify-center">
     <li></li>
-    {Array.from(tags).map((tag) => (
-      <li class="m-2 md:m-4">
-        <a href={`/tags/${tag}`} class="text-gray-600 font-semibold py-2 px-3 rounded-full hover:text-gray-900 hover:bg-gray-100 text-sm md:text-base">#{tag}</a>
-      </li>
-    ))}
+    {/* 渲染置顶标签 */}
+    {
+      topTags.map((tag) => (
+        <li class="m-2 md:m-4">
+          <a
+            href={`/tags/${tag}`}
+            class="text-gray-600 font-semibold py-2 px-3 rounded-full hover:text-gray-900 hover:bg-gray-100 text-sm md:text-base "
+          >
+            #{tag}
+            <span class="ml-1 text-yellow-500 text-xs">★</span>
+          </a>
+        </li>
+      ))
+    }
+
+    {/* 渲染其他标签 */}
+    {
+      otherTags.map((tag) => (
+        <li class="m-2 md:m-4">
+          <a
+            href={`/tags/${tag}`}
+            class="text-gray-600 font-semibold py-2 px-3 rounded-full hover:text-gray-900 hover:bg-gray-100 text-sm md:text-base"
+          >
+            #{tag}
+          </a>
+        </li>
+      ))
+    }
   </ul>
 </div>

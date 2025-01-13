@@ -1,8 +1,10 @@
 ---
-title: "S2AC: Energy-Based Reinforcement Learning with Stein Soft Actor Critic"
+title: "Paper Notes - S2AC: Energy-Based Reinforcement Learning with Stein Soft Actor Critic"
 published: 2024-06-16
+description: Notes for this paper.
 tags:
-  - Max-Ent-RL
+  - paper-notes
+  - RL
 authors: 
   - Safa Messaoud
   - Billel Mokeddem

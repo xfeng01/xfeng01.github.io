@@ -1,7 +1,9 @@
 ---
-title: Energy-Guided Diffusion Sampling for Offline-to-Online Reinforcement Learning
+title: Paper Notes - Energy-Guided Diffusion Sampling for Offline-to-Online Reinforcement Learning
 published: 2024-09-08
+description: Notes for this paper.
 tags:
+  - paper-notes
   - diffusion-model
   - RL
 authors:
