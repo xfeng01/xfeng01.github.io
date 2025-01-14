@@ -9,7 +9,7 @@ category: Paper
 draft: false
 ---
 This paper focuses on consistency training. The main changes are shown in the table.
-![[Pasted image 20250113193215.png|900]]
+![Improved Techniques](./images/improved_cm.png)
 ## 1 Weighting Function, Noise Embedding, and Dropout
 
 The default weighting function $\lambda(\sigma) \equiv 1$ assigns equal weights to all noise levels but is suboptimal. The paper refines this by introducing $\lambda(\sigma_i) = \frac{1}{\sigma_{i+1} - \sigma_i}$, which decreases as noise increases. This prioritizes smaller noise levels, improving sample quality in CT with the squared $\ell_2$ metric.
