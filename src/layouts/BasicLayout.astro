@@ -14,3 +14,21 @@ import BaseHead from "../components/BaseHead.astro";
     <slot />
   </body>
 </html>
+
+<script>
+  document.addEventListener('keydown', (event) => {
+  if (event.ctrlKey && event.key === 'b') {
+    event.preventDefault(); // 阻止默认行为（如果有）
+
+    // 获取当前页面路径
+    const currentPath = window.location.pathname;
+
+    // 判断当前页面是否是博客页面
+    if (currentPath === '/blog' || currentPath === '/blog/') {
+      window.location.href = '/'; // 返回根目录
+    } else {
+      window.location.href = '/blog'; // 跳转到博客页面
+    }
+  }
+});
+</script>

@@ -18,9 +18,12 @@ export async function getStaticPaths() {
 
 const { tag } = Astro.params as { tag: string }; // 获取动态路由参数并指定类型
 const allPosts = await getCollection("posts");
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.published.getTime() - a.data.published.getTime()
+);
 
 // 根据标签过滤文章
-const filteredPosts = allPosts.filter(post => post.data.tags.includes(tag));
+const filteredPosts = sortedPosts.filter(post => post.data.tags.includes(tag));
 ---
 
 <MainLayout>
