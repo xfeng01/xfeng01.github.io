@@ -13,38 +13,18 @@ authors:
 draft: false
 ---
 
-- learn an action-value function
-- add a term maximizing action-values into the training loss of the conditional diffusion model --- which results in a loss that seeks optimal actions that are near the behavior policy.
-- show the expressiveness of the diffusion model-based policy, and the <font color="#ff0000">coupling of the behavior cloning and policy improvement</font> under the diffusion model both contribute to the outstanding performance of Diffusion-QL.
-
 ## 1 Introduction
 
-Applying standard policy improvement approaches to an offline dataset typically leads to relying on evaluating actions that have not been seen in the dataset, and therefore their values are unlikely to be estimated accurately.
+Offline reinforcement learning (RL) faces a fundamental challenge: how to estimate the values of out-of-distribution actions, since we can't interact with the environment directly. Several strategies aim to address this issue:
 
-previous solutions:
-- regularize how far the policy can deviate from the behavior policy
-- constrain the learned value function to assign low values to out-of-distribution actions
-- introduce model-based methods, which learn a model of the environment dynamics and perform pessimistic planning in the learned Markov decision process (MDP)
-- treat offline RL as a problem of sequence prediction with return guidance
+1. **Policy regularization**: This limits how far the learned policy can deviate from the behavior policy.
+2. **Value function constraints**: The learned value function assigns low values to out-of-distribution actions.
+3. **Model-based methods**: These learn an environment model and perform pessimistic planning in the learned MDP.
+4. **Sequence prediction**: Treating offline RL as a sequence prediction problem with return guidance.
 
-policy-regularized RL 
-- policy regularization methods perform poorly due to their limited ability to <font color="#ff0000">accurately represent the behavior policy</font>.
-- the policy regularization may limit the <font color="#ff0000">exploration space</font> of the agent to a small region with only <font color="#ff0000">suboptimal actions</font>.
+While policy regularization has shown promise, it often leads to suboptimal results. **The reason?** Policy regularization methods are typically unable to accurately represent the behavior policy, which in turn limits exploration and leads the agent to converge on suboptimal actions. In other words, for regularization to work, it needs to be able to faithfully capture the behavior policy.
 
-The inaccurate policy regularization occurs for two main reasons
-- policy classes are not expressive enough
-- the regularization methods are improper
-
-In this paper, 
-- <font color="#ff0000">construct an objective</font> for the diffusion loss which contains two terms
-    - a behavior-cloning term that encourages the diffusion model to sample actions in the same distribution as the training set
-    - a policy improvement term that attempts to sample high-value actions (according to a learned Q-value).
-- Our diffusion model is a conditional model with states as the condition and actions as the outputs.
-
-Applying a diffusion model here has several appealing properties
-- very expressive and can well capture multi-modal distributions
-- the diffusion model loss constitutes a strong distribution matching technique and hence it could be seen as a powerful sample-based policy regularization method without the need for extra behavior cloning.
-- diffusion models perform generation via iterative refinement, and the guidance from maximizing the Q-value function can be added at each reverse diffusion step.
+Common regularization techniques like **KL divergence** and **maximum mean discrepancy (MMD)** often fall short in offline RL. These methods either require explicit density values or multiple action samples at each state, complicating the optimization process. This makes them less effective for offline RL settings.
 
 ## 2 Diffusion Q-learning
 
@@ -89,3 +69,17 @@ $$
 As the scale of the Q-value function varies in different offline datasets, to normalize it, we follow  Fujimoto & Gu (2021) to set $α$ as $\alpha=\frac{\eta}{\mathbb{E}_{{(\boldsymbol{s},\boldsymbol{a})\thicksim\mathcal{D}}}[[Q_{\phi}(\boldsymbol{s},\boldsymbol{a})]]}$, where $η$ is a hyperparameter that balances  the two loss terms and the Q in the denominator is for normalization only and not differentiated over.
 
 ![Diffusion-QL](./images/Diffusion-QL.png)
+
+## 3 Policy Regularization
+
+**Diffusion Steps Overview**
+
+To effectively learn a distribution, the number of diffusion timesteps, denoted by $N$, should typically be large (e.g., $N = 20$ or $50$ for simple distributions). However, when applying Q-learning, a relatively smaller value of $N$ can still achieve satisfactory performance (or learn the optimal distribution).
+
+It’s important to note that increasing $N$ strengthens the policy regularization. Thus, $N$ serves as a key trade-off factor between the expressiveness of the policy and the computational cost involved in training.
+
+In these experiments, $N = 5$ yields good results on D4RL (Fu et al., 2020) datasets. T
+
+## 4 Experiments
+
+Experimental details: We train for 1000 epochs (2000 for Gym tasks). Each epoch consists of 1000 gradient steps with batch size 256.
