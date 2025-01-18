@@ -3,6 +3,7 @@ title: Paper Notes -- Consistency Models
 published: 2025-01-18
 description: Notes for this paper
 tags:
+  - paper-notes
   - generative-AI
 category: Paper
 draft: false
