@@ -5,6 +5,7 @@ import "/node_modules/katex/dist/katex.min.css";
 interface Props {
   frontmatter: any;
   hideSidebar?: boolean;
+  headings?: any[];
 }
 const { frontmatter, hideSidebar = false, headings = [] } = Astro.props;
 ---
