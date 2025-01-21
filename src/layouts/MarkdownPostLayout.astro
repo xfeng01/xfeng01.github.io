@@ -6,10 +6,10 @@ interface Props {
   frontmatter: any;
   hideSidebar?: boolean;
 }
-const { frontmatter, hideSidebar = false } = Astro.props;
+const { frontmatter, hideSidebar = false, headings = [] } = Astro.props;
 ---
 
-<PostHigherLayout>
+<PostHigherLayout headings={headings}>
   <article
     class={`blog-post w-full ${hideSidebar ? "max-w-5xl" : "max-w-4xl"} mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 markdown-body`}
   >

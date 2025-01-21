@@ -1,0 +1,71 @@
+---
+
+---
+
+<!-- There can't be a filter on parent element, or it will break `fixed` -->
+<div class="back-to-top-wrapper hidden lg:block">
+  <div
+    id="back-to-top-btn"
+    class="back-to-top-btn hide flex items-center rounded-2xl overflow-hidden transition"
+    onclick="backToTop()"
+  >
+    <button aria-label="Back to Top" class="btn-card">
+      <div class="arrow-up"></div>
+    </button>
+  </div>
+</div>
+
+<style lang="stylus">
+.back-to-top-wrapper {
+    width: 3.75rem;
+    height: 3.75rem;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+
+.back-to-top-btn {
+    color: var(--primary);
+    border: none;
+    position: fixed;
+    bottom: 4rem;
+    opacity: 1;
+    cursor: pointer;
+    transform: translateX(5rem);
+    pointer-events: auto;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn-card {
+    height: 3.75rem;
+    width: 3.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-card:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+.arrow-up {
+    width: 20px;
+    height: 20px;
+    border-left: 3px solid currentColor;
+    border-top: 3px solid currentColor;
+    transform: rotate(45deg);
+    margin-top: 6px;
+}
+</style>
+
+<script is:raw is:inline>
+  function backToTop() {
+    window.scroll({ top: 0, behavior: "smooth" });
+  }
+</script>

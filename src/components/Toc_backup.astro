@@ -1,0 +1,103 @@
+<aside
+  class="md:w-[220px] md:fixed bg-white max-md:mt-0 shadow-lg rounded-xl border-0 px-0 text-sm transition-shadow hover:shadow-xl"
+>
+  <ul
+    data-blog-toc
+    class="sticky leading-6 top-0 bg-white p-5 list-none text-left px-0 mx-4"
+  >
+    <li class="text-xl font-bold mb-4 text-gray-800">Contents</li>
+    <div class="text-gray-600">
+      <div class="toc_container text-base"></div>
+    </div>
+  </ul>
+</aside>
+
+<style>
+  .toc_container {
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+    scrollbar-width: thin;
+    -ms-overflow-style: none;
+    padding-right: 10px;
+  }
+
+  .toc_container::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .toc_container::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 8px;
+  }
+
+  .toc_container::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+  }
+
+  .toc_container::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+
+  .toc_container a {
+    color: #4b5563;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: block;
+    padding: 4px 0;
+  }
+
+  .toc_container a:hover {
+    color: #2563eb;
+  }
+
+  .toc_container .active {
+    color: #2563eb;
+    font-weight: 500;
+  }
+</style>
+
+<script>
+  import * as tocbot from "tocbot";
+
+  tocbot.init({
+    tocSelector: ".toc_container",
+    contentSelector: ".markdown-body",
+    headingSelector: "h2",
+    hasInnerContainers: true,
+    headingsOffset: 80,
+    scrollSmoothOffset: -80,
+    scrollSmoothDuration: 200,
+  });
+
+  tocbot.refresh();
+</script>
+
+<script>
+  const setCurrent: IntersectionObserverCallback = (entries) => {
+    for (let entry of entries) {
+      const { id } = entry.target;
+      const tocHeadingEl = document.querySelector(
+        `[data-blog-toc] a[href="#${id}"]`
+      );
+      if (!tocHeadingEl) return;
+      if (entry.isIntersecting) {
+        document
+          .querySelectorAll("[data-blog-toc] a")
+          .forEach((e) => e.classList.remove("active"));
+        tocHeadingEl.classList.add("active");
+      }
+    }
+  };
+
+  const observerOption: IntersectionObserverInit = {
+    root: null,
+    rootMargin: "0px 0px -180px",
+    threshold: 1.0,
+  };
+  const headingObserver = new IntersectionObserver(setCurrent, observerOption);
+  document
+    .querySelectorAll("article :is(h2)")
+    .forEach((heading) => headingObserver.observe(heading));
+</script>
