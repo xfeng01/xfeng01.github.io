@@ -1,6 +1,6 @@
 ---
 import BasicLayout from "./BasicLayout.astro";
-import TOC from "src/components/TOC.astro";
+import Toc from "src/components//Toc.astro";
 import BackToTop from "../components/BackToTop.astro";
 
 const { headings = [] } = Astro.props;
@@ -12,7 +12,7 @@ const { headings = [] } = Astro.props;
       <!-- 左侧TOC -->
       <aside class="hidden lg:block sticky top-20 w-56 h-fit">
         <h2 class="text-lg font-bold mb-3 text-gray-800">Contents</h2>
-        <TOC headings={headings} />
+        <Toc headings={headings} />
       </aside>
 
       <!-- 主要内容 -->
