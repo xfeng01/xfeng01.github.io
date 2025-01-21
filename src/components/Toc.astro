@@ -38,12 +38,12 @@ const maxLevel = site.toc.depth;
         <a
           href={`#${heading.slug}`}
           class:list={[
-            "px-2 flex gap-1 relative transition w-full min-h-6 rounded-lg",
+            "px-2 flex gap-2 relative transition w-full min-h-4 rounded-lg",
             "hover:bg-gray-100 active:bg-gray-200",
             {
-              "font-medium text-gray-900": heading.depth == minDepth,
-              "text-gray-600 text-sm": heading.depth == minDepth + 1,
-              "text-gray-500 text-sm": heading.depth == minDepth + 2,
+              "font-medium text-gray-900 text-sm": heading.depth == minDepth,
+              "text-gray-600 text-xs": heading.depth == minDepth + 1,
+              "text-gray-500 text-xs": heading.depth == minDepth + 2,
             },
           ]}
         >
@@ -52,12 +52,12 @@ const maxLevel = site.toc.depth;
               "transition shrink-0 rounded-lg text-xs flex items-center justify-center",
               {
                 "ml-0": heading.depth == minDepth,
-                "ml-3": heading.depth == minDepth + 1,
-                "ml-6": heading.depth == minDepth + 2,
+                "ml-4": heading.depth == minDepth + 1,
+                "ml-8": heading.depth == minDepth + 2,
               },
             ]}
           />
-          <span class="truncate">{removeTailingHash(heading.text)}</span>
+          <span class="break-words">{removeTailingHash(heading.text)}</span>
         </a>
       ))
   }
