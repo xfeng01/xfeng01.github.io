@@ -5,7 +5,7 @@ description: Notes for this paper.
 tags:
   - paper-notes
   - diffusion-model
-  - Q-learning
+  - RL
 authors:
   - Zhendong Wang
   - Jonathan J Hunt
