@@ -23,10 +23,10 @@
     "remark-math": "^6.0.0",
     "remark-slug": "^7.0.1",
     "tailwindcss": "^3.4.4",
-    "tocbot": "^4.31.0",
-    "typescript": "^5.4.5"
+    "tocbot": "^4.31.0"
   },
   "devDependencies": {
-    "stylus": "^0.64.0"
+    "stylus": "^0.64.0",
+    "typescript": "^5.7.3"
   }
 }
