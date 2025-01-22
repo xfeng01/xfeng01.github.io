@@ -18,7 +18,7 @@ Playing the piano is another passion of mine—it became my favorite way to enjo
 Table tennis, on the other hand, is the only sport that keeps me active, as I rarely exercise otherwise.
 
 # 📰 News 
-
+- *2025.01*: My first-author paper, 'Sequential Stochastic Combinatorial Optimization Using Hierarchical Reinforcement Learning,' has been accepted to ICLR 2025.
 - *2024.05*: I join the Wireless Lab at UCLA!
 
 # 📜 Publications
