@@ -1,7 +1,7 @@
 ---
 title: Paper Notes - Diffusion Policies creating a Trust Region for  Offline Reinforcement Learning
 published: 2024-09-16
-description: Notes for this paper.
+description: This paper proposed to train a one-step policy guided by a diffusion model via a trust region loss, enabling fast inference without iterative sampling.
 tags:
   - paper-notes
   - diffusion-model
