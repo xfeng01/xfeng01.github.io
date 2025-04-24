@@ -10,12 +10,12 @@ My research focuses on the intersection of wireless communications, optimization
 - **Optimization**: My work focuses on combinatorial and intelligent optimization algorithms, particularly their applications in communication networks and decision-making systems.
 - **AI**: My interests include reinforcement learning, generative AI, graph neural networks, and the theoretical foundations of AI, with a particular focus on AI for wireless communication and wireless communication for AI, such as semantic communication integration.
 
-**Beyond academics**, I enjoy cooking and often hear from my friends that my dishes are exceptionally delicious😆. 
+<!-- **Beyond academics**, I enjoy cooking and often hear from my friends that my dishes are exceptionally delicious😆. 
 To me, this process feels like reinforcement learning—each attempt at cooking the same dish involves a balance of exploration and exploitation. 
 The final taste serves as the reward, and the recipe I write down afterward becomes the saved optimal model parameters.
 I also love drawing, particularly anime characters. 
 Playing the piano is another passion of mine—it became my favorite way to enjoy music since I tend to sing off-key! 
-Table tennis, on the other hand, is the only sport that keeps me active, as I rarely exercise otherwise.
+Table tennis, on the other hand, is the only sport that keeps me active, as I rarely exercise otherwise. -->
 
 # 📰 News 
 - *2025.01*: My first-author paper, 'Sequential Stochastic Combinatorial Optimization Using Hierarchical Reinforcement Learning,' has been accepted to ICLR 2025.
