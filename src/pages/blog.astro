@@ -94,16 +94,23 @@ const totalPages = Math.ceil(sortedPosts.length / blog.postsPerPage);
     const searchInput = document.getElementById('searchInput');
     const postsContainer = document.getElementById('postsContainer');
     const noResults = document.getElementById('noResults');
+    
+    // 添加空值检查
+    if (!searchInput || !postsContainer || !noResults) return;
+    
     const allPostItems = Array.from(postsContainer.children);
 
     // 处理搜索功能
     searchInput.addEventListener('input', () => {
-      const searchTerm = searchInput.value.toLowerCase().trim();
+      const searchTerm = (searchInput as HTMLInputElement).value.toLowerCase().trim();
       let hasResults = false;
 
       allPostItems.forEach(post => {
-        // 修改从h3到h2
-        const title = post.querySelector('h2').textContent.toLowerCase();
+        // 添加空值检查
+        const titleElement = post.querySelector('h2');
+        if (!titleElement) return;
+        
+        const title = titleElement.textContent?.toLowerCase() || '';
         const matches = title.includes(searchTerm);
         
         post.classList.toggle('hidden', !matches);

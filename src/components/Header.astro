@@ -294,6 +294,8 @@ const Navigation = [
 
     // Scrolling effect for navigation
     window.addEventListener("scroll", () => {
+      if (!navigation) return; // Add null check
+      
       if (window.scrollY > 10) {
         navigation.classList.add("scrolled");
       } else {
@@ -314,7 +316,7 @@ const Navigation = [
     const navItems = document.querySelectorAll(".nav-item");
     navItems.forEach(item => {
       item.addEventListener("click", () => {
-        if (window.innerWidth < 768) {
+        if (window.innerWidth < 768 && navMenu) { // Add null check for navMenu
           navMenu.classList.remove("show");
         }
       });
@@ -390,6 +392,10 @@ const Navigation = [
     if (themeToggleMobile) {
       themeToggleMobile.addEventListener("click", toggleDarkMode);
     }
+    
+    // We need to expose scrollToTop to the global scope since it's used in inline onclick
+    // @ts-expect-error: 添加自定义属性到window对象
+    window.scrollToTop = scrollToTop;
   });
 
   function scrollToTop() {

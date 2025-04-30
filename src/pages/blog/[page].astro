@@ -24,8 +24,6 @@ interface Props {
 const { page } = Astro.props;
 const pathname = new URL(Astro.request.url).pathname.split("/");
 const currentPage = pathname.length > 2 ? pathname[pathname.length - 1] : "";
-const activeClass =
-  "bg-purple-700 text-white border-purple-700 text-white opacity-100";
 ---
 
 <MainLayout>
@@ -103,7 +101,7 @@ const activeClass =
             class="relative inline-flex items-center px-4 py-2 text-sm font-medium bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-l border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 group transition-colors"
           >
             <span>Next</span>
-            <svg class="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
           </a>
@@ -118,14 +116,22 @@ const activeClass =
     const searchInput = document.getElementById('searchInput');
     const postsContainer = document.getElementById('postsContainer');
     const noResults = document.getElementById('noResults');
+    
+    // 添加空值检查
+    if (!searchInput || !postsContainer || !noResults) return;
+    
     const allPostItems = Array.from(postsContainer.children);
 
     searchInput.addEventListener('input', () => {
-      const searchTerm = searchInput.value.toLowerCase().trim();
+      const searchTerm = (searchInput as HTMLInputElement).value.toLowerCase().trim();
       let hasResults = false;
 
       allPostItems.forEach(post => {
-        const title = post.querySelector('h2').textContent.toLowerCase();
+        // 添加空值检查
+        const titleElement = post.querySelector('h2');
+        if (!titleElement) return;
+        
+        const title = titleElement.textContent?.toLowerCase() || '';
         const matches = title.includes(searchTerm);
         
         post.classList.toggle('hidden', !matches);

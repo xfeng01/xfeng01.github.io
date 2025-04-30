@@ -64,6 +64,8 @@
       
       // Check scroll position
       function checkScroll() {
+        if (!backToTopButton) return; // Add null check inside the function
+        
         if (window.scrollY > 300) {
           backToTopButton.classList.replace('scale-0', 'scale-100');
         } else {
