@@ -2,33 +2,120 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import BaseHead from "../components/BaseHead.astro";
+// Removed BackToTop component import as we now use global JavaScript to create the button
 ---
 
-<html lang="en">
+<html lang="en" class="scroll-smooth dark:bg-gray-900">
   <head>
     <BaseHead />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script is:inline>
+      // Apply dark mode immediately to avoid flashing
+      const applyTheme = () => {
+        if (localStorage.theme === 'dark' || 
+            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      };
+      applyTheme();
+    </script>
   </head>
 
-  <body class="w-full mx-auto md:mt-[100px] max-w-[1300px] text-gray-600">
+  <body class="w-full mx-auto mt-[64px] md:mt-[70px] max-w-[1300px] text-gray-600 dark:text-gray-300 dark:bg-gray-900 transition-colors duration-300">
+    <div class="page-transition"></div>
     <Header />
-    <slot />
+    <div class="content-wrapper fade-in">
+      <slot />
+    </div>
+    <!-- Removed BackToTop component usage, we now create the button directly with JavaScript -->
+    <footer class="py-8 mt-16 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800">
+      <div class="container mx-auto px-4">
+        <p>&copy; {new Date().getFullYear()} Xinsong Feng. All rights reserved.</p>
+        <div class="mt-4 flex justify-center space-x-4">
+          <a href="https://github.com/xfeng01" class="hover:text-gray-900 dark:hover:text-white transition-colors">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="mailto:xsfeng@g.ucla.com" class="hover:text-gray-900 dark:hover:text-white transition-colors">
+            <i class="fas fa-envelope"></i>
+          </a>
+          <a href="https://scholar.google.com/citations?hl=en&user=664D7CoAAAAJ" class="hover:text-gray-900 dark:hover:text-white transition-colors">
+            <i class="fas fa-graduation-cap"></i>
+          </a>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
 
-<script>
-  document.addEventListener('keydown', (event) => {
-  if (event.ctrlKey && event.key === 'b') {
-    event.preventDefault(); // 阻止默认行为（如果有）
+<style>
+  .page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    z-index: 9999;
+    transform: translateY(100%);
+    pointer-events: none;
+  }
 
-    // 获取当前页面路径
-    const currentPath = window.location.pathname;
+  .dark .page-transition {
+    background-color: #1a202c;
+  }
 
-    // 判断当前页面是否是博客页面
-    if (currentPath === '/blog' || currentPath === '/blog/') {
-      window.location.href = '/'; // 返回根目录
-    } else {
-      window.location.href = '/blog'; // 跳转到博客页面
+  .content-wrapper {
+    animation: fadeInContent 0.8s ease forwards;
+  }
+
+  @keyframes fadeInContent {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
-});
+</style>
+
+<script>
+  document.addEventListener('keydown', (event) => {
+    if (event.ctrlKey && event.key === 'b') {
+      event.preventDefault(); // Prevent default behavior (if any)
+
+      // Get current page path
+      const currentPath = window.location.pathname;
+
+      // Page transition effect
+      const pageTransition = document.querySelector('.page-transition');
+      pageTransition.style.transition = 'transform 0.5s ease';
+      pageTransition.style.transform = 'translateY(0)';
+
+      setTimeout(() => {
+        // Check if current page is blog page
+        if (currentPath === '/blog' || currentPath === '/blog/') {
+          window.location.href = '/'; // Return to root
+        } else {
+          window.location.href = '/blog'; // Go to blog page
+        }
+      }, 500);
+    }
+  });
+
+  // Animation after page load
+  window.addEventListener('load', () => {
+    // If loading from cache, manually trigger animation
+    if (document.readyState === 'complete') {
+      document.querySelector('.content-wrapper').style.animation = 'none';
+      setTimeout(() => {
+        document.querySelector('.content-wrapper').style.animation = 'fadeInContent 0.8s ease forwards';
+      }, 10);
+    }
+  });
 </script>

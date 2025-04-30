@@ -14,6 +14,10 @@ export const site = {
   },
 };
 
+export const blog = {
+  postsPerPage: 7, // Posts to display per page
+};
+
 export const info = {
   location: {
     icon: "fas fa-map-marker-alt",

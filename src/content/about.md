@@ -1,6 +1,6 @@
-**Hi, I’m a second-year graduate student in Electrical and Computer Engineering at UCLA.**
+**Hi, I'm a second-year graduate student in Electrical and Computer Engineering at UCLA.**
 
-Before joining UCLA, I earned my Bachelor’s degree from Chongqing University. I am a member of both the [**Wireless Lab at UCLA**](https://wireless.ee.ucla.edu/) and the [**W&M Data-Driven Decision Intelligence (D3I) Lab**](https://haipeng-chen.github.io/). 
+Before joining UCLA, I earned my Bachelor's degree from Chongqing University. I am a member of both the [**Wireless Lab at UCLA**](https://wireless.ee.ucla.edu/) and the [**W&M Data-Driven Decision Intelligence (D3I) Lab**](https://haipeng-chen.github.io/). 
 
 Currently, I am expanding my research experience in both wireless communications and artificial intelligence.
 I am driven by a passion for advancing technology and a long-term goal of contributing to the development of next-generation mobile communication systems and promoting AI-enabled communication network design.
@@ -17,7 +17,7 @@ I also love drawing, particularly anime characters.
 Playing the piano is another passion of mine—it became my favorite way to enjoy music since I tend to sing off-key! 
 Table tennis, on the other hand, is the only sport that keeps me active, as I rarely exercise otherwise. -->
 
-# 📰 News 
+# 📰 News
 - *2025.01*: My first-author paper, 'Sequential Stochastic Combinatorial Optimization Using Hierarchical Reinforcement Learning,' has been accepted to ICLR 2025.
 - *2024.05*: I join the Wireless Lab at UCLA!
 

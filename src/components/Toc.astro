@@ -25,50 +25,126 @@ const removeTailingHash = (text: string) => {
   return text.substring(0, lastIndexOfHash);
 };
 
-let heading1Count = 1;
-
 const maxLevel = site.toc.depth;
 ---
 
-<table-of-contents class:list={[className, "group"]}>
-  {
-    headings
-      .filter((heading) => heading.depth < minDepth + maxLevel)
-      .map((heading) => (
-        <a
-          href={`#${heading.slug}`}
-          class:list={[
-            "px-2 flex gap-2 relative transition w-full min-h-4 rounded-lg",
-            "hover:bg-gray-100 active:bg-gray-200",
-            {
-              "font-medium text-gray-900 text-sm": heading.depth == minDepth,
-              "text-gray-600 text-xs": heading.depth == minDepth + 1,
-              "text-gray-500 text-xs": heading.depth == minDepth + 2,
-            },
-          ]}
-        >
-          <div
-            class:list={[
-              "transition shrink-0 rounded-lg text-xs flex items-center justify-center",
-              {
-                "ml-0": heading.depth == minDepth,
-                "ml-4": heading.depth == minDepth + 1,
-                "ml-8": heading.depth == minDepth + 2,
-              },
-            ]}
-          />
-          <span class="break-words">{removeTailingHash(heading.text)}</span>
-        </a>
-      ))
+<style is:inline>
+  /* Use inline styles to ensure they are applied */
+  .toc-item {
+    color: #4b5563 !important;
+    transition: all 0.2s ease;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-bottom: 2px;
+    font-size: 0.875rem;
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    align-items: flex-start; /* Align at the top */
   }
-  <div
-    id="active-indicator"
-    class:list={[
-      { hidden: headings.length == 0 },
-      "-z-10 absolute bg-gray-100 left-0 right-0 rounded-xl transition-all " +
-        "group-hover:bg-transparent border-2 border-gray-200 group-hover:border-gray-300 border-dashed",
-    ]}
-  >
+  
+  .toc-item:hover {
+    color: #111827 !important;
+  }
+  
+  .toc-item.visible {
+    font-weight: 500 !important;
+    color: #111827 !important;
+  }
+  
+  .toc-level-1 {
+    font-weight: 500;
+    color: #374151 !important;
+  }
+  
+  .toc-level-2 {
+    color: #4b5563 !important;
+    padding-left: 12px;
+  }
+  
+  .toc-level-3 {
+    color: #6b7280 !important;
+    font-size: 0.75rem;
+    padding-left: 24px;
+  }
+  
+  .toc-dot {
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 0.55em; 
+  }
+  
+  .toc-level-1 .toc-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #4b5563;
+  }
+  
+  .toc-level-2 .toc-dot {
+    width: 5px;
+    height: 5px;
+    background-color: #6b7280;
+  }
+  
+  .toc-level-3 .toc-dot {
+    width: 4px;
+    height: 4px;
+    background-color: #9ca3af;
+  }
+  
+  /* Dark mode */
+  .dark .toc-item {
+    color: #d1d5db !important;
+  }
+  
+  .dark .toc-item:hover {
+    color: #f3f4f6 !important;
+  }
+  
+  .dark .toc-item.visible {
+    color: #f9fafb !important;
+  }
+  
+  .dark .toc-level-1 {
+    color: #e5e7eb !important;
+  }
+  
+  .dark .toc-level-2 {
+    color: #d1d5db !important;
+  }
+  
+  .dark .toc-level-3 {
+    color: #9ca3af !important;
+  }
+  
+  .dark .toc-level-1 .toc-dot {
+    background-color: #d1d5db;
+  }
+  
+  .dark .toc-level-2 .toc-dot {
+    background-color: #9ca3af;
+  }
+  
+  .dark .toc-level-3 .toc-dot {
+    background-color: #6b7280;
+  }
+</style>
+
+<table-of-contents id="toc" class:list={[className, "group"]}>
+  <div id="toc-inner-wrapper">
+    {
+      headings
+        .filter((heading) => heading.depth < minDepth + maxLevel)
+        .map((heading) => (
+          <a
+            href={`#${heading.slug}`}
+            class={`toc-item toc-level-${heading.depth - minDepth + 1}`}
+          >
+            <div class="toc-dot"></div>
+            <span class="break-words line-clamp-2">{removeTailingHash(heading.text)}</span>
+          </a>
+        ))
+    }
   </div>
 </table-of-contents>
 
@@ -89,6 +165,7 @@ const maxLevel = site.toc.depth;
       super();
       this.observer = new IntersectionObserver(this.markVisibleSection, {
         threshold: 0,
+        rootMargin: "-100px 0px -66% 0px"
       });
     }
 
@@ -177,9 +254,7 @@ const maxLevel = site.toc.depth;
     update = () => {
       requestAnimationFrame(() => {
         this.toggleActiveHeading();
-        // requestAnimationFrame(() => {
         this.scrollToActiveHeading();
-        // });
       });
     };
 
@@ -225,19 +300,10 @@ const maxLevel = site.toc.depth;
     }
 
     connectedCallback() {
-      // wait for the onload animation to finish, which makes the `getBoundingClientRect` return correct values
-      const element = document.querySelector(".prose");
-      if (element) {
-        element.addEventListener(
-          "animationend",
-          () => {
-            this.init();
-          },
-          { once: true }
-        );
-      } else {
-        console.warn("Animation element not found");
-      }
+      // Wait for animation to complete before initializing
+      setTimeout(() => {
+        this.init();
+      }, 100);
     }
 
     init() {
@@ -275,12 +341,16 @@ const maxLevel = site.toc.depth;
 
       this.fallback();
       this.update();
+      
+      // Add scroll listener to update active indicator
+      window.addEventListener('scroll', this.update, { passive: true });
     }
 
     disconnectedCallback() {
       this.sections.forEach((section) => this.observer.unobserve(section));
       this.observer.disconnect();
       this.tocEl?.removeEventListener("click", this.handleAnchorClick);
+      window.removeEventListener('scroll', this.update);
     }
   }
 

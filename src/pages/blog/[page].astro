@@ -1,21 +1,31 @@
 ---
 import { getCollection } from "astro:content";
-import { blog } from "../consts";
-import MainLayout from "../layouts/MainLayout.astro";
-import PostCard from "../components/PostCard.astro";
-import TagsList from "../components/TagsList.astro"; // 引入标签组件
+import type { GetStaticPathsOptions, Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+import { blog } from "../../consts";
+import MainLayout from "../../layouts/MainLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import TagsList from "../../components/TagsList.astro"; // 引入标签组件
 
-const allPosts = await getCollection("posts");
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const allPosts = await getCollection("posts");
 
-const sortedPosts = allPosts.sort(
-  (a, b) => b.data.published.getTime() - a.data.published.getTime()
-);
+  const sortedPosts = allPosts.sort(
+    (a, b) => b.data.published.getTime() - a.data.published.getTime()
+  );
 
-// 只获取第一页的文章
-const firstPagePosts = sortedPosts.slice(0, blog.postsPerPage);
+  return paginate(sortedPosts, { pageSize: blog.postsPerPage });
+}
 
-// 计算总页数
-const totalPages = Math.ceil(sortedPosts.length / blog.postsPerPage);
+interface Props {
+  page: Page<CollectionEntry<"posts">>;
+}
+
+const { page } = Astro.props;
+const pathname = new URL(Astro.request.url).pathname.split("/");
+const currentPage = pathname.length > 2 ? pathname[pathname.length - 1] : "";
+const activeClass =
+  "bg-purple-700 text-white border-purple-700 text-white opacity-100";
 ---
 
 <MainLayout>
@@ -23,7 +33,6 @@ const totalPages = Math.ceil(sortedPosts.length / blog.postsPerPage);
     <div class="w-full mb-4">
       <TagsList />
     </div>
-    <!-- 搜索框 - 修改为全宽 -->
     <div class="search-container w-full">
       <input 
         type="text" 
@@ -36,7 +45,7 @@ const totalPages = Math.ceil(sortedPosts.length / blog.postsPerPage);
 
   <ul id="postsContainer">
     {
-      firstPagePosts.map((post) => (
+      page.data.map((post) => (
         <PostCard
           title={post.data.title}
           date={post.data.published.toLocaleDateString("default").slice(0, 10)}
@@ -46,35 +55,51 @@ const totalPages = Math.ceil(sortedPosts.length / blog.postsPerPage);
       ))
     }
   </ul>
-
-  <!-- 无结果时显示 -->
+  
   <div id="noResults" class="hidden text-center py-6 text-gray-500 dark:text-gray-400">
     No posts found matching your search.
   </div>
 
-  <!-- 添加美化后的分页控件 -->
-  {totalPages > 1 && (
-    <div class="flex justify-center mt-10">
-      <div class="inline-flex items-center rounded-md overflow-hidden shadow-sm">
-        {/* 页码按钮组 */}
-        {[...Array(totalPages)].map((_, i) => (
+  <!-- 美化分页控件 -->
+  <div class="flex justify-center mt-10">
+    <div class="inline-flex items-center rounded-md overflow-hidden shadow-sm">
+      <!-- 上一页按钮 -->
+      {
+        page.url.prev ? (
+          <a
+            href={page.url.prev}
+            class="relative inline-flex items-center px-4 py-2 text-sm font-medium bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 group transition-colors"
+          >
+            <svg class="w-4 h-4 mr-1.5 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            <span>Previous</span>
+          </a>
+        ) : null
+      }
+      
+      <!-- 页码 -->
+      {
+        [...Array(page.lastPage)].map((_, i) => (
           <a
             href={i === 0 ? "/blog" : `/blog/${i + 1}`}
-            class={`relative inline-flex items-center px-4 py-2 text-sm font-medium transition-colors 
-              ${i === 0 
-                ? "bg-blue-600 text-white hover:bg-blue-700" 
+            class={`relative inline-flex items-center px-4 py-2 text-sm font-medium transition-colors ${
+              (i === 0 && currentPage === "") || currentPage === (i + 1).toString()
+                ? "bg-blue-600 text-white hover:bg-blue-700"
                 : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 border-l border-gray-200 dark:border-gray-700"
-              }`}
-            aria-current={i === 0 ? "page" : undefined}
+            }`}
+            aria-current={(i === 0 && currentPage === "") || currentPage === (i + 1).toString() ? "page" : undefined}
           >
             {i + 1}
           </a>
-        ))}
-        
-        {/* 下一页按钮 */}
-        {totalPages > 1 && (
+        ))
+      }
+      
+      <!-- 下一页按钮 -->
+      {
+        page.url.next ? (
           <a
-            href="/blog/2"
+            href={page.url.next}
             class="relative inline-flex items-center px-4 py-2 text-sm font-medium bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-l border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 group transition-colors"
           >
             <span>Next</span>
@@ -82,27 +107,24 @@ const totalPages = Math.ceil(sortedPosts.length / blog.postsPerPage);
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
           </a>
-        )}
-      </div>
+        ) : null
+      }
     </div>
-  )}
+  </div>
 </MainLayout>
 
 <script>
-  // 等待DOM加载完成
   document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInput');
     const postsContainer = document.getElementById('postsContainer');
     const noResults = document.getElementById('noResults');
     const allPostItems = Array.from(postsContainer.children);
 
-    // 处理搜索功能
     searchInput.addEventListener('input', () => {
       const searchTerm = searchInput.value.toLowerCase().trim();
       let hasResults = false;
 
       allPostItems.forEach(post => {
-        // 修改从h3到h2
         const title = post.querySelector('h2').textContent.toLowerCase();
         const matches = title.includes(searchTerm);
         
@@ -113,7 +135,6 @@ const totalPages = Math.ceil(sortedPosts.length / blog.postsPerPage);
         }
       });
 
-      // 显示或隐藏无结果消息
       noResults.classList.toggle('hidden', hasResults);
     });
   });

@@ -1,26 +1,58 @@
 ---
 import BasicLayout from "./BasicLayout.astro";
 import Toc from "src/components//Toc.astro";
-import BackToTop from "../components/BackToTop.astro";
 
 const { headings = [] } = Astro.props;
 ---
 
 <BasicLayout>
-  <main class="relative max-w-[1200px] mx-auto px-2">
-    <div class="flex relative gap-6 py-6">
-      <!-- 左侧TOC -->
-      <aside class="hidden lg:block sticky top-20 w-56 h-fit">
-        <h2 class="text-lg font-bold mb-3 text-gray-800">Contents</h2>
-        <Toc headings={headings} />
-      </aside>
+  <main class="relative max-w-[1200px] mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+    <div class="flex relative gap-3 py-4 sm:py-6 md:py-8">
 
-      <!-- 主要内容 -->
-      <article class="flex-1 min-w-0 ">
+      <article class="flex-1 min-w-0">
         <slot />
       </article>
-
-      <BackToTop />
+      
+      <aside class="hidden lg:block w-48 sticky top-24 h-fit" id="toc-sidebar">
+        <div>
+          <div class="mb-1">
+            <h2 class="text-base font-bold text-gray-800 dark:text-gray-200">Contents</h2>
+          </div>
+          <div class="toc-container max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+            <Toc headings={headings} />
+          </div>
+        </div>
+      </aside>
+      
     </div>
   </main>
 </BasicLayout>
+
+<style>
+  /* Scrollbar styles */
+  :global(.scrollbar-thin)::-webkit-scrollbar {
+    width: 2px;
+  }
+
+  :global(.scrollbar-thumb-gray-300)::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 2px;
+  }
+
+  :global(.dark .scrollbar-thumb-gray-600)::-webkit-scrollbar-thumb {
+    background: #4b5563;
+  }
+
+  /* Animation transition effects */
+  :global(.toc-container) {
+    scroll-behavior: smooth;
+    @apply transition-all duration-200;
+  }
+  
+  /* Mobile-specific styles */
+  @media (max-width: 640px) {
+    article {
+      padding: 0 1%; /* Minimal left/right padding, only 1% of screen width */
+    }
+  }
+</style>

@@ -2,70 +2,94 @@
 
 ---
 
-<!-- There can't be a filter on parent element, or it will break `fixed` -->
-<div class="back-to-top-wrapper hidden lg:block">
-  <div
-    id="back-to-top-btn"
-    class="back-to-top-btn hide flex items-center rounded-2xl overflow-hidden transition"
-    onclick="backToTop()"
+<div id="back-to-top-container" class="back-to-top-fixed-container">
+  <button 
+    id="back-to-top" 
+    class="p-3 rounded-full bg-blue-500 text-white shadow-lg transform scale-0 transition-all duration-300 hover:bg-blue-600 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700"
+    aria-label="Back to top"
   >
-    <button aria-label="Back to Top" class="btn-card">
-      <div class="arrow-up"></div>
-    </button>
-  </div>
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      class="h-6 w-6" 
+      fill="none" 
+      viewBox="0 0 24 24" 
+      stroke="currentColor"
+    >
+      <path 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
+        d="M5 10l7-7m0 0l7 7m-7-7v18"
+      />
+    </svg>
+  </button>
 </div>
 
-<style lang="stylus">
-.back-to-top-wrapper {
-    width: 3.75rem;
-    height: 3.75rem;
-    position: absolute;
-    right: 0;
-    top: 0;
-    pointer-events: none;
-}
-
-.back-to-top-btn {
-    color: var(--primary);
-    border: none;
-    position: fixed;
-    bottom: 4rem;
-    opacity: 1;
-    cursor: pointer;
-    transform: translateX(5rem);
+<style>
+  /* Use !important to ensure styles are not overridden */
+  .back-to-top-fixed-container {
+    position: fixed !important;
+    bottom: 2rem !important;
+    right: 2rem !important;
+    z-index: 9999 !important; /* Very high z-index to ensure it's on top */
+    pointer-events: none; /* Container itself doesn't receive click events */
+  }
+  
+  /* Button needs to receive click events */
+  #back-to-top {
     pointer-events: auto;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+  }
+  
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+  }
 
-.btn-card {
-    height: 3.75rem;
-    width: 3.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+  #back-to-top:hover {
+    animation: pulse 1.5s infinite;
+  }
 
-.btn-card:hover {
-    background: rgba(0,0,0,0.05);
-}
-
-.arrow-up {
-    width: 20px;
-    height: 20px;
-    border-left: 3px solid currentColor;
-    border-top: 3px solid currentColor;
-    transform: rotate(45deg);
-    margin-top: 6px;
-}
+  .dark #back-to-top:hover {
+    animation: pulse 1.5s infinite;
+  }
 </style>
 
-<script is:raw is:inline>
-  function backToTop() {
-    window.scroll({ top: 0, behavior: "smooth" });
-  }
+<script>
+  // Use an immediately invoked function expression to avoid global variable pollution
+  (function() {
+    document.addEventListener('DOMContentLoaded', () => {
+      const backToTopButton = document.getElementById('back-to-top');
+      if(!backToTopButton) return;
+      
+      // Check scroll position
+      function checkScroll() {
+        if (window.scrollY > 300) {
+          backToTopButton.classList.replace('scale-0', 'scale-100');
+        } else {
+          backToTopButton.classList.replace('scale-100', 'scale-0');
+        }
+      }
+      
+      // Initial check
+      checkScroll();
+      
+      // Use passive: true to improve scroll performance
+      window.addEventListener('scroll', () => {
+        // Use requestAnimationFrame to prevent too many repaints
+        window.requestAnimationFrame(checkScroll);
+      }, { passive: true });
+      
+      // Click the button to return to top
+      backToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+      
+      // Ensure component is initialized only once
+      console.log('BackToTop component initialized');
+    });
+  })();
 </script>

@@ -2,48 +2,542 @@ html {
   scroll-behavior: smooth;
   background-color: #ffffff;
   color: #333333;
+  font-size: 16px;
+  /* Add uniform transition time */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 15px; /* Slightly reduce base font size on mobile */
+  }
+}
+
+html.dark {
+  background-color: #1a202c;
+  color: #e2e8f0;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  line-height: 1.3;
-  max-width: 800px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 5px; /* Smaller default padding */
+  color: #4a5568;
+  background-color: #f8fafc;
+  /* Match the transition effect with html */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* Add global variables at the top for all theme-related transition effects */
+:root {
+  --theme-transition: 0.2s ease-in-out;
+}
+
+/* Add global theme transition rules */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-duration: var(--theme-transition);
+  transition-timing-function: ease-in-out;
+}
+
+/* Disable transition effects for specific elements to avoid unnecessary transitions */
+.no-transition,
+.no-transition *,
+input[type="checkbox"],
+input[type="radio"] {
+  transition: none !important;
+}
+
+@media (min-width: 640px) {
+  body {
+    padding: 20px;
+  }
+}
+
+.dark body, body.dark-mode {
+  background-color: #1a202c;
+  color: #e2e8f0;
 }
 
 h1 {
-  @apply text-2xl font-bold mt-6 mb-3;
-  color: #2c3e50;
+  @apply text-2xl sm:text-3xl font-bold mt-5 sm:mt-8 mb-2 sm:mb-4;
+  color: #1a202c;
+  letter-spacing: -0.025em;
 }
 
 h2 {
-  @apply text-xl font-bold mt-5 mb-2;
-  color: #34495e;
+  @apply text-xl sm:text-2xl font-bold mt-4 sm:mt-6 mb-2 sm:mb-3;
+  color: #2d3748;
+  letter-spacing: -0.025em;
 }
 
 h3 {
-  @apply text-lg font-bold mt-4 mb-2;
-  color: #34495e;
+  @apply text-lg sm:text-xl font-bold mt-3 sm:mt-5 mb-2;
+  color: #4a5568;
+  letter-spacing: -0.015em;
 }
 
 ul {
-  @apply list-disc list-inside ml-6 space-y-2;
+  @apply list-disc ml-4 pl-0 space-y-1 my-2 sm:ml-6 sm:space-y-2 sm:my-4;
+  list-style-position: outside;
+}
+
+ul li {
+  @apply text-sm sm:text-base mb-1 pl-1;
+  line-height: 1.3;
+}
+
+@media (min-width: 640px) {
+  ul li {
+    line-height: 1.5;
+  }
+}
+
+ol {
+  @apply ml-4 pl-0 space-y-1 my-2 sm:ml-6 sm:space-y-2 sm:my-4;
+  list-style-position: outside;
+  counter-reset: item;
+}
+
+ol li {
+  @apply text-sm sm:text-base mb-1 pl-1;
+  line-height: 1.3;
+  display: block;
+}
+
+ol li:before {
+  content: counters(item, ".") ". ";
+  counter-increment: item;
+}
+
+@media (min-width: 640px) {
+  ol li {
+    line-height: 1.5;
+  }
 }
 
 a {
-  color: #3498db;
+  color: #4299e1;
   text-decoration: none;
-  @apply hover:underline;
+  transition: all 0.2s ease;
+  @apply hover:text-blue-700 hover:underline;
 }
 
 p {
-  @apply mb-3;
+  @apply mb-2 sm:mb-4;
+  line-height: 1.4;
+}
+
+@media (min-width: 640px) {
+  p {
+    line-height: 1.6;
+  }
 }
 
 .container {
-  background-color: #f9f9f9;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 30px;
+  }
+}
+
+.container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Add card style */
+.card {
+  background-color: white;
   border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .card {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode support */
+.dark {
+  background-color: #1a202c;
+  color: #e2e8f0;
+}
+
+.dark h1 {
+  color: #f7fafc;
+}
+
+.dark h2, .dark h3 {
+  color: #e2e8f0;
+}
+
+.dark .container, .dark .card {
+  background-color: #2d3748;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+}
+
+.dark a {
+  color: #63b3ed;
+}
+
+/* Animation effects */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Code block beautification */
+pre, code {
+  @apply bg-gray-100 dark:bg-gray-800 rounded p-1;
+  font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', monospace;
+}
+
+pre {
+  @apply p-4 my-4 overflow-x-auto;
+}
+
+/* Quote styles */
+blockquote {
+  @apply border-l-4 border-blue-500 pl-4 italic my-4 py-2 bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 rounded-r;
+}
+
+/* Table styles */
+table {
+  @apply w-full border-collapse my-4;
+}
+
+th, td {
+  @apply border border-gray-300 dark:border-gray-700 p-2;
+}
+
+th {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Academic content optimization styles */
+.blog-post .katex-display {
+  padding: 1rem 0.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  background-color: rgba(247, 250, 252, 0.8);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+html.dark .blog-post .katex-display {
+  background-color: rgba(26, 32, 44, 0.8);
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1);
+}
+
+/* Inline math formula optimization */
+.blog-post .katex {
+  font-size: 1.05em;
+}
+
+/* Important theorems, lemmas, etc. emphasis blocks */
+.blog-post .theorem,
+.blog-post .lemma,
+.blog-post .definition,
+.blog-post .remark {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  position: relative;
+}
+
+.blog-post .theorem {
+  background-color: rgba(66, 153, 225, 0.1);
+  border-left: 4px solid #4299e1;
+}
+
+.blog-post .lemma {
+  background-color: rgba(72, 187, 120, 0.1);
+  border-left: 4px solid #48bb78;
+}
+
+.blog-post .definition {
+  background-color: rgba(237, 137, 54, 0.1);
+  border-left: 4px solid #ed8936;
+}
+
+.blog-post .remark {
+  background-color: rgba(160, 174, 192, 0.1);
+  border-left: 4px solid #a0aec0;
+}
+
+html.dark .blog-post .theorem {
+  background-color: rgba(66, 153, 225, 0.15);
+}
+
+html.dark .blog-post .lemma {
+  background-color: rgba(72, 187, 120, 0.15);
+}
+
+html.dark .blog-post .definition {
+  background-color: rgba(237, 137, 54, 0.15);
+}
+
+html.dark .blog-post .remark {
+  background-color: rgba(160, 174, 192, 0.15);
+}
+
+/* Improve line spacing for better readability */
+.blog-post p {
+  line-height: 1.8;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .blog-post p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Improve list item appearance */
+.blog-post ul li,
+.blog-post ol li {
+  margin-bottom: 0.5rem;
+  padding-left: 0.25rem;
+}
+
+@media (max-width: 640px) {
+  .blog-post ul li,
+  .blog-post ol li {
+    margin-bottom: 0.3rem;
+    line-height: 1.4;
+    font-size: 0.95rem;
+  }
+  
+  .blog-post ul,
+  .blog-post ol {
+    margin-left: 1rem;
+  }
+}
+
+/* Optimize table display */
+.blog-post table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.blog-post table th,
+.blog-post table td {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+html.dark .blog-post table th,
+html.dark .blog-post table td {
+  border-color: #2d3748;
+}
+
+.blog-post table th {
+  background-color: #f7fafc;
+  font-weight: 600;
+}
+
+html.dark .blog-post table th {
+  background-color: #2d3748;
+}
+
+/* Optimize paper reference citation style */
+.blog-post .reference {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  padding-left: 2rem;
+  text-indent: -2rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Optimize figure captions */
+.blog-post figure {
+  margin: 2rem 0;
+}
+
+.blog-post figcaption {
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 0.75rem;
+  font-style: italic;
+  color: #718096;
+}
+
+html.dark .blog-post figcaption {
+  color: #a0aec0;
+}
+
+/* Optimize code blocks */
+.blog-post pre {
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  padding: 1rem;
+  overflow-x: auto;
+  background-color: #2d3748;
+  color: #e2e8f0;
+}
+
+html.dark .blog-post pre {
+  background-color: #1a202c;
+  border: 1px solid #4a5568;
+}
+
+.blog-post code:not([class*="language-"]) {
+  font-family: 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+  background-color: rgba(226, 232, 240, 0.5);
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.85em;
+  color: #d53f8c;
+}
+
+html.dark .blog-post code:not([class*="language-"]) {
+  background-color: rgba(45, 55, 72, 0.5);
+  color: #ed64a6;
+}
+
+/* Optimize text below math formulas */
+.blog-post .equation-description {
+  text-align: center;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+  color: #718096;
+}
+
+html.dark .blog-post .equation-description {
+  color: #a0aec0;
+}
+
+/* Add style for paper keywords */
+.blog-post .keyword {
+  font-weight: 600;
+  color: #3182ce;
+}
+
+html.dark .blog-post .keyword {
+  color: #63b3ed;
+}
+
+/* Improve paper section title styles */
+.blog-post h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  color: #2d3748;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .blog-post h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .blog-post h3 {
+    font-size: 1.3rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .blog-post h4 {
+    font-size: 1.1rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.6rem;
+  }
+}
+
+html.dark .blog-post h2 {
+  color: #e2e8f0;
+  border-bottom-color: #4a5568;
+}
+
+.blog-post h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #2d3748;
+}
+
+html.dark .blog-post h3 {
+  color: #e2e8f0;
+}
+
+.blog-post h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #2d3748;
+}
+
+html.dark .blog-post h4 {
+  color: #e2e8f0;
+}
+
+/* Paragraph spacing optimization */
+.blog-post p + p {
+  margin-top: -0.5rem;
+}
+
+/* Table spacing optimization */
+.blog-post * + table,
+.blog-post table + * {
+  margin-top: 1.5rem;
 }

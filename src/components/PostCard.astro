@@ -1,25 +1,106 @@
 ---
 const { title, date, description, url } = Astro.props;
+
+// 为每篇文章选择一个强调色
+const colors = [
+  "border-blue-500",
+  "border-indigo-500",
+  "border-purple-500",
+  "border-pink-500",
+  "border-rose-500",
+  "border-orange-500",
+  "border-amber-500",
+  "border-green-500",
+  "border-teal-500",
+];
+const borderColor = colors[Math.floor(Math.random() * colors.length)];
 ---
 
-<a
-  href={url}
-  class="block bg-white rounded-lg px-3 "
->
-  <h2 class="text-lg font-semibold text-gray-800 hover:text-blue-600 mb-2">
-    {title}
-  </h2>
-  <div class="flex items-center justify-between">
-    <p class="text-sm text-gray-600 mb-0 mr-4 line-clamp-2">{description}</p>
-    <div class="flex items-center text-xs text-gray-500">
-      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-        <path
-          d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm1-6a1 1 0 11-2 0V7a1 1 0 012 0v3z"
-        ></path>
-      </svg>
-      {date}
+<li class="post-card list-none !pl-0 !mb-0">
+  <a href={url} class="group block hover:bg-gray-50/60 dark:hover:bg-gray-800/30 transition-colors rounded-md">
+    <div class="flex">
+      <div class={`w-1 self-stretch ${borderColor} bg-opacity-80 rounded-full mr-3 my-1 transition-all group-hover:bg-opacity-100 group-hover:w-1.5`}></div>
+      <div class="flex-grow min-w-0 py-3">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="!text-base !font-semibold !text-gray-800 dark:!text-white group-hover:!text-blue-600 dark:group-hover:!text-blue-400 !transition-colors !truncate !mt-0 !mb-0">
+            {title}
+          </h2>
+          <span class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap flex-shrink-0 group-hover:text-blue-500 dark:group-hover:text-blue-300">
+            {date}
+          </span>
+        </div>
+        
+        <div class="mt-2.5"></div> <!-- 标题和描述之间的间距 -->
+        
+        <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-1 group-hover:text-gray-700 dark:group-hover:text-gray-200 !mb-0">
+          {description}
+        </p>
+      </div>
     </div>
-  </div>
-</a>
+  </a>
+</li>
 
-<hr class="border-t border-gray-200 my-4" />
+<style>
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* 博客卡片样式 */
+  .post-card {
+    position: relative;
+  }
+  
+  /* 添加更明显的分割线 */
+  .post-card:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+      rgba(0,0,0,0) 0%, 
+      rgba(200,200,200,0.5) 10%, 
+      rgba(200,200,200,0.5) 90%, 
+      rgba(0,0,0,0) 100%
+    );
+  }
+  
+  /* 暗模式下的分割线 */
+  @media (prefers-color-scheme: dark) {
+    .post-card:not(:last-child)::after {
+      background: linear-gradient(90deg, 
+        rgba(0,0,0,0) 0%, 
+        rgba(70,70,70,0.6) 10%, 
+        rgba(70,70,70,0.6) 90%, 
+        rgba(0,0,0,0) 100%
+      );
+    }
+  }
+  
+  /* 强制应用样式，覆盖全局样式 */
+  :global(#posts-list) li {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-left: 0 !important;
+  }
+  
+  :global(#posts-list) li:not(:last-child) {
+    padding-bottom: 0.75rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  :global(#posts-list) h2 {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    font-size: 1rem !important;
+  }
+  
+  :global(#posts-list) p {
+    margin-bottom: 0 !important;
+    line-height: 1.4 !important;
+  }
+</style>

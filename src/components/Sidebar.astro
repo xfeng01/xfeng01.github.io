@@ -2,104 +2,162 @@
 import { site, info } from "../consts";
 ---
 
-<aside
-  class="md:w-[200px] md:fixed h-full bg-white max-md:mt-0 shadow-md rounded-lg md:p-4 max-md:p-2"
->
-  <div class="md:text-center flex items-center md:block">
-    <img
-      class="w-[80px] h-[80px] md:w-[150px] md:h-[150px] rounded-full md:mx-auto shadow-lg border-2 md:border-4 border-gray-200"
-      src={site.avatar}
-      alt={site.author}
-    />
-    <div class="ml-3 md:ml-0 flex-grow">
-      <h2 class="md:mt-4 mb-0 md:mb-1 text-base md:text-xl font-semibold">
-        {site.author}
-        <br class="md:hidden" />
-        <span class="md:hidden text-sm">{site.author_CN}</span>
-        <br class="hidden md:inline" />
-        <span class="hidden md:inline">{site.author_CN}</span>
-      </h2>
-      <p class="text-gray-600 text-xs md:text-sm md:block">
-        {site.description}
-      </p>
-    </div>
-
-    <!-- 移动端显示的社交图标 -->
-    <ul class="flex md:hidden items-center mt-2">
-      {
-        info.social.map((social, index) => (
-          <li
-            class={`mx-2 flex items-center justify-center ${index === 0 ? "pt-2" : ""}`}
-          >
-            <a href={social.link}>
-              <i
-                class={`${social.icon} ${social.color} text-3xl align-middle`}
-              />
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </div>
-
-  <!-- 桌面端显示的联系信息 -->
-  <ul class="hidden md:block mt-6">
-    <li
-      class="hover:bg-gray-100 rounded-md transition duration-300 ease-in-out"
-    >
-      <div class="icon-column text-blue-500">
-        <i class="fas fa-map-marker-alt"></i>
-      </div>
-      <div class="text-column">{info.location.name}</div>
-    </li>
-    {
-      info.social.map((social) => (
-        <li class="hover:bg-gray-100 rounded-md transition duration-300 ease-in-out">
-          <div class={`icon-column ${social.color}`}>
-            <i class={social.icon} />
-          </div>
-          <div class="text-column">
-            <a href={social.link} class="hover:text-blue-600">
-              {social.name}
-            </a>
-          </div>
-        </li>
-      ))
-    }
-  </ul>
+<aside class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-colors duration-300">
+  <!-- Top gradient decoration -->
+  <div class="h-3 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
   
+  <div class="p-4 sm:p-6">
+    <!-- Mobile layout - shown on small screens -->
+    <div class="sm:hidden">
+      <!-- Three-area layout: Avatar | Name+Degree | Icons -->
+      <div class="flex items-center">
+        <!-- Left avatar -->
+        <div class="relative flex-shrink-0 mr-3">
+          <img
+            class="w-20 h-20 rounded-full object-cover border-3 border-white dark:border-gray-700 shadow-md"
+            src={site.avatar}
+            alt={site.author}
+          />
+          <div class="absolute -bottom-1 -right-1 bg-green-500 w-3 h-3 rounded-full border-2 border-white dark:border-gray-700"></div>
+        </div>
+        
+        <!-- Middle name and degree -->
+        <div class="flex flex-col justify-center flex-grow">
+          <h2 class="text-base font-bold text-gray-800 dark:text-white mb-0.5 leading-normal">
+            {site.author}
+          </h2>
+          <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mt-0 mb-0.5 leading-normal">{site.author_CN}</h3>
+          <p class="text-xs text-gray-600 dark:text-gray-400 leading-normal">MSc in ECE</p>
+        </div>
+        
+        <!-- Right social media icons -->
+        <div class="flex space-x-0.5">
+          {
+            info.social.slice(0, 4).map((social) => (
+              <a 
+                href={social.link} 
+                class="social-icon-link flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                title={social.name}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class={`${social.icon} ${social.color} text-3xl`} />
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+    
+    <!-- Desktop layout - hidden on small screens -->
+    <div class="hidden sm:block">
+      <!-- Avatar and basic info -->
+      <div class="flex flex-col items-center text-center mb-6">
+        <div class="relative mb-4 inline-block">
+          <img
+            class="w-28 md:w-40 h-28 md:h-40 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-md"
+            src={site.avatar}
+            alt={site.author}
+          />
+          <div class="absolute -bottom-2 -right-2 bg-green-500 w-4 h-4 md:w-5 md:h-5 rounded-full border-2 border-white dark:border-gray-700"></div>
+        </div>
+        
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white mb-0">
+          {site.author}
+        </h2>
+        <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300 mt-0 mb-2">{site.author_CN}</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">{site.description}</p>
+        
+        <!-- Location info -->
+        <div class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
+          <i class="fas fa-map-marker-alt mr-1"></i>
+          <span>{info.location.name}</span>
+        </div>
+      </div>
+      
+      <!-- Social media links -->
+      <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+        <h4 class="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Contact</h4>
+        <div class="grid grid-cols-4 gap-3">
+          {
+            info.social.map((social) => (
+              <a 
+                href={social.link} 
+                class="social-icon-link flex flex-col items-center h-16 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300 no-underline"
+                title={social.name}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class={`${social.icon} ${social.color} text-xl mb-1 no-underline`} />
+                <div class="w-full flex justify-center items-center">
+                  <span class="text-xs text-gray-600 dark:text-gray-400 hidden md:block hover:underline text-center">
+                    {social.name === "Google Scholar" ? "Scholar" : social.name}
+                  </span>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      
+      <!-- Quick navigation -->
+      <div class="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4">
+        <h4 class="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Navigation</h4>
+        <div class="flex flex-col space-y-2">
+          <a href="/" class="px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center">
+            <i class="fas fa-home mr-2 text-blue-500"></i>
+            <span>Home</span>
+          </a>
+          <a href="/blog" class="px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center">
+            <i class="fas fa-feather-alt mr-2 text-indigo-500"></i>
+            <span>Blog</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </aside>
 
 <style>
-  ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+  :global(.dark) .bg-white {
+    background-color: #1f2937 !important; /* dark:bg-gray-800 */
+    color: #e5e7eb !important; /* dark:text-gray-300 */
   }
-
-  @media (min-width: 768px) {
-    li {
-      display: flex;
-      align-items: center;
-      margin: 10px 0;
-      padding: 8px;
-    }
-    .icon-column {
-      width: 30px;
-      display: flex;
-      justify-content: center;
-    }
-    .text-column {
-      flex-grow: 1;
-    }
+  
+  :global(.dark) .text-gray-800 {
+    color: #f3f4f6 !important; /* dark:text-gray-100 */
   }
-
-  a {
+  
+  :global(.dark) .border-gray-200 {
+    border-color: #374151 !important; /* dark:border-gray-700 */
+  }
+  
+  :global(.dark) .bg-gray-100 {
+    background-color: #374151 !important; /* dark:bg-gray-700 */
+  }
+  
+  /* Disable icon underlines */
+  .social-icon-link {
+    text-decoration: none !important;
+  }
+  
+  .social-icon-link:hover {
+    text-decoration: none !important;
+  }
+  
+  .social-icon-link i {
+    text-decoration: none !important;
+  }
+  
+  .social-icon-link:hover i {
+    text-decoration: none !important;
+  }
+  
+  .social-icon-link span {
     text-decoration: none;
-    color: inherit;
-    transition: color 0.3s ease;
   }
-  a:hover {
-    text-decoration: none;
+  
+  .social-icon-link:hover span {
+    text-decoration: underline;
   }
 </style>

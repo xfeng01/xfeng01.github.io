@@ -23,19 +23,19 @@ const topTags = pinnedTags.filter((tag) => allTags.includes(tag));
 const otherTags = allTags.filter((tag) => !pinnedTags.includes(tag));
 ---
 
-<div class="tags-list bg-white shadow-lg rounded-xl md:p-4 p-2 max-md:mt-2">
-  <ul class="list-none flex flex-wrap justify-center">
+<div class="tags-list bg-white dark:bg-gray-800 shadow-lg rounded-xl p-3 max-md:mt-2">
+  <ul class="list-none flex flex-wrap gap-1.5">
     <li></li>
     {/* 渲染置顶标签 */}
     {
       topTags.map((tag) => (
-        <li class="m-2 md:m-4">
+        <li>
           <a
             href={`/tags/${tag}`}
-            class="text-gray-600 font-semibold py-2 px-3 rounded-full hover:text-gray-900 hover:bg-gray-100 text-sm md:text-base "
+            class="inline-flex items-center text-gray-600 dark:text-gray-300 font-semibold py-1 px-2 rounded-md hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 text-sm md:text-base transition-colors"
           >
             #{tag}
-            <span class="ml-1 text-yellow-500 text-xs">★</span>
+            <span class="ml-1 text-yellow-500 dark:text-yellow-400 text-xs">★</span>
           </a>
         </li>
       ))
@@ -44,10 +44,10 @@ const otherTags = allTags.filter((tag) => !pinnedTags.includes(tag));
     {/* 渲染其他标签 */}
     {
       otherTags.map((tag) => (
-        <li class="m-2 md:m-4">
+        <li>
           <a
             href={`/tags/${tag}`}
-            class="text-gray-600 font-semibold py-2 px-3 rounded-full hover:text-gray-900 hover:bg-gray-100 text-sm md:text-base"
+            class="inline-flex items-center text-gray-600 dark:text-gray-300 font-semibold py-1 px-2 rounded-md hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 text-sm md:text-base transition-colors"
           >
             #{tag}
           </a>
@@ -56,3 +56,17 @@ const otherTags = allTags.filter((tag) => !pinnedTags.includes(tag));
     }
   </ul>
 </div>
+
+<style>
+  /* 确保标签在移动设备上也更紧凑 */
+  @media (max-width: 768px) {
+    .tags-list {
+      padding: 0.5rem;
+    }
+    
+    .tags-list ul {
+      gap: 0.5rem;
+      justify-content: flex-start;
+    }
+  }
+</style>
