@@ -23,9 +23,9 @@ const topTags = pinnedTags.filter((tag) => allTags.includes(tag));
 const otherTags = allTags.filter((tag) => !pinnedTags.includes(tag));
 ---
 
-<div class="tags-list bg-white dark:bg-gray-800 shadow-lg rounded-xl p-3 max-md:mt-2">
-  <ul class="list-none flex flex-wrap gap-1.5">
-    <li></li>
+<div class="tags-list bg-white dark:bg-gray-800 shadow-sm rounded-lg p-2 max-md:mt-2">
+  <!-- 使用 px-0.5 添加少量左内边距来确保对齐 -->
+  <ul class="list-none flex flex-wrap gap-1.5 px-0.5">
     {/* 渲染置顶标签 */}
     {
       topTags.map((tag) => (
@@ -68,5 +68,15 @@ const otherTags = allTags.filter((tag) => !pinnedTags.includes(tag));
       gap: 0.5rem;
       justify-content: flex-start;
     }
+  }
+  
+  /* 确保第一个标签与页面内容对齐 */
+  .tags-list ul {
+    margin: 0;
+    padding-inline-start: 0;
+  }
+  
+  .tags-list li {
+    margin: 0;
   }
 </style>

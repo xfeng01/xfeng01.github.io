@@ -28,8 +28,8 @@ const currentPage = pathname.length > 2 ? pathname[pathname.length - 1] : "";
 
 <MainLayout>
   <div class="px-4 sm:px-6 md:px-0">
-    <div class="flex flex-col justify-between items-start mb-6">
-      <div class="w-full mb-4">
+    <div class="flex flex-col justify-between items-start mb-4">
+      <div class="w-full mb-2">
         <TagsList />
       </div>
       <div class="search-container w-full">
@@ -69,7 +69,7 @@ const currentPage = pathname.length > 2 ? pathname[pathname.length - 1] : "";
           page.url.prev && (
             <a
               href={page.url.prev}
-              class="inline-flex items-center justify-center px-4 py-2 h-10 rounded-md text-sm font-medium text-white bg-gray-800/60 hover:bg-gray-700 transition-colors"
+              class="inline-flex items-center justify-center px-4 py-2 h-10 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             >
               <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -88,7 +88,7 @@ const currentPage = pathname.length > 2 ? pathname[pathname.length - 1] : "";
                 class={`relative inline-flex items-center justify-center w-10 h-10 text-sm font-medium transition-colors ${
                   (i === 0 && currentPage === "") || String(i + 1) === currentPage
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-800/60 text-gray-300 hover:bg-gray-700"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                 }`}
                 aria-current={(i === 0 && currentPage === "") || String(i + 1) === currentPage ? "page" : undefined}
               >
@@ -103,10 +103,10 @@ const currentPage = pathname.length > 2 ? pathname[pathname.length - 1] : "";
           page.url.next && (
             <a
               href={page.url.next}
-              class="inline-flex items-center justify-center px-4 py-2 h-10 rounded-md text-sm font-medium text-white bg-gray-800/60 hover:bg-gray-700 transition-colors"
+              class="inline-flex items-center justify-center px-4 py-2 h-10 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             >
               <span class="mr-1">Next</span>
-              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 24 24">
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
             </a>
