@@ -29,8 +29,8 @@
   /* Use !important to ensure styles are not overridden */
   .back-to-top-fixed-container {
     position: fixed !important;
-    bottom: 2rem !important;
-    right: 2rem !important;
+    bottom: 2rem !important; /* Default for desktop */
+    right: 2rem !important; /* Default for desktop */
     z-index: 9999 !important; /* Very high z-index to ensure it's on top */
     pointer-events: none; /* Container itself doesn't receive click events */
   }
@@ -38,6 +38,19 @@
   /* Button needs to receive click events */
   #back-to-top {
     pointer-events: auto;
+  }
+  
+  /* 移动端调整位置，增加间距 */
+  @media (max-width: 640px) {
+    .back-to-top-fixed-container {
+      bottom: 5rem !important; /* 在移动端离底部更远，避免与其他按钮冲突 */
+      right: 1rem !important; /* 在移动端靠右更近，节省空间 */
+    }
+    
+    #back-to-top {
+      transform: scale(0.85); /* 在移动端稍微缩小按钮大小 */
+      padding: 0.5rem !important; /* 更小的内边距 */
+    }
   }
   
   @keyframes pulse {

@@ -17,10 +17,10 @@ const borderColor = colors[Math.floor(Math.random() * colors.length)];
 ---
 
 <li class="post-card list-none !pl-0 !mb-0">
-  <a href={url} class="group block hover:bg-gray-50/60 dark:hover:bg-gray-800/30 transition-colors rounded-md">
-    <div class="flex">
-      <div class={`w-1 self-stretch ${borderColor} bg-opacity-80 rounded-full mr-3 my-1 transition-all group-hover:bg-opacity-100 group-hover:w-1.5`}></div>
-      <div class="flex-grow min-w-0 py-3">
+  <a href={url} class="group block hover:bg-gray-50/60 dark:hover:bg-gray-800/30 transition-colors">
+    <div class="flex px-0 py-3">
+      <div class={`w-1 self-stretch ${borderColor} bg-opacity-80 rounded-full mr-2 transition-all group-hover:bg-opacity-100 group-hover:w-1.5`}></div>
+      <div class="flex-grow min-w-0">
         <div class="flex items-center justify-between gap-2">
           <h2 class="!text-base !font-semibold !text-gray-800 dark:!text-white group-hover:!text-blue-600 dark:group-hover:!text-blue-400 !transition-colors !truncate !mt-0 !mb-0">
             {title}
@@ -30,7 +30,7 @@ const borderColor = colors[Math.floor(Math.random() * colors.length)];
           </span>
         </div>
         
-        <div class="mt-2.5"></div> <!-- 标题和描述之间的间距 -->
+        <div class="mt-2"></div> <!-- 标题和描述之间的间距 -->
         
         <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-1 group-hover:text-gray-700 dark:group-hover:text-gray-200 !mb-0">
           {description}

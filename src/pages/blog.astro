@@ -19,73 +19,82 @@ const totalPages = Math.ceil(sortedPosts.length / blog.postsPerPage);
 ---
 
 <MainLayout>
-  <div class="flex flex-col justify-between items-start mb-6">
-    <div class="w-full mb-4">
-      <TagsList />
-    </div>
-    <!-- 搜索框 - 修改为全宽 -->
-    <div class="search-container w-full">
-      <input 
-        type="text" 
-        id="searchInput"
-        placeholder="Search..." 
-        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-  </div>
-
-  <ul id="postsContainer">
-    {
-      firstPagePosts.map((post) => (
-        <PostCard
-          title={post.data.title}
-          date={post.data.published.toLocaleDateString("default").slice(0, 10)}
-          description={post.data.description}
-          url={`/posts/${post.id}/`}
+  <div class="px-4 sm:px-6 md:px-0">
+    <div class="flex flex-col justify-between items-start mb-6">
+      {/* 标签列表 */}
+      <div class="w-full mb-4">
+        <TagsList />
+      </div>
+      
+      {/* 搜索框 */}
+      <div class="search-container w-full">
+        <input 
+          type="text" 
+          id="searchInput"
+          placeholder="Search..." 
+          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-      ))
-    }
-  </ul>
-
-  <!-- 无结果时显示 -->
-  <div id="noResults" class="hidden text-center py-6 text-gray-500 dark:text-gray-400">
-    No posts found matching your search.
-  </div>
-
-  <!-- 添加美化后的分页控件 -->
-  {totalPages > 1 && (
-    <div class="flex justify-center mt-10">
-      <div class="inline-flex items-center rounded-md overflow-hidden shadow-sm">
-        {/* 页码按钮组 */}
-        {[...Array(totalPages)].map((_, i) => (
-          <a
-            href={i === 0 ? "/blog" : `/blog/${i + 1}`}
-            class={`relative inline-flex items-center px-4 py-2 text-sm font-medium transition-colors 
-              ${i === 0 
-                ? "bg-blue-600 text-white hover:bg-blue-700" 
-                : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 border-l border-gray-200 dark:border-gray-700"
-              }`}
-            aria-current={i === 0 ? "page" : undefined}
-          >
-            {i + 1}
-          </a>
-        ))}
-        
-        {/* 下一页按钮 */}
-        {totalPages > 1 && (
-          <a
-            href="/blog/2"
-            class="relative inline-flex items-center px-4 py-2 text-sm font-medium bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-l border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 group transition-colors"
-          >
-            <span>Next</span>
-            <svg class="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </a>
-        )}
       </div>
     </div>
-  )}
+
+    {/* 文章列表 - 移除背景框 */}
+    <div>
+      <ul id="postsContainer" class="p-0 m-0">
+        {
+          firstPagePosts.map((post) => (
+            <PostCard
+              title={post.data.title}
+              date={post.data.published.toLocaleDateString("default").slice(0, 10)}
+              description={post.data.description}
+              url={`/posts/${post.id}/`}
+            />
+          ))
+        }
+      </ul>
+    </div>
+
+    {/* 无结果时显示 */}
+    <div id="noResults" class="hidden text-center py-6 text-gray-500 dark:text-gray-400">
+      No posts found matching your search.
+    </div>
+
+    {/* 添加美化后的分页控件 */}
+    {totalPages > 1 && (
+      <div class="flex justify-center mt-8">
+        <div class="flex items-center gap-4">
+          {/* 页码按钮组，固定在左侧 */}
+          <div class="inline-flex rounded-md overflow-hidden">
+            {[...Array(totalPages)].map((_, i) => (
+              <a
+                href={i === 0 ? "/blog" : `/blog/${i + 1}`}
+                class={`relative inline-flex items-center justify-center w-10 h-10 text-sm font-medium transition-colors 
+                  ${i === 0 
+                    ? "bg-blue-600 text-white" 
+                    : "bg-gray-800/60 text-gray-300 hover:bg-gray-700"
+                  }`}
+                aria-current={i === 0 ? "page" : undefined}
+              >
+                {i + 1}
+              </a>
+            ))}
+          </div>
+          
+          {/* 下一页按钮 */}
+          {totalPages > 1 && (
+            <a
+              href="/blog/2"
+              class="inline-flex items-center justify-center px-4 py-2 h-10 rounded-md text-sm font-medium text-white bg-gray-800/60 hover:bg-gray-700 transition-colors"
+            >
+              <span class="mr-1">Next</span>
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          )}
+        </div>
+      </div>
+    )}
+  </div>
 </MainLayout>
 
 <script>

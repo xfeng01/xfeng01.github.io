@@ -27,86 +27,92 @@ const currentPage = pathname.length > 2 ? pathname[pathname.length - 1] : "";
 ---
 
 <MainLayout>
-  <div class="flex flex-col justify-between items-start mb-6">
-    <div class="w-full mb-4">
-      <TagsList />
-    </div>
-    <div class="search-container w-full">
-      <input 
-        type="text" 
-        id="searchInput"
-        placeholder="Search..." 
-        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-  </div>
-
-  <ul id="postsContainer">
-    {
-      page.data.map((post) => (
-        <PostCard
-          title={post.data.title}
-          date={post.data.published.toLocaleDateString("default").slice(0, 10)}
-          description={post.data.description}
-          url={`/posts/${post.id}/`}
+  <div class="px-4 sm:px-6 md:px-0">
+    <div class="flex flex-col justify-between items-start mb-6">
+      <div class="w-full mb-4">
+        <TagsList />
+      </div>
+      <div class="search-container w-full">
+        <input 
+          type="text" 
+          id="searchInput"
+          placeholder="Search..." 
+          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-      ))
-    }
-  </ul>
-  
-  <div id="noResults" class="hidden text-center py-6 text-gray-500 dark:text-gray-400">
-    No posts found matching your search.
-  </div>
+      </div>
+    </div>
 
-  <!-- 美化分页控件 -->
-  <div class="flex justify-center mt-10">
-    <div class="inline-flex items-center rounded-md overflow-hidden shadow-sm">
-      <!-- 上一页按钮 -->
-      {
-        page.url.prev ? (
-          <a
-            href={page.url.prev}
-            class="relative inline-flex items-center px-4 py-2 text-sm font-medium bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 group transition-colors"
-          >
-            <svg class="w-4 h-4 mr-1.5 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-            <span>Previous</span>
-          </a>
-        ) : null
-      }
-      
-      <!-- 页码 -->
-      {
-        [...Array(page.lastPage)].map((_, i) => (
-          <a
-            href={i === 0 ? "/blog" : `/blog/${i + 1}`}
-            class={`relative inline-flex items-center px-4 py-2 text-sm font-medium transition-colors ${
-              (i === 0 && currentPage === "") || currentPage === (i + 1).toString()
-                ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 border-l border-gray-200 dark:border-gray-700"
-            }`}
-            aria-current={(i === 0 && currentPage === "") || currentPage === (i + 1).toString() ? "page" : undefined}
-          >
-            {i + 1}
-          </a>
-        ))
-      }
-      
-      <!-- 下一页按钮 -->
-      {
-        page.url.next ? (
-          <a
-            href={page.url.next}
-            class="relative inline-flex items-center px-4 py-2 text-sm font-medium bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-l border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 group transition-colors"
-          >
-            <span>Next</span>
-            <svg class="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </a>
-        ) : null
-      }
+    <div>
+      <ul id="postsContainer" class="p-0 m-0">
+        {
+          page.data.map((post) => (
+            <PostCard
+              title={post.data.title}
+              date={post.data.published.toLocaleDateString("default").slice(0, 10)}
+              description={post.data.description}
+              url={`/posts/${post.id}/`}
+            />
+          ))
+        }
+      </ul>
+    </div>
+  
+    <div id="noResults" class="hidden text-center py-6 text-gray-500 dark:text-gray-400">
+      No posts found matching your search.
+    </div>
+
+    <!-- 美化分页控件 -->
+    <div class="flex justify-center mt-8">
+      <div class="flex items-center gap-4">
+        <!-- 上一页按钮 -->
+        {
+          page.url.prev && (
+            <a
+              href={page.url.prev}
+              class="inline-flex items-center justify-center px-4 py-2 h-10 rounded-md text-sm font-medium text-white bg-gray-800/60 hover:bg-gray-700 transition-colors"
+            >
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+              <span class="ml-1">Previous</span>
+            </a>
+          )
+        }
+        
+        <!-- 页码按钮组 -->
+        <div class="inline-flex rounded-md overflow-hidden">
+          {
+            [...Array(page.lastPage)].map((_, i) => (
+              <a
+                href={i === 0 ? "/blog" : `/blog/${i + 1}`}
+                class={`relative inline-flex items-center justify-center w-10 h-10 text-sm font-medium transition-colors ${
+                  (i === 0 && currentPage === "") || String(i + 1) === currentPage
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-800/60 text-gray-300 hover:bg-gray-700"
+                }`}
+                aria-current={(i === 0 && currentPage === "") || String(i + 1) === currentPage ? "page" : undefined}
+              >
+                {i + 1}
+              </a>
+            ))
+          }
+        </div>
+        
+        <!-- 下一页按钮 -->
+        {
+          page.url.next && (
+            <a
+              href={page.url.next}
+              class="inline-flex items-center justify-center px-4 py-2 h-10 rounded-md text-sm font-medium text-white bg-gray-800/60 hover:bg-gray-700 transition-colors"
+            >
+              <span class="mr-1">Next</span>
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          )
+        }
+      </div>
     </div>
   </div>
 </MainLayout>

@@ -149,7 +149,8 @@ if (currentIndex !== -1) {
 
     <!-- Improved article bottom navigation -->
     <div class="mt-10 pt-6 border-t border-gray-200 dark:border-gray-700">
-      <nav class="flex justify-between items-stretch gap-4">
+      <!-- 桌面版导航 - 三列布局 -->
+      <nav class="hidden sm:flex justify-between items-stretch gap-4">
         <!-- Previous article button -->
         <div class="flex-1 min-w-0">
           {prevPost ? (
@@ -191,6 +192,51 @@ if (currentIndex !== -1) {
           ) : (
             <div class="h-full p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 opacity-50 flex items-center justify-center">
               <span class="text-gray-400 dark:text-gray-500">No newer posts</span>
+            </div>
+          )}
+        </div>
+      </nav>
+      
+      <!-- 移动端导航 - 堆叠布局 -->
+      <nav class="sm:hidden flex flex-col space-y-3">
+        <!-- Back to blog button - 放在最上面，最常用 -->
+        <a href="/blog" class="flex items-center justify-center py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+          <span class="text-gray-800 dark:text-gray-200 font-medium">Back to Blog</span>
+        </a>
+        
+        <!-- Previous & Next 按钮并排显示 -->
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Previous article button -->
+          {prevPost ? (
+            <a href={`/posts/${prevPost.id}`} class="flex flex-col py-2 px-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+              <div class="flex items-center text-blue-600 dark:text-blue-400 text-xs font-medium mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                <span>Previous</span>
+              </div>
+              <span class="text-gray-800 dark:text-gray-200 text-xs font-medium line-clamp-1">{prevPost.data.title}</span>
+            </a>
+          ) : (
+            <div class="flex items-center justify-center py-2 px-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 opacity-50">
+              <span class="text-gray-400 dark:text-gray-500 text-xs">No earlier posts</span>
+            </div>
+          )}
+          
+          <!-- Next article button -->
+          {nextPost ? (
+            <a href={`/posts/${nextPost.id}`} class="flex flex-col py-2 px-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors text-right">
+              <div class="flex items-center justify-end text-blue-600 dark:text-blue-400 text-xs font-medium mb-1">
+                <span>Next</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <span class="text-gray-800 dark:text-gray-200 text-xs font-medium line-clamp-1">{nextPost.data.title}</span>
+            </a>
+          ) : (
+            <div class="flex items-center justify-center py-2 px-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 opacity-50">
+              <span class="text-gray-400 dark:text-gray-500 text-xs">No newer posts</span>
             </div>
           )}
         </div>
