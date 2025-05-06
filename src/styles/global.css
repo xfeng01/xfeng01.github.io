@@ -52,6 +52,37 @@ input[type="radio"] {
   transition: none !important;
 }
 
+/* Code block theme adaptation for light/dark mode
+  Ensures code blocks have different background colors in light and dark themes
+*/
+:root {
+  --code-bg-light: #f5f5f5;
+  --code-bg-dark: #22272e;
+}
+
+/*
+  Force all code blocks (including in .blog-post) to use theme variables for background color
+  Use !important to override Tailwind or other styles
+*/
+pre, code, .astro-code,
+.blog-post pre,
+.blog-post code:not([class*="language-"]) {
+  background: var(--code-bg-light) !important;
+}
+html.dark pre, html.dark code, html.dark .astro-code,
+html.dark .blog-post pre,
+html.dark .blog-post code:not([class*="language-"]) {
+  background: var(--code-bg-dark) !important;
+}
+
+pre, code, .astro-code {
+  background: var(--code-bg-light);
+}
+
+html.dark pre, html.dark code, html.dark .astro-code {
+  background: var(--code-bg-dark);
+}
+
 @media (min-width: 640px) {
   body {
     padding: 20px;
@@ -214,7 +245,8 @@ p {
 
 /* Code block beautification */
 pre, code {
-  @apply bg-gray-100 dark:bg-gray-800 rounded p-1;
+  /* Remove bg-gray-100 and dark:bg-gray-800 from @apply */
+  @apply rounded p-1;
   font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', monospace;
 }
 
