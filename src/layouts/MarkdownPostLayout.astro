@@ -8,7 +8,7 @@ interface Props {
   hideSidebar?: boolean;
   headings?: any[];
 }
-const { frontmatter, hideSidebar = false, headings = [] } = Astro.props;
+const { frontmatter, headings = [] } = Astro.props;
 
 // Get current article slug
 const currentSlug = Astro.url.pathname.split('/').filter(Boolean).pop();
