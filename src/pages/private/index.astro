@@ -1,0 +1,159 @@
+---
+import { getCollection } from "astro:content";
+import { privateArea } from "../../consts";
+import MainLayout from "../../layouts/MainLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import TagsList from "../../components/private/TagsList.astro";
+import PasswordProtection from "../../components/private/PasswordProtection.astro";
+
+const allPrivatePosts = await getCollection("personal");
+const sortedPosts = allPrivatePosts.sort(
+  (a, b) => b.data.published.getTime() - a.data.published.getTime()
+);
+
+const firstPagePosts = sortedPosts.slice(0, privateArea.postsPerPage || 10);
+
+
+const totalPages = Math.ceil(sortedPosts.length / (privateArea.postsPerPage || 10));
+const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags || []))];
+---
+
+<MainLayout>
+  <PasswordProtection>
+    <div class="px-4 sm:px-6 md:px-0">
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Private Notes</h1>
+        <p class="text-gray-600 dark:text-gray-400">Personal research notes and protected content</p>
+      </div>
+
+      <div class="flex flex-col justify-between items-start mb-4">
+        {/* Tag list for filtering */}
+        <div class="w-full mb-2">
+          <TagsList tags={allTags} baseUrl="/private/tags/" />
+        </div>
+        
+        {/* Search box */}
+        <div class="search-container w-full">
+          <input 
+            type="text" 
+            id="searchInput"
+            placeholder="Search private notes..." 
+            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      </div>
+
+      {/* Post list */}
+      <div>
+        <ul id="postsContainer" class="p-0 m-0">
+          {
+            firstPagePosts.map((post) => (
+              <PostCard
+                title={post.data.title}
+                date={post.data.published.toLocaleDateString("default").slice(0, 10)}
+                description={post.data.description}
+                url={`/private/${post.id}/`}
+                tags={post.data.tags}
+              />
+            ))
+          }
+        </ul>
+      </div>
+
+      {/* No results message */}
+      <div id="noResults" class="hidden text-center py-6 text-gray-500 dark:text-gray-400">
+        No private notes found matching your search.
+      </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div class="flex justify-center mt-8">
+          <div class="flex items-center gap-4">
+            {/* Page number buttons */}
+            <div class="inline-flex rounded-md overflow-hidden">
+              {[...Array(totalPages)].map((_, i) => (
+                <a
+                  href={i === 0 ? "/private" : `/private/page/${i + 1}`}
+                  class={`relative inline-flex items-center justify-center w-10 h-10 text-sm font-medium transition-colors 
+                    ${i === 0 
+                      ? "bg-blue-600 text-white" 
+                      : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                    }`}
+                  aria-current={i === 0 ? "page" : undefined}
+                >
+                  {i + 1}
+                </a>
+              ))}
+            </div>
+            
+            {/* Next page button */}
+            {totalPages > 1 && (
+              <a
+                href="/private/page/2"
+                class="inline-flex items-center justify-center px-4 py-2 h-10 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              >
+                <span class="mr-1">Next</span>
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </a>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  </PasswordProtection>
+</MainLayout>
+
+<script>
+  // Initialize search functionality when DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const postsContainer = document.getElementById('postsContainer');
+    const noResults = document.getElementById('noResults');
+    
+    // Add null checks
+    if (!searchInput || !postsContainer || !noResults) return;
+    
+    const allPostItems = Array.from(postsContainer.children);
+
+    // Handle search functionality
+    searchInput.addEventListener('input', () => {
+      const searchTerm = (searchInput as HTMLInputElement).value.toLowerCase().trim();
+      let hasResults = false;
+
+      allPostItems.forEach(post => {
+        // Check for title element
+        const titleElement = post.querySelector('h2');
+        if (!titleElement) return;
+        
+        const title = titleElement.textContent?.toLowerCase() || '';
+        
+        // Check description as well
+        const descriptionElement = post.querySelector('.post-description');
+        const description = descriptionElement?.textContent?.toLowerCase() || '';
+        
+        // Check tags if they exist
+        const tagElements = post.querySelectorAll('.post-tag');
+        const tags = Array.from(tagElements).map(tag => tag.textContent?.toLowerCase() || '');
+        
+        // Match on title, description or tags
+        const matchesTitle = title.includes(searchTerm);
+        const matchesDesc = description.includes(searchTerm);
+        const matchesTags = tags.some(tag => tag.includes(searchTerm));
+        
+        const matches = matchesTitle || matchesDesc || matchesTags;
+        
+        post.classList.toggle('hidden', !matches);
+        
+        if (matches) {
+          hasResults = true;
+        }
+      });
+
+      noResults.classList.toggle('hidden', hasResults);
+    });
+  });
+</script>
+
+

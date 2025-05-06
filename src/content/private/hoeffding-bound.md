@@ -3,7 +3,6 @@ title: Hoeffding Bound
 published: 2025-04-24
 description: A useful equation in reinforcement learning.
 tags:
-  - paper-notes
   - generative-AI
 draft: false 
 ---

@@ -1,0 +1,82 @@
+---
+import { getCollection } from "astro:content";
+
+// Get all posts
+const allPosts = await getCollection("personal");
+const tagsSet = new Set<string>();
+
+// Collect all tags
+allPosts.forEach((post) => {
+  post.data.tags.forEach((tag) => {
+    tagsSet.add(tag);
+  });
+});
+
+// Convert Set to array and sort (optional)
+const allTags = Array.from(tagsSet).sort((a, b) => a.localeCompare(b));
+
+// Define pinned tags list
+const pinnedTags = [""];
+
+// Separate pinned tags and other tags
+const topTags = pinnedTags.filter((tag) => allTags.includes(tag));
+const otherTags = allTags.filter((tag) => !pinnedTags.includes(tag));
+---
+
+<div class="tags-list bg-white dark:bg-gray-800 shadow-sm rounded-lg p-2 max-md:mt-2">
+  <!-- Use px-0.5 to add a small left padding to ensure alignment -->
+  <ul class="list-none flex flex-wrap gap-1.5 px-0.5">
+    {/* Render pinned tags */}
+    {
+      topTags.map((tag) => (
+        <li>
+          <a
+            href={`/private/tags/${tag}`}
+            class="inline-flex items-center text-gray-600 dark:text-gray-300 font-semibold py-1 px-2 rounded-md hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 text-sm md:text-base transition-colors"
+          >
+            #{tag}
+            <span class="ml-1 text-yellow-500 dark:text-yellow-400 text-xs">★</span>
+          </a>
+        </li>
+      ))
+    }
+
+    {/* Render other tags */}
+    {
+      otherTags.map((tag) => (
+        <li>
+          <a
+            href={`/private/tags/${tag}`}
+            class="inline-flex items-center text-gray-600 dark:text-gray-300 font-semibold py-1 px-2 rounded-md hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 text-sm md:text-base transition-colors"
+          >
+            #{tag}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  /* Ensure tags are more compact on mobile devices */
+  @media (max-width: 768px) {
+    .tags-list {
+      padding: 0.5rem;
+    }
+    
+    .tags-list ul {
+      gap: 0.5rem;
+      justify-content: flex-start;
+    }
+  }
+  
+  /* Ensure the first tag aligns with the page content */
+  .tags-list ul {
+    margin: 0;
+    padding-inline-start: 0;
+  }
+  
+  .tags-list li {
+    margin: 0;
+  }
+</style>
