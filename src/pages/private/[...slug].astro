@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import PrivateLayout from "../../layouts/PrivateLayout.astro";
+import { render } from "astro:content";
+
+export async function getStaticPaths() {
+  const privateEntries = await getCollection("personal");
+  return privateEntries.map(entry => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+
+<PrivateLayout frontmatter={entry.data} headings={headings}>
+  <Content />
+</PrivateLayout>

@@ -51,3 +51,10 @@ export const info = {
     },
   ],
 };
+
+// Private area configuration
+export const privateArea = {
+  // SHA-256 hash of the password for private content
+  // (hash of "yuanyuan")
+  passwordHash: "f760b4ba1f2f85061cc5011e4fe88f95dfeb7d19f1a9eec9d3516c0e77a5aa66",
+};
