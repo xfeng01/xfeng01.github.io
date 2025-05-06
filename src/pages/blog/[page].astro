@@ -5,7 +5,7 @@ import type { CollectionEntry } from "astro:content";
 import { blog } from "../../consts";
 import MainLayout from "../../layouts/MainLayout.astro";
 import PostCard from "../../components/PostCard.astro";
-import TagsList from "../../components/TagsList.astro"; // 引入标签组件
+import TagsList from "../../components/TagsList.astro"; 
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const allPosts = await getCollection("posts");
@@ -61,10 +61,8 @@ const currentPage = pathname.length > 2 ? pathname[pathname.length - 1] : "";
       No posts found matching your search.
     </div>
 
-    <!-- 美化分页控件 -->
     <div class="flex justify-center mt-8">
       <div class="flex items-center gap-4">
-        <!-- 上一页按钮 -->
         {
           page.url.prev && (
             <a
@@ -79,7 +77,6 @@ const currentPage = pathname.length > 2 ? pathname[pathname.length - 1] : "";
           )
         }
         
-        <!-- 页码按钮组 -->
         <div class="inline-flex rounded-md overflow-hidden">
           {
             [...Array(page.lastPage)].map((_, i) => (
@@ -98,7 +95,6 @@ const currentPage = pathname.length > 2 ? pathname[pathname.length - 1] : "";
           }
         </div>
         
-        <!-- 下一页按钮 -->
         {
           page.url.next && (
             <a
@@ -123,7 +119,6 @@ const currentPage = pathname.length > 2 ? pathname[pathname.length - 1] : "";
     const postsContainer = document.getElementById('postsContainer');
     const noResults = document.getElementById('noResults');
     
-    // 添加空值检查
     if (!searchInput || !postsContainer || !noResults) return;
     
     const allPostItems = Array.from(postsContainer.children);
@@ -133,7 +128,6 @@ const currentPage = pathname.length > 2 ? pathname[pathname.length - 1] : "";
       let hasResults = false;
 
       allPostItems.forEach(post => {
-        // 添加空值检查
         const titleElement = post.querySelector('h2');
         if (!titleElement) return;
         
