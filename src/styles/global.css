@@ -20,5 +20,5 @@ ul {
   @apply list-disc pl-6 space-y-2 mb-4;
 }
 a {
-  @apply underline text-blue-600 hover:text-blue-800;
+  @apply text-blue-500 hover:underline;
 }
