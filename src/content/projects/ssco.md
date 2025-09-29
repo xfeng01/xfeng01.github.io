@@ -3,6 +3,7 @@ title: "Sequential stochastic combinatorial optimization using hierarchal reinfo
 authors: ["Xinsong Feng", "Zihan Yu", "Yanhai Xiong", "Haipeng Chen"]
 pub: "ICLR 2025"
 image: "/ssco.svg"
+date: 2025-02-08
 link: "https://arxiv.org/abs/2502.05537"
 ---
 

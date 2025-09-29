@@ -3,6 +3,7 @@ title: "Offline Reinforcement Learning with Generative Trajectory Policies"
 authors: ["Xinsong Feng", "Leshu Tang", "Chenan Wang", "Haipeng Chen"]
 pub: "Submitted to ICLR 2026"
 image: "/gtp.svg"
+date: 2025-09-24
 # link: "https://arxiv.org/abs/2502.05537"
 ---
 

@@ -2,12 +2,22 @@ import { defineCollection, z } from 'astro:content';
 
 const aboutCollection = defineCollection({
   type: 'content',
+  schema: z.object({}),
+});
+
+const projectsCollection = defineCollection({
+  type: 'content',
   schema: z.object({
-    // You can define frontmatter properties here if needed
-    // For example: title: z.string()
+    title: z.string(),
+    authors: z.array(z.string()),
+    pub: z.string(),
+    date: z.date(),
+    image: z.string().optional(),
+    link: z.string().optional(),
   }),
 });
 
 export const collections = {
   'about': aboutCollection,
+  'projects': projectsCollection,
 };
