@@ -1,6 +1,35 @@
 ---
 import "../styles/global.css";
 const { title = "Xinsong Feng" } = Astro.props;
+
+export const info = {
+  social: [
+    {
+      icon: "fas fa-envelope",
+      color: "text-green-500",
+      name: "Email",
+      link: "mailto:xsfeng@ucla.edu",
+    },
+    {
+      icon: "fas fa-graduation-cap",
+      color: "text-red-500",
+      name: "Google Scholar",
+      link: "https://scholar.google.com/citations?hl=en&user=664D7CoAAAAJ",
+    },
+    {
+      icon: "fab fa-github",
+      color: "text-gray-700",
+      name: "GitHub",
+      link: "https://github.com/xfeng01",
+    },
+    {
+      icon: "fas fa-file-contract",
+      color: "text-blue-500",
+      name: "Resume",
+      link: "/CV.pdf",
+    },
+  ],
+};
 ---
 <html lang="en">
   <head>
@@ -14,7 +43,32 @@ const { title = "Xinsong Feng" } = Astro.props;
   <body class="bg-white font-sans leading-relaxed text-gray-900">
 
     <main class="max-w-7xl mx-auto py-12 min-h-screen">
-      <slot />
+      <h1>Xinsong Feng (冯欣淞)</h1>
+      <div class="mt-8">
+        <div class="float-none md:float-right ml-0 md:ml-8 mb-4 w-full md:w-1/4">
+          <img src="/xsfeng.jpg" alt="Xinsong Feng" class="rounded-lg shadow-md w-full">
+          <div class="mt-4">
+            <h2 class="font-bold text-lg text-gray-800 mb-2">LINKS</h2>
+            <div class="flex space-x-2">
+              {
+                info.social.map((social) => (
+                <a 
+                  href={social.link} 
+                  class="social-icon-link flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-100 no-underline"
+                  title={social.name}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i class={`${social.icon} ${social.color} text-3xl`} />
+                </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+        
+        <slot />
+      </div>
     </main>
 
     <footer class="max-w-7xl mx-auto py-6 text-center text-sm text-gray-500 border-t">
