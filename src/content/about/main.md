@@ -6,5 +6,6 @@ My current research focuses on reinforcement learning (RL), generative AI, and l
 In RL, my interests span theoretical foundations, new algorithmic designs, and applications to complex optimization problems.
 In generative AI, my focus is on ODE-based generative models, where I seek to better understand their underlying theoretical principles and design new algorithms to improve both performance and efficiency.
 For LLMs, I am currently exploring diffusion-based language models and their potential integration with reinforcement learning.
+Previously, I worked on wireless communications, and I remain interested in exploring opportunities to apply AI methods to this domain.
 
 Feel free to contact me if you are interested in further discussion or potential collaboration.
