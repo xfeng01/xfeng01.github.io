@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* 全局排版（学术主页风格） */
+
 body {
   @apply max-w-4xl mx-auto px-6 py-8 font-sans leading-relaxed text-gray-900;
 }
