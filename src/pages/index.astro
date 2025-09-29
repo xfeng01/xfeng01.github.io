@@ -1,13 +1,61 @@
 ---
 import BasicLayout from '../layouts/BasicLayout.astro';
-import { getEntry } from 'astro:content';
+import { getEntry, getCollection } from 'astro:content';
 
+// Fetch content for the "About" section
 const aboutEntry = await getEntry('about', 'main');
-const { Content } = await aboutEntry.render();
+const { Content: AboutContent } = await aboutEntry.render();
+
+// Fetch all project entries, sorted by some criteria if needed
+const projects = await getCollection('projects');
+console.log('Projects data:', projects);
+const yourName = "Xinsong Feng"; // Define your name to highlight it
 ---
 
 <BasicLayout>
-	<Content />
+	<AboutContent />
+
+	<section class="mt-12">
+		<h2 class="text-2xl font-bold mb-8 text-gray-900">Projects</h2>
+		<div class="space-y-8">
+			{projects.map((project: any) => (
+				<div class="flex flex-col md:flex-row items-start gap-6">
+					{project.data.image && (
+						<div class="w-full md:w-1/4">
+							<img src={project.data.image} alt={`Image for ${project.data.title}`} class="rounded-md border border-gray-200" />
+						</div>
+					)}
+					<div class="w-full md:w-3/4">
+						<h3 class="text-xl font-semibold mb-2">
+							{project.data.link ? (
+								<a href={project.data.link} target="_blank" rel="noopener noreferrer" class="hover:text-blue-700">
+									{project.data.title}
+								</a>
+							) : (
+								project.data.title
+							)}
+						</h3>
+						<p class="text-gray-600 mb-2">
+							{project.data.authors.map((author: any, index: number) => (
+								<span class={author === yourName ? 'font-semibold underline' : ''}>
+									{author}{index < project.data.authors.length - 1 ? ', ' : ''}
+								</span>
+							))}
+						</p>
+						<p class="text-gray-800">
+							{project.data.publicationVenue}.
+							{project.data.award && (
+								<span class="ml-2 font-bold text-red-600">{project.data.award}.</span>
+							)}
+						</p>
+						<div class="text-gray-700 mt-2">
+							{/* Here you can render the markdown content of the publication */}
+						</div>
+					</div>
+				</div>
+			))}
+		</div>
+	</section>
 </BasicLayout>
 
 
