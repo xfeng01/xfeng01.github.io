@@ -7,8 +7,10 @@ import ProjectCard from '../components/ProjectCard.astro';
 const aboutEntry = await getEntry('about', 'main');
 const { Content: AboutContent } = await aboutEntry.render();
 
-// Fetch all project entries
-const projects = await getCollection('projects');
+// Fetch all project entries and sort by date (newest first)
+const projects = (await getCollection('projects')).sort((a, b) => {
+  return b.data.date.getTime() - a.data.date.getTime();
+});
 ---
 
 <BasicLayout>
