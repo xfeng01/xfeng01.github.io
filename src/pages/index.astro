@@ -18,15 +18,10 @@ const projects = (await getCollection('projects')).sort((a, b) => {
 
 	<section class="mt-12">
 		<h2 class="text-2xl font-bold mb-8 text-gray-900">Projects</h2>
-		<div class="space-y-8">
-			{projects.map(async (project) => {
-				const { Content } = await project.render();
-				return (
-					<ProjectCard project={project}>
-						<Content />
-					</ProjectCard>
-				)
-			})}
+		<div class="space-y-0">
+			{projects.map((project) => (
+				<ProjectCard project={project} />
+			))}
 		</div>
 	</section>
 </BasicLayout>

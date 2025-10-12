@@ -14,6 +14,9 @@ const projectsCollection = defineCollection({
     date: z.date(),
     image: z.string().optional(),
     link: z.string().optional(),
+    code: z.string().optional(),
+    poster: z.string().optional(),
+    blog: z.string().optional(),
   }),
 });
 
