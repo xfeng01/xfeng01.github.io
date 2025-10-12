@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, image, link, authors, pub, code, poster, blog } = project.data;
+const { title, image, link, authors, pub, description, code, poster, blog } = project.data;
 const yourName = "Xinsong Feng";
 const { Content } = await project.render();
 
@@ -39,6 +39,13 @@ const projectId = `project-${project.slug}`;
     <p class="text-sm text-gray-800 mb-2">
       <span class="italic">{pub}</span>
     </p>
+    
+    <!-- Short Description (always visible) -->
+    {description && (
+      <p class="text-sm text-gray-700 mb-3 leading-relaxed">
+        {description}
+      </p>
+    )}
     
     <!-- Buttons -->
     <div class="flex flex-wrap gap-2 mb-3">
