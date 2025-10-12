@@ -50,7 +50,7 @@ const projectId = `project-${project.slug}`;
     <!-- Buttons -->
     <div class="flex flex-wrap gap-2 mb-3">
       <button 
-        class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+        class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors text-gray-900"
         onclick={`toggleAbstract('${projectId}')`}
       >
         ABSTRACT
@@ -61,18 +61,9 @@ const projectId = `project-${project.slug}`;
           target="_blank" 
           rel="noopener noreferrer"
           class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
+          style="color: #111827; text-decoration: none;"
         >
           LINK
-        </a>
-      )}
-      {code && (
-        <a 
-          href={code} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
-        >
-          CODE
         </a>
       )}
       {poster && (
@@ -81,8 +72,20 @@ const projectId = `project-${project.slug}`;
           target="_blank" 
           rel="noopener noreferrer"
           class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
+          style="color: #111827; text-decoration: none;"
         >
           POSTER
+        </a>
+      )}
+      {code && (
+        <a 
+          href={code} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
+          style="color: #111827; text-decoration: none;"
+        >
+          CODE
         </a>
       )}
       {blog && (
@@ -91,6 +94,7 @@ const projectId = `project-${project.slug}`;
           target="_blank" 
           rel="noopener noreferrer"
           class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
+          style="color: #111827; text-decoration: none;"
         >
           BLOG
         </a>
