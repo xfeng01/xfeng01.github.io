@@ -20,14 +20,8 @@ const projectId = `project-${project.slug}`;
     </div>
   )}
   <div class="w-full md:w-2/3">
-    <h3 class="text-base font-semibold mb-1">
-      {link ? (
-        <a href={link} target="_blank" rel="noopener noreferrer" class="hover:text-blue-700">
-          {title}
-        </a>
-      ) : (
-        title
-      )}
+    <h3 class="text-base font-semibold mb-1 text-gray-900">
+      {title}
     </h3>
     <p class="text-sm text-gray-600 mb-1">
       {authors.map((author: string, index: number) => (
