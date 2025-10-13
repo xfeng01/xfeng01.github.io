@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, image, link, authors, pub, description, code, poster, blog } = project.data;
+const { title, image, paper, authors, pub, description, code, poster, blog } = project.data;
 const yourName = "Xinsong Feng";
 const { Content } = await project.render();
 
@@ -55,15 +55,15 @@ const imageId = `image-${project.slug}`;
       >
         ABSTRACT
       </button>
-      {link && (
+      {paper && (
         <a 
-          href={link} 
+          href={paper} 
           target="_blank" 
           rel="noopener noreferrer"
           class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
           style="color: #111827; text-decoration: none;"
         >
-          LINK
+          PAPER
         </a>
       )}
       {poster && (
