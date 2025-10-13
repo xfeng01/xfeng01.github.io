@@ -5,7 +5,7 @@ pub: "ICLR 2025"
 image: "/ssco.svg"
 date: 2025-02-08
 description: "We propose Wake-Sleep Option (WS-option), a hierarchical reinforcement learning framework for sequential stochastic combinatorial optimization that jointly optimizes budget allocation and node selection in a two-layer MDP."
-link: "https://arxiv.org/abs/2502.05537"
+paper: "https://arxiv.org/abs/2502.05537"
 poster: "/ssco_poster.pdf"
 code: "https://github.com/wmd3i/HRL4SSCO"
 ---
