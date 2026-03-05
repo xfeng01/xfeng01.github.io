@@ -11,6 +11,9 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.13",
     "astro": "^5.14.1",
+    "katex": "^0.16.35",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "tailwindcss": "^4.1.13"
   }
 }

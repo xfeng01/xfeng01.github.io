@@ -1,3 +1,4 @@
+@import "katex/dist/katex.min.css";
 @import "tailwindcss";
 
 
@@ -18,4 +19,10 @@ ul {
 }
 a {
   @apply text-blue-500 hover:underline;
+}
+
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
 }

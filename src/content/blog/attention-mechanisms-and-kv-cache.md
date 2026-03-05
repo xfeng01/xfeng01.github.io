@@ -11,29 +11,29 @@ tags:
 
 ### 1.1 Self-Attention vs. Cross-Attention
 
-- Self-Attention: The Query ($Q$), Key ($K$), and Value ($V$) matrices are all derived from the **same input sequence**. This structure enables each token to observe and integrate information from all other tokens within the sequence, effectively capturing internal semantic dependencies.
+- Self-Attention: The Query $Q$, Key $K$, and Value $V$ matrices are all derived from the **same input sequence**. This structure enables each token to observe and integrate information from all other tokens within the sequence, effectively capturing internal semantic dependencies.
 - Cross-Attention: The $Q$ matrix originates from one sequence (typically the Decoder), while the $K$ and $V$ matrices originate from another (typically the Encoder). This mechanism allows a target sequence to "query" information from a source sequence. A classic example is machine translation: when generating a target word (acting as $Q$), the model queries the source sentence (acting as $K$ and $V$) to identify the most relevant context.
 
-### 1.2 The Roles of Q, K, and V
+### 1.2 The Roles of $Q$, $K$, and $V$
 
 The interaction within the attention mechanism can be intuitively understood as an information retrieval process from an "archive":
 
-- **Key (**​**$K$**​ **) and Value (**​**$V$**​ **) - The Archive:**  These represent the deterministic, historical context. Specifically, $K$ acts as the **label/index** (determining *who* is important), while $V$ contains the **actual content** (determining *what* information to extract).
-- **Query (**​**$Q$**​ **) - The Search Request:**  $Q$ encodes the current step's intent. It matches against all available $K$ matrices to compute attention weights, subsequently retrieving the most relevant combination of $V$ matrices.
+- **Key $K$ and Value $V$ - The Archive:**  These represent the deterministic, historical context. Specifically, $K$ acts as the **label/index** (determining *who* is important), while $V$ contains the **actual content** (determining *what* information to extract).
+- **Query $Q$ - The Search Request:**  $Q$ encodes the current step's intent. It matches against all available $K$ matrices to compute attention weights, subsequently retrieving the most relevant combination of $V$ matrices.
 
 ### 1.3 Autoregressive Generation and the KV-Cache
 
 During inference, standard Transformers operate autoregressively. Generating the $t$-th token requires computing its attention relationship with all preceding $t$ tokens. Without caching, the Attention computation is formulated as:
 
 $$
-Attention(Q_t, K_{1:t}, V_{1:t}) = softmax\left(\frac{Q_t K_{1:t}^T}{\sqrt{d_k}}\right) V_{1:t}
+\mathrm{Attention}(Q_t, K_{1:t}, V_{1:t}) = \mathrm{softmax}\left(\frac{Q_t K_{1:t}^T}{\sqrt{d_k}}\right) V_{1:t}
 $$
 
-In this naive approach, to compute the output at position $t$, the model must redundantly recompute the keys ($K_{1:t-1}$) and values ($V_{1:t-1}$) for all historical positions.
+In this naive approach, to compute the output at position $t$, the model must redundantly recompute the keys $K_{1:t-1}$ and values $V_{1:t-1}$ for all historical positions.
 
 Since $Q$ drives the active generation while $K$ and $V$ provide static historical information, models store historical keys and values in the ​**KV-Cache**. Consequently, the memory capacity allocated for the KV-Cache directly dictates the maximum context window the model can retain.
 
-### 1.4 Semantic Compression via Hidden States ($h_t$)
+### 1.4 Semantic Compression via Hidden States $h_t$
 
 Throughout the sequential generation pipeline:
 
@@ -48,10 +48,10 @@ Suppose we have a simplified one-layer Transformer. Our target is to make the mo
 
 Let us define the key notations and their corresponding dimensions. Let $d$ denote the model's hidden dimension, and $|V|$ denote the vocabulary size:
 
-- **$x_t \in \mathbb{R}^{1 \times d}$**  ****  (Input Representation): The input vector at step $t$, which is the sum of the current token embedding and the positional embedding.
-- **$Q_t, K_t, V_t \in \mathbb{R}^{1 \times d}$**  ****  (Query, Key, Value): Obtained by multiplying $x_t$ with three respective weight matrices ($W^Q, W^K, W^V \in \mathbb{R}^{d \times d}$). Here, $Q_t$ acts as the query, while $K_t$ and $V_t$ are the keys and values to be stored in the KV-Cache.
-- **$z_t \in \mathbb{R}^{1 \times d}$**  ****  (Context Vector): The output of the Attention layer. It is a weighted sum of the historical values ($V_{1:t} \in \mathbb{R}^{t \times d}$) and represents the features incorporating context information.
-- **$h_t \in \mathbb{R}^{1 \times d}$**  (Hidden State): The final output of the Transformer layer after passing $z_t$ through a FFN/MLP. It represents the accumulated semantic information up to step $t$.
+- **Input Representation $x_t \in \mathbb{R}^{1 \times d}$:** The input vector at step $t$, which is the sum of the current token embedding and the positional embedding.
+- $Q_t, K_t, V_t \in \mathbb{R}^{1 \times d}$: Obtained by multiplying $x_t$ with three respective weight matrices ($W^Q, W^K, W^V \in \mathbb{R}^{d \times d}$). Here, $Q_t$ acts as the query, while $K_t$ and $V_t$ are the keys and values to be stored in the KV-Cache.
+- **Context Vector $z_t \in \mathbb{R}^{1 \times d}$:** The output of the Attention layer. It is a weighted sum of the historical values ($V_{1:t} \in \mathbb{R}^{t \times d}$) and represents the features incorporating context information.
+- **Hidden State $h_t \in \mathbb{R}^{1 \times d}$:** The final output of the Transformer layer after passing $z_t$ through a FFN/MLP. It represents the accumulated semantic information up to step $t$.
 
 Now, let's examine how the model generates this sequence step-by-step.
 
@@ -62,7 +62,7 @@ We feed a special token `[BOS]` (Begin of Sequence) to prompt the model to start
 - **Input Layer:**  Compute the token embedding for `[BOS]`, add the positional encoding, and obtain $x_1 \in \mathbb{R}^{1 \times d}$.
 - **Generate Q, K, V:**  Apply linear projections to $x_1$ to obtain $Q_1, K_1, V_1 \in \mathbb{R}^{1 \times d}$.
 - **Update KV-Cache:**  Store $K_1$ and $V_1$ into the cache. The current cache size for both K and V is $1 \times d$.
-- **Attention (**​**$z_1$**​ **):**  Since there is no prior context, $Q_1$ only attends to $K_1$ (the attention weight is trivially $1$). Thus, $z_1 = V_1 \in \mathbb{R}^{1 \times d}$.
+- **Attention ($z_1$):**  Since there is no prior context, $Q_1$ only attends to $K_1$ (the attention weight is trivially $1$). Thus, $z_1 = V_1 \in \mathbb{R}^{1 \times d}$.
 - **Hidden State & Prediction:**  Pass $z_1$ through the MLP to obtain $h_1 \in \mathbb{R}^{1 \times d}$. Finally, $h_1$ is projected by the Language Modeling (LM) head (using a weight matrix $W_{LM} \in \mathbb{R}^{d \times |V|}$) to yield a logits vector $\in \mathbb{R}^{1 \times |V|}$, predicting the highest-probability next token: `"To"`.
 
 Step 2: Incorporating Context (Input: `"To"` $\rightarrow$ Predict: `"be"`)
