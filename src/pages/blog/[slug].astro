@@ -1,0 +1,57 @@
+---
+import BasicLayout from '../../layouts/BasicLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+---
+
+<BasicLayout title={`${post.data.title} | Xinsong Feng`} showProfile={false} compact={true}>
+  <article class="max-w-3xl">
+    <a href="/blog" class="mb-6 inline-flex items-center text-sm font-semibold no-underline" style="color: #111827;">
+      ← Back to blog
+    </a>
+
+    <header class="mb-8 border-b border-gray-200 pb-6">
+      <p class="mb-3 text-sm text-gray-500">{formatDate(post.data.date)}</p>
+      <h2 class="mb-3 text-3xl font-bold text-gray-900">{post.data.title}</h2>
+      <p class="mb-0 max-w-2xl text-base leading-relaxed text-gray-600">{post.data.description}</p>
+      {
+        post.data.tags && post.data.tags.length > 0 && (
+          <div class="mt-4 flex flex-wrap gap-2">
+            {post.data.tags.map((tag) => (
+              <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium uppercase tracking-[0.14em] text-gray-600">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    <div class="text-gray-800">
+      <Content />
+    </div>
+  </article>
+</BasicLayout>

@@ -1,0 +1,60 @@
+---
+import BasicLayout from '../../layouts/BasicLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => {
+  return b.data.date.getTime() - a.data.date.getTime();
+});
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+---
+
+<BasicLayout title="Blog | Xinsong Feng" showProfile={false} compact={true}>
+  <section class="max-w-4xl">
+    <div class="border-b border-gray-200 pb-4">
+      <div>
+        <h2 class="mb-1 text-2xl font-semibold text-gray-900">Blog</h2>
+        <p class="mb-0 max-w-2xl text-sm leading-6 text-gray-600">
+          Research notes, paper summaries, and implementation details.
+        </p>
+      </div>
+    </div>
+
+    {
+      posts.length === 0 ? (
+        <div class="border-b border-dashed border-gray-300 py-6 text-gray-600">
+          No posts yet.
+        </div>
+      ) : (
+        <div>
+          {posts.map((post) => (
+            <article class="border-b border-gray-200 py-5">
+              <h3 class="mb-1 text-xl font-semibold leading-snug text-gray-900">
+                <a href={`/blog/${post.slug}/`} class="no-underline" style="color: #111827;">
+                  {post.data.title}
+                </a>
+              </h3>
+              <div class="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">
+                <p class="mb-0">{formatDate(post.data.date)}</p>
+                {
+                  post.data.tags && post.data.tags.length > 0 && (
+                    <p class="mb-0 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                      {post.data.tags.join(' / ')}
+                    </p>
+                  )
+                }
+              </div>
+              <p class="mb-0 max-w-2xl text-sm leading-6 text-gray-600">{post.data.description}</p>
+            </article>
+          ))}
+        </div>
+      )
+    }
+  </section>
+</BasicLayout>
