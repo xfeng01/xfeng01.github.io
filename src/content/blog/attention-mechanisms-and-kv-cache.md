@@ -9,19 +9,19 @@ tags:
 
 ## 1 Fundamentals of the Attention Mechanism and KV-Cache
 
-### **1.1 Self-Attention vs. Cross-Attention**
+### 1.1 Self-Attention vs. Cross-Attention
 
 - Self-Attention: The Query ($Q$), Key ($K$), and Value ($V$) matrices are all derived from the **same input sequence**. This structure enables each token to observe and integrate information from all other tokens within the sequence, effectively capturing internal semantic dependencies.
 - Cross-Attention: The $Q$ matrix originates from one sequence (typically the Decoder), while the $K$ and $V$ matrices originate from another (typically the Encoder). This mechanism allows a target sequence to "query" information from a source sequence. A classic example is machine translation: when generating a target word (acting as $Q$), the model queries the source sentence (acting as $K$ and $V$) to identify the most relevant context.
 
-### **1.2 The Roles of Q, K, and V**
+### 1.2 The Roles of Q, K, and V
 
 The interaction within the attention mechanism can be intuitively understood as an information retrieval process from an "archive":
 
 - **Key (**​**$K$**​ **) and Value (**​**$V$**​ **) - The Archive:**  These represent the deterministic, historical context. Specifically, $K$ acts as the **label/index** (determining *who* is important), while $V$ contains the **actual content** (determining *what* information to extract).
 - **Query (**​**$Q$**​ **) - The Search Request:**  $Q$ encodes the current step's intent. It matches against all available $K$ matrices to compute attention weights, subsequently retrieving the most relevant combination of $V$ matrices.
 
-### **1.3 Autoregressive Generation and the KV-Cache**
+### 1.3 Autoregressive Generation and the KV-Cache
 
 During inference, standard Transformers operate autoregressively. Generating the $t$-th token requires computing its attention relationship with all preceding $t$ tokens. Without caching, the Attention computation is formulated as:
 
@@ -33,7 +33,7 @@ In this naive approach, to compute the output at position $t$, the model must re
 
 Since $Q$ drives the active generation while $K$ and $V$ provide static historical information, models store historical keys and values in the ​**KV-Cache**. Consequently, the memory capacity allocated for the KV-Cache directly dictates the maximum context window the model can retain.
 
-### **1.4 Semantic Compression via Hidden States (**​**$h_t$**​ **)**
+### 1.4 Semantic Compression via Hidden States ($h_t$)
 
 Throughout the sequential generation pipeline:
 
