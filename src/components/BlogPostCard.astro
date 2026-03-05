@@ -16,13 +16,13 @@ const formatDate = (date: Date) =>
   });
 ---
 
-<article class="border-b border-gray-200 py-5">
-  <h3 class="mb-1 text-xl font-semibold leading-snug text-gray-900">
+<article class="border-b border-gray-200 py-4">
+  <h3 class="mb-0.5 text-xl font-semibold leading-snug text-gray-900">
     <a href={`/blog/${post.slug}/`} class="no-underline" style="color: #111827;">
       {post.data.title}
     </a>
   </h3>
-  <div class="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">
+  <div class="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">
     <p class="mb-0">{formatDate(post.data.date)}</p>
     {
       post.data.tags && post.data.tags.length > 0 && (
@@ -32,5 +32,5 @@ const formatDate = (date: Date) =>
       )
     }
   </div>
-  <p class="mb-0 max-w-2xl text-sm leading-6 text-gray-600">{post.data.description}</p>
+  <p class="mb-0 max-w-2xl text-sm leading-5 text-gray-600">{post.data.description}</p>
 </article>
