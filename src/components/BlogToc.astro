@@ -1,14 +1,15 @@
 ---
-import type { MarkdownHeading } from 'astro';
-
-interface Props {
-  headings: MarkdownHeading[];
+interface TocItem {
+  depth: number;
+  slug: string;
+  text: string;
 }
 
-const { headings } = Astro.props;
-const items = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
-const cleanHeadingText = (text: string) =>
-  text.replace(/[*`$]/g, '').replace(/\s+/g, ' ').trim();
+interface Props {
+  items: TocItem[];
+}
+
+const { items } = Astro.props;
 ---
 
 {
@@ -26,12 +27,12 @@ const cleanHeadingText = (text: string) =>
                     ? "block overflow-hidden text-[12px] leading-[1.45] no-underline transition-colors hover:text-gray-900"
                     : "block overflow-hidden text-[13px] leading-[1.45] no-underline transition-colors hover:text-gray-900"}
                   style="color: #4b5563;"
-                  title={cleanHeadingText(heading.text)}
+                  title={heading.text}
                 >
                   <span
                     style="-webkit-line-clamp: 2; -webkit-box-orient: vertical; display: -webkit-box; overflow: hidden;"
                   >
-                    {cleanHeadingText(heading.text)}
+                    {heading.text}
                   </span>
                 </a>
               </li>

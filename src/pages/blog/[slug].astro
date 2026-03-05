@@ -18,6 +18,27 @@ interface Props {
 
 const { post } = Astro.props;
 const { Content, headings } = await post.render();
+const renderedTocHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+
+const cleanTocText = (text: string) =>
+  text
+    .replace(/\$([^$]+)\$/g, (_, expression) => String(expression).replace(/\\/g, '').trim())
+    .replace(/[*_`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const markdownHeadingPattern = /^(#{2,3})\s+(.*)$/gm;
+const rawTocItems = Array.from(post.body.matchAll(markdownHeadingPattern), (match) => ({
+  depth: match[1].length,
+  text: cleanTocText(match[2]),
+}));
+
+const tocItems = rawTocItems
+  .map((item, index) => ({
+    ...item,
+    slug: renderedTocHeadings[index]?.slug ?? '',
+  }))
+  .filter((item) => item.slug);
 
 const formatDate = (date: Date) =>
   date.toLocaleDateString('en-US', {
@@ -58,5 +79,5 @@ const formatDate = (date: Date) =>
     </div>
   </article>
 
-  <BlogToc headings={headings} />
+  <BlogToc items={tocItems} />
 </BasicLayout>
