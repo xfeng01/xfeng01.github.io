@@ -60,9 +60,9 @@ Step 1: Initialization (Input: `[BOS]` $\rightarrow$ Predict: `"To"`)
 We feed a special token `[BOS]` (Begin of Sequence) to prompt the model to start generating.
 
 - **Input Layer:**  Compute the token embedding for `[BOS]`, add the positional encoding, and obtain $x_1 \in \mathbb{R}^{1 \times d}$.
-- **Generate Q, K, V:**  Apply linear projections to $x_1$ to obtain $Q_1, K_1, V_1 \in \mathbb{R}^{1 \times d}$.
+- **Generate $Q, K, V$:**  Apply linear projections to $x_1$ to obtain $Q_1, K_1, V_1 \in \mathbb{R}^{1 \times d}$.
 - **Update KV-Cache:**  Store $K_1$ and $V_1$ into the cache. The current cache size for both K and V is $1 \times d$.
-- **Attention ($z_1$):**  Since there is no prior context, $Q_1$ only attends to $K_1$ (the attention weight is trivially $1$). Thus, $z_1 = V_1 \in \mathbb{R}^{1 \times d}$.
+- **Attention $z_1$:**  Since there is no prior context, $Q_1$ only attends to $K_1$ (the attention weight is trivially $1$). Thus, $z_1 = V_1 \in \mathbb{R}^{1 \times d}$.
 - **Hidden State & Prediction:**  Pass $z_1$ through the MLP to obtain $h_1 \in \mathbb{R}^{1 \times d}$. Finally, $h_1$ is projected by the Language Modeling (LM) head (using a weight matrix $W_{LM} \in \mathbb{R}^{d \times |V|}$) to yield a logits vector $\in \mathbb{R}^{1 \times |V|}$, predicting the highest-probability next token: `"To"`.
 
 Step 2: Incorporating Context (Input: `"To"` $\rightarrow$ Predict: `"be"`)
@@ -70,9 +70,9 @@ Step 2: Incorporating Context (Input: `"To"` $\rightarrow$ Predict: `"be"`)
 In the autoregressive setting, the token predicted in the previous step (`"To"`) becomes the input for the current step.
 
 - **Input Layer:**  Compute the token embedding for `"To"`, add the positional encoding for position 2, and obtain $x_2 \in \mathbb{R}^{1 \times d}$.
-- **Generate Q, K, V:**  Apply the linear projections to $x_2$ to generate $Q_2, K_2, V_2 \in \mathbb{R}^{1 \times d}$. Here, $Q_2$ encodes the semantic query: "Given the context so far, what should follow the word 'To'?"
+- **Generate $Q, K, V$:**  Apply the linear projections to $x_2$ to generate $Q_2, K_2, V_2 \in \mathbb{R}^{1 \times d}$. Here, $Q_2$ encodes the semantic query: "Given the context so far, what should follow the word 'To'?"
 - **Update KV-Cache:**  Append the newly computed $(K_2, V_2)$ row vectors to the existing KV-Cache. The cache now holds the accumulated history matrices $K_{1:2}, V_{1:2} \in \mathbb{R}^{2 \times d}$.
-- **Attention (**​**$z_2$**​ **):**  The query $Q_2 \in \mathbb{R}^{1 \times d}$ attends to all available keys in the cache $K_{1:2} \in \mathbb{R}^{2 \times d}$ via dot-product, resulting in attention scores $\in \mathbb{R}^{1 \times 2}$. After applying the softmax function to these scores, the resulting attention weights are used to compute a weighted sum of $V_{1:2}$. The output, $z_2 \in \mathbb{R}^{1 \times d}$, is no longer the isolated representation of `"To"`; it is now a context-aware feature vector.
+- **Attention $z_2$:**  The query $Q_2 \in \mathbb{R}^{1 \times d}$ attends to all available keys in the cache $K_{1:2} \in \mathbb{R}^{2 \times d}$ via dot-product, resulting in attention scores $\in \mathbb{R}^{1 \times 2}$. After applying the softmax function to these scores, the resulting attention weights are used to compute a weighted sum of $V_{1:2}$. The output, $z_2 \in \mathbb{R}^{1 \times d}$, is no longer the isolated representation of `"To"`; it is now a context-aware feature vector.
 - **Hidden State & Prediction:**  The context vector $z_2$ is processed by the MLP to yield the hidden state $h_2 \in \mathbb{R}^{1 \times d}$. Finally, the LM head maps $h_2$ to the vocabulary distribution $\in \mathbb{R}^{1 \times |V|}$, predicting the highest-probability next token: `"be"`.
 
 The subsequent steps follow the exact same autoregressive pattern, appending new $K$ and $V$ matrices to the cache and generating the next sequence token until a termination condition is met.
