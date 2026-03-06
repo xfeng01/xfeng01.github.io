@@ -76,19 +76,3 @@ In the autoregressive setting, the token predicted in the previous step (`"To"`)
 - **Hidden State & Prediction:**  The context vector $z_2$ is processed by the MLP to yield the hidden state $h_2 \in \mathbb{R}^{1 \times d}$. Finally, the LM head maps $h_2$ to the vocabulary distribution $\in \mathbb{R}^{1 \times |V|}$, predicting the highest-probability next token: `"be"`.
 
 The subsequent steps follow the exact same autoregressive pattern, appending new $K$ and $V$ matrices to the cache and generating the next sequence token until a termination condition is met.
-
-‍
-
-‍
-
-‍
-
-‍
-
-‍
-
-‍
-
-‍
-
-‍
