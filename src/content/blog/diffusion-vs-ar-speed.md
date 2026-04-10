@@ -10,100 +10,119 @@ tags:
 
 ## 1 Introduction: A Counterintuitive Complexity Paradox
 
-In discussions of generative AI, we often encounter a puzzling phenomenon. When generating a sequence of length $L$, the per-step time complexity of a traditional autoregressive model (AR model with KV cache) is usually viewed as $O(L)$ along the attention path. By contrast, a text diffusion model performs full self-attention over the entire sequence for $T$ denoising steps, leading to a theoretical complexity of $O(TL^2)$. From a purely algorithmic standpoint, $O(L) \ll O(TL^2)$ seems decisive. So why, in real modern GPU inference, especially for long-context generation, do diffusion models often keep up with AR models and sometimes even outperform them?
+When we talk about language models, one question naturally comes up. In an autoregressive (AR) model with a KV cache, computing $Q$, $K$, and $V$ for the new token is $O(1)$ with respect to sequence length, but the new query must still attend over all cached keys and values, making the attention cost $O(L)$ per decoding step. A diffusion language model (DLM), by contrast, applies full self-attention over the entire sequence at each denoising step, giving a cost of $O(L^2)$ per step, and $O(TL^2)$ over $T$ denoising steps.
 
-The answer lies in the large gap between algorithmic complexity and **low-level hardware execution efficiency**. This note examines that gap by comparing AR, DLM, and BDLM from a hardware-efficiency perspective.
+From this perspective, diffusion seems much more expensive than autoregressive decoding.  
+So why can diffusion models still remain competitive in real GPU inference, especially for long-context generation, and sometimes even outperform autoregressive models?
+
+The key point is that theoretical complexity and actual GPU speed are not the same thing. This note explores that gap by comparing AR, DLM, and BDLM from a hardware-efficiency perspective.
 
 ## 2 Background: Why Are AR Models So Slow in Practice?
 
-To understand what really determines inference time on GPUs, it helps to introduce two core physical quantities. For intuition, think of a GPU as a large **data-processing factory**:
+To understand what really determines inference time on GPUs, it helps to first look at two basic physical quantities. For intuition, think of a GPU as a large **data-processing factory**:
 
-- **Global memory (HBM/VRAM):** a huge **storage room** deep inside the factory. It has enormous capacity (for example, 80GB) and stores large model weights and the full KV cache.
-- **Compute units (Tensor Cores):** the **workers** in the factory. They perform the actual matrix computations.
-- **On-chip cache (SRAM):** a tiny but extremely convenient **workbench** right next to the workers.
-- **Peak compute throughput ($\pi$, Peak FLOPs):** the theoretical compute peak of the GPU, corresponding to the workers' **maximum processing speed**.
-- **Memory bandwidth ($\beta$):** the bandwidth between global memory and the workbench, corresponding to the **conveyor belt** that moves data to the workers.
+- **Global memory (HBM/VRAM):** a huge **storage room** deep inside the factory. It has massive capacity (for example, 80GB) and holds large model weights and the full KV cache.
+- **Compute units (Tensor Cores):** the **workers** in the factory. They carry out the actual matrix computations.
+- **On-chip cache (SRAM):** a small but extremely fast **workbench** right next to the workers.
+- **Peak compute throughput ($\pi$, peak FLOPs):** the GPU’s theoretical maximum compute capability, like the workers’ **top processing speed**.
+- **Memory bandwidth ($\beta$):** the rate at which data can move from global memory to the workbench, like the **conveyor belt speed** feeding the workers.
 
-On modern GPUs, there is a brutal reality: the workers are much faster than the conveyor belt, i.e., $\pi \gg \beta$.
 
-Once this hardware picture is clear, the main weakness of AR generation becomes easier to see.
+On modern GPUs, there is a harsh reality: the workers are much faster than the conveyor belt, that is, $\pi \gg \beta$.
 
-In AR decoding, even with KV cache, generating the $i$-th token does not require that much actual computation. The FLOPs are only about $O(d^2 + i \cdot d)$, where $d$ is the hidden dimension. The problem is that the GPU still has to repeatedly fetch model weights and historical KV entries from global memory. In other words, **each step computes only one token, which means very low parallelism and poor weight reuse**. From the roofline perspective, the resulting **arithmetic intensity** is typically very low:
+With that picture in mind, the weakness of AR generation becomes easier to understand.
+
+In AR decoding, even with a KV cache, generating the $i$-th token does not require much computation. The FLOPs are only about $O(d^2 + i \cdot d)$, where $d$ is the hidden dimension.  
+What really hurts is memory traffic. The GPU still has to keep pulling model weights and past KV entries from global memory at every step. Since each step produces only one token, parallelism stays low and the same weights cannot be reused very effectively.
+
+From the roofline perspective, this means the **arithmetic intensity** is usually very low:
 
 $$
 I = \frac{\text{FLOPs}}{\text{Memory I/O}} \approx O(1)
 $$
 
-This connects to a key hardware mechanism on modern GPUs: **asynchronous overlap**.
+This leads to another important hardware idea on modern GPUs: **overlap**.
 
-Naively, one might think the total latency for processing a batch of data should be "data movement time + compute time." But in an efficient pipeline, while the workers are processing the current batch, the conveyor belt can already be moving the next one. Since these two processes overlap in physical time, the actual runtime is not their simple sum. Instead, it is better approximated by the slower of the two:
+At first glance, you might think the latency of one step should be
+
+$$
+\text{data movement time} + \text{compute time}.
+$$
+
+But a well-optimized GPU pipeline does not work like that. While the compute units are processing the current work, data for the next work can already be moving through memory at the same time. Because these two parts overlap, the real runtime is usually not their sum. It is better approximated by the slower one:
 
 $$
 T_{\text{real}} = \max\left(\text{compute time}, \text{memory time}\right)
 = \max\left(\frac{\text{FLOPs}}{\pi}, \frac{\text{Memory I/O}}{\beta}\right)
 $$
 
-What does an $O(1)$ arithmetic intensity imply?
+So what does an $O(1)$ arithmetic intensity mean here?
 
-It means that in this factory, **the workers often finish their current computation quickly, then sit idle waiting for the next batch of data to arrive from memory**. As a result, the system easily falls into a strongly **memory-bound** regime. The large compute capability $\pi$ cannot be fully utilized, and actual runtime is dominated by the slower memory bandwidth $\beta$.
+It means computation grows only in the same order as memory traffic. On modern GPUs, where compute is much stronger than memory bandwidth, this is usually not enough to keep the compute units busy. In the factory picture, the workers finish quickly and then wait for the next data to arrive. The system therefore falls into a strongly **memory-bound** regime: the large compute capability $\pi$ cannot be fully used, and runtime is dominated by the slower memory bandwidth $\beta$.
 
-Therefore, to generate $L$ tokens, this inefficient pipeline must be launched serially $L$ times. The overall wall-clock time can be roughly approximated as
+As a result, AR decoding suffers twice. Each step has low arithmetic intensity, and the whole process must also run sequentially, one token at a time. To generate $L$ tokens, this inefficient pipeline is launched $L$ times in a row. Under a memory-bound approximation, the total wall-clock time can be written roughly as
 
 $$
 T_{\text{AR}} \approx \sum_{i=1}^{L} \frac{O(d^2 + i \cdot d)}{\beta}
 \approx O\left(\frac{L d^2 + L^2 d}{\beta}\right)
 $$
 
+
 ## 3 The Key Advantage of Diffusion Models: Better Weight Reuse Under High Parallelism
 
-Compared with the token-by-token serial generation of AR models, DLMs have a fundamentally different computation pattern. At each denoising step, the model computes **the entire sequence of length $L$ at once**.
+Compared with the token-by-token serial generation of AR models, diffusion language models (DLMs) follow a very different computation pattern. At each denoising step, the model processes the **entire sequence of length $L$ at once**.
 
-Using the same factory analogy, this means the workers' workbench now holds all $L$ tokens simultaneously. As a result, the FLOPs for one denoising step increase to about $O(L \cdot d^2 + L^2 \cdot d)$, including the linear projections for all tokens and the $L \times L$ global attention computation.
+In the factory analogy, this means the workbench now holds all $L$ tokens at the same time. The amount of computation in one denoising step therefore becomes much larger, roughly
+$$
+O(L \cdot d^2 + L^2 \cdot d),
+$$
+including the linear projections for all tokens and the global attention over the full sequence.
 
-**But the crucial change is that both weights and computation are reused much more effectively.** To process all $L$ tokens, the model weights only need to be fetched into on-chip memory once, after which the entire sequence can use them together. This is a classic form of **weight reuse**. So although the FLOPs per step grow substantially, the arithmetic intensity of diffusion models also increases with sequence length:
+The key advantage is that this larger computation also brings much better **parallelism** and **weight reuse**. Instead of generating one token at a time, the model applies the same weights across all $L$ tokens within one large computation. As a result, each weight load supports much more actual computation, which increases arithmetic intensity.
 
+Under a simplified scaling view, the arithmetic intensity becomes
 $$
 I = \frac{\text{FLOPs}}{\text{Memory I/O}}
-= \frac{O(L \cdot d^2 + L^2 \cdot d)}{O(d^2 + L \cdot d)}
-\approx O(L)
+\approx
+\frac{O(L \cdot d^2 + L^2 \cdot d)}{O(d^2 + L \cdot d)}
+\approx O(L).
 $$
 
-This means that as the sequence length $L$ grows, diffusion models become increasingly likely to escape the low-intensity, low-utilization execution mode of AR models and move into a **compute-bound** regime.
+The exact scaling depends on implementation details, but the main point is clear: as sequence length grows, diffusion-style computation typically achieves much higher arithmetic intensity than AR decoding. This makes it far more likely to utilize GPU compute well, rather than spending most of its time waiting on memory.
 
 Under the runtime model
-
 $$
 T = \max(\text{compute time}, \text{memory time}),
 $$
-
-the computation is now large enough that the memory bottleneck can be partially hidden in the background. As a result, the GPU can utilize much more of its massive compute capability $\pi$. If the model uses $T$ denoising steps, the total runtime can be approximated as
-
+this higher-intensity execution is much more favorable to modern GPUs. Memory traffic can be better amortized, parallelism is much higher, and the hardware can use more of its peak compute throughput $\pi$. If the model performs $T$ denoising steps, its total runtime can be roughly written as
 $$
 T_{\text{Diff}} \approx \sum_{t=1}^{T} \frac{O(L \cdot d^2 + L^2 \cdot d)}{\pi}
-\approx O\left(\frac{T \cdot L \cdot d^2 + T \cdot L^2 \cdot d}{\pi}\right)
+\approx O\left(\frac{T L d^2 + T L^2 d}{\pi}\right).
 $$
 
-**The critical threshold.** To compare the actual runtimes of diffusion and AR more directly, consider the ratio $\frac{T_{\text{Diff}}}{T_{\text{AR}}}$. Under a first-order approximation where the feature-dimension term $d^2$ dominates, we have
-
+To compare diffusion and AR more directly, consider the ratio
+$$
+\frac{T_{\text{Diff}}}{T_{\text{AR}}}.
+$$
+Under a first-order approximation in which the $d^2$ term dominates, we get
 $$
 \frac{T_{\text{Diff}}}{T_{\text{AR}}}
 \approx
-\frac{\frac{T \cdot L \cdot d^2}{\pi}}{\frac{L \cdot d^2}{\beta}}
+\frac{\frac{T L d^2}{\pi}}{\frac{L d^2}{\beta}}
 =
-T \cdot \frac{\beta}{\pi}
+T \cdot \frac{\beta}{\pi}.
 $$
 
-This simple expression gives a very clear physical intuition. Under this approximation, the effects of sequence length $L$ and model dimension $d$ cancel out. The main factors are the algorithmic number of diffusion steps $T$ and the hardware constant $\frac{\beta}{\pi}$. For a modern GPU such as the H100, this ratio is roughly
-
+This gives a useful hardware-level intuition. In this approximation, the sequence length $L$ and hidden size $d$ cancel out, leaving two main factors: the number of diffusion steps $T$ and the hardware ratio $\beta / \pi$. For a modern GPU such as the H100, this ratio is roughly
 $$
 \frac{\beta}{\pi}
 \approx
 \frac{3.35 \text{ TB/s}}{1000 \text{ TFLOPS}}
 \approx
-\frac{1}{300}
+\frac{1}{300}.
 $$
 
-> This suggests that as long as the number of diffusion steps $T$ is small enough, for example $T < 300$, a diffusion model may still run faster than an AR model in practice, even if it performs more FLOPs in theory. Big-O notation hides real hardware utilization, and hardware efficiency is often what ultimately determines wall-clock speed.
+So, as a rough back-of-the-envelope estimate, if the number of diffusion steps is small enough, for example on the order of a few hundred or less, diffusion can remain competitive with AR in wall-clock time, and may even be faster in practice despite doing more FLOPs on paper. The reason is simple: big-O counts operations, but real GPU speed depends on how efficiently those operations map onto hardware.
 
 ## 4 The Hardware Advantage of Block Diffusion
 

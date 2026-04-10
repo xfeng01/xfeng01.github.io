@@ -14,8 +14,15 @@ h2 {
 p {
   @apply mb-4;
 }
+ol {
+  @apply list-decimal pl-6 space-y-2 mb-4;
+}
 ul {
   @apply list-disc pl-6 space-y-2 mb-4;
+}
+li > ol,
+li > ul {
+  @apply mt-2 mb-0;
 }
 a {
   @apply text-blue-500 hover:underline;
