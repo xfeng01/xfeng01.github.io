@@ -1,7 +1,7 @@
 ---
 title: "Solving Constrained Optimization Problems as ODE-based Models Using Reinforcement Learning"
 authors: [Han Meng, Xinsong Feng, Yang Li, Chenan Wang, Kishansingh Rajput, Malachi Schram, Haipeng Chen]
-pub: "Submitted to AISTATS 2026"
+pub: "Submitted to TMLR"
 image: "/cmfo.png"
 date: 2025-10-02
 description: "We propose CMFO (Constrained Markov Flow Optimizer), which unifies flow-matching generative models and reinforcement learning to solve constrained optimization problems with improved efficiency and feasibility."
