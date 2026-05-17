@@ -1,13 +1,13 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
-import BlogArticle from '../../components/BlogArticle.astro';
-import { getBlogPostLang, getBlogPostSlug } from '../../utils/blog';
+import BlogArticle from '../../../components/BlogArticle.astro';
+import { getBlogPostLang, getBlogPostSlug } from '../../../utils/blog';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
 
   return posts
-    .filter((post) => getBlogPostLang(post) === 'en')
+    .filter((post) => getBlogPostLang(post) === 'zh')
     .map((post) => ({
       params: { slug: getBlogPostSlug(post) },
       props: { post },

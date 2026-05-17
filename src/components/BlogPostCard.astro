@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import MathText from './MathText.astro';
+import { getBlogPostHref } from '../utils/blog';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -8,6 +9,7 @@ interface Props {
 
 const { post } = Astro.props;
 const tags = post.data.tags ?? [];
+const href = getBlogPostHref(post);
 
 const formatDate = (date: Date) =>
   date.toLocaleDateString('en-US', {
@@ -38,7 +40,7 @@ const formatDate = (date: Date) =>
           )
         }
         <p class="mb-2 max-w-3xl text-[0.95rem] leading-6 text-gray-600">{post.data.description}</p>
-        <a href={`/blog/${post.slug}/`} class="read-link text-sm font-medium">
+        <a href={href} class="read-link text-sm font-medium">
           Read post
         </a>
       </div>

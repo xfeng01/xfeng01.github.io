@@ -2,10 +2,13 @@
 import BasicLayout from '../../layouts/BasicLayout.astro';
 import { getCollection } from 'astro:content';
 import BlogPostCard from '../../components/BlogPostCard.astro';
+import { getBlogPostLang } from '../../utils/blog';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => {
-  return b.data.date.getTime() - a.data.date.getTime();
-});
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .filter((post) => getBlogPostLang(post) === 'en')
+  .sort((a, b) => {
+    return b.data.date.getTime() - a.data.date.getTime();
+  });
 ---
 
 <BasicLayout title="Blog | Xinsong Feng" showProfile={false}>

@@ -1,0 +1,147 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BasicLayout from '../layouts/BasicLayout.astro';
+import BlogToc from './BlogToc.astro';
+import MathText from './MathText.astro';
+import { getBlogPostHref, getBlogPostLang } from '../utils/blog';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await post.render();
+const renderedTocHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const pageTitle = post.data.title.replace(/\$([^$]+)\$/g, '$1');
+const tags = post.data.tags ?? [];
+const currentLang = getBlogPostLang(post);
+const translationKey = post.data.translationKey;
+const languageLabels = {
+  en: 'English',
+  zh: '中文',
+};
+
+const publishedPosts = await getCollection('blog', ({ data }) => !data.draft);
+const translationPosts = translationKey
+  ? publishedPosts.filter((entry) => entry.data.translationKey === translationKey)
+  : [];
+const languageLinks = (['en', 'zh'] as const)
+  .map((lang) => {
+    const entry = translationPosts.find((candidate) => getBlogPostLang(candidate) === lang);
+
+    return entry
+      ? {
+          href: getBlogPostHref(entry),
+          label: languageLabels[lang],
+          active: lang === currentLang,
+        }
+      : null;
+  })
+  .filter(Boolean) as Array<{ href: string; label: string; active: boolean }>;
+
+const cleanTocText = (text: string) => {
+  const mathExpressions: string[] = [];
+  const textWithMathPlaceholders = text.replace(/\$([^$]+)\$/g, (_, expression) => {
+    const normalizedMath = String(expression)
+      .replace(/\\([a-zA-Z]+)/g, '$1')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    mathExpressions.push(normalizedMath);
+    return `@@MATH${mathExpressions.length - 1}@@`;
+  });
+
+  return textWithMathPlaceholders
+    .replace(/[*`]/g, '')
+    .replace(/(^|[\s([{])_([^_]+)_($|[\s)\]}.,:;!?])/g, '$1$2$3')
+    .replace(/@@MATH(\d+)@@/g, (_, index) => mathExpressions[Number(index)] ?? '')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
+const markdownHeadingPattern = /^(#{2,3})\s+(.*)$/gm;
+const rawTocItems = Array.from(post.body.matchAll(markdownHeadingPattern), (match) => ({
+  depth: match[1].length,
+  text: cleanTocText(match[2]),
+}));
+
+const tocItems = rawTocItems
+  .map((item, index) => ({
+    ...item,
+    slug: renderedTocHeadings[index]?.slug ?? '',
+  }))
+  .filter((item) => item.slug);
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+---
+
+<BasicLayout title={`${pageTitle} | Xinsong Feng`} showProfile={false}>
+  <article class="min-w-0 max-w-[46rem]">
+    <header class="mb-7 border-b border-gray-200 pb-5">
+      <div class="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.85rem] font-medium text-gray-500">
+        <a href="/blog" class="no-underline transition-colors hover:text-gray-900" style="color: #9ca3af;">
+          Blog
+        </a>
+        <span>/</span>
+        <span>{formatDate(post.data.date)}</span>
+        {
+          languageLinks.length > 1 && (
+            <>
+              <span class="text-gray-300">/</span>
+              <nav class="inline-flex items-center gap-1" aria-label="Language versions">
+                {languageLinks.map((link, index) => (
+                  <>
+                    {index > 0 && <span class="text-gray-300">/</span>}
+                    {link.active ? (
+                      <span class="text-gray-900">{link.label}</span>
+                    ) : (
+                      <a href={link.href} class="language-link no-underline">
+                        {link.label}
+                      </a>
+                    )}
+                  </>
+                ))}
+              </nav>
+            </>
+          )
+        }
+      </div>
+      <h2 class="mb-3 text-[1.72rem] font-semibold leading-tight text-gray-900 sm:text-[2rem]">
+        <MathText text={post.data.title} />
+      </h2>
+      <p class="mb-0 max-w-2xl text-[0.96rem] leading-6 text-gray-600">{post.data.description}</p>
+      {
+        tags.length > 0 && (
+          <p class="mt-3 mb-0 text-[0.72rem] font-semibold uppercase tracking-[0.11em] text-gray-400">
+            {tags.join(' / ')}
+          </p>
+        )
+      }
+    </header>
+
+    <div class="blog-content text-gray-800">
+      <Content />
+    </div>
+  </article>
+
+  <BlogToc items={tocItems} />
+</BasicLayout>
+
+<style>
+  .language-link {
+    color: #9ca3af;
+    transition: color 150ms ease;
+  }
+
+  .language-link:hover {
+    color: #111827;
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
+  }
+</style>
