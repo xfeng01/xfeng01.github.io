@@ -2,6 +2,14 @@
 import "../styles/global.css";
 const { title = "Xinsong Feng", showProfile = true } = Astro.props;
 
+const pageShellClass = showProfile
+  ? "mx-auto min-h-screen w-full max-w-5xl px-6 py-8 sm:px-8 lg:px-10"
+  : "mx-auto min-h-screen w-full max-w-5xl px-6 py-6 sm:px-8 lg:px-10";
+const siteHeaderClass = showProfile ? "mb-10" : "mb-7";
+const siteTitleClass = showProfile
+  ? "mb-0 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl"
+  : "mb-0 text-3xl font-bold leading-tight text-gray-900";
+
 export const info = {
   social: [
     {
@@ -44,9 +52,9 @@ export const info = {
     <title>{title}</title>
   </head>
   <body class="bg-white leading-relaxed text-gray-900">
-    <main class="mx-auto min-h-screen w-full max-w-5xl px-6 py-8 sm:px-8 lg:px-10">
-      <div class="mb-10">
-        <h1 class="mb-0 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl">
+    <main class={pageShellClass}>
+      <div class={siteHeaderClass}>
+        <h1 class={siteTitleClass}>
           <a href="/" class="no-underline" style="color: #111827;">
             Xinsong Feng (<span style="font-family: 'KaiTi', 'STKaiti', 'Kaiti SC', serif;">冯欣淞</span>)
           </a>

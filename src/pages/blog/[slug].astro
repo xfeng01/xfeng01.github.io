@@ -21,6 +21,7 @@ const { post } = Astro.props;
 const { Content, headings } = await post.render();
 const renderedTocHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 const pageTitle = post.data.title.replace(/\$([^$]+)\$/g, '$1');
+const tags = post.data.tags ?? [];
 
 const cleanTocText = (text: string) => {
   const mathExpressions: string[] = [];
@@ -65,28 +66,24 @@ const formatDate = (date: Date) =>
 ---
 
 <BasicLayout title={`${pageTitle} | Xinsong Feng`} showProfile={false}>
-  <article class="min-w-0 max-w-[44rem]">
-    <header class="mb-9 border-b border-gray-200 pb-7">
-      <p class="mb-4 text-sm font-medium text-gray-500">
+  <article class="min-w-0 max-w-[46rem]">
+    <header class="mb-7 border-b border-gray-200 pb-5">
+      <p class="mb-3 text-[0.85rem] font-medium text-gray-500">
         <a href="/blog" class="no-underline transition-colors hover:text-gray-900" style="color: #9ca3af;">
           Blog
         </a>
         <span class="mx-2">/</span>
         <span>{formatDate(post.data.date)}</span>
       </p>
-      <h2 class="mb-4 text-[2rem] font-semibold leading-tight text-gray-900 sm:text-[2.35rem]">
+      <h2 class="mb-3 text-[1.72rem] font-semibold leading-tight text-gray-900 sm:text-[2rem]">
         <MathText text={post.data.title} />
       </h2>
-      <p class="mb-0 max-w-2xl text-base leading-7 text-gray-600">{post.data.description}</p>
+      <p class="mb-0 max-w-2xl text-[0.96rem] leading-6 text-gray-600">{post.data.description}</p>
       {
-        post.data.tags && post.data.tags.length > 0 && (
-          <div class="mt-5 flex flex-wrap gap-x-3 gap-y-2">
-            {post.data.tags.map((tag) => (
-              <span class="text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-gray-400">
-                {tag}
-              </span>
-            ))}
-          </div>
+        tags.length > 0 && (
+          <p class="mt-3 mb-0 text-[0.72rem] font-semibold uppercase tracking-[0.11em] text-gray-400">
+            {tags.join(' / ')}
+          </p>
         )
       }
     </header>
