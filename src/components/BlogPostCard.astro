@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import MathText from './MathText.astro';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -17,12 +18,12 @@ const formatDate = (date: Date) =>
   });
 ---
 
-<article class="grid gap-2.5 py-5 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-6">
+<article class="grid gap-2 py-4 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-6">
   <p class="mb-0 pt-0.5 text-sm leading-6 text-gray-500">{formatDate(post.data.date)}</p>
   <div class="min-w-0">
     <h3 class="mb-1.5 text-[1.26rem] font-semibold leading-snug text-gray-900">
       <a href={`/blog/${post.slug}/`} class="post-title-link">
-        {post.data.title}
+        <MathText text={post.data.title} />
       </a>
     </h3>
     {

@@ -1,0 +1,36 @@
+---
+import katex from 'katex';
+
+interface Props {
+  text: string;
+  class?: string;
+}
+
+const { text, class: className } = Astro.props;
+
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const renderInlineMath = (source: string) =>
+  source
+    .split(/(\$[^$]+\$)/g)
+    .map((part) => {
+      if (part.startsWith('$') && part.endsWith('$')) {
+        return katex.renderToString(part.slice(1, -1), {
+          displayMode: false,
+          throwOnError: false,
+          strict: false,
+        });
+      }
+
+      return escapeHtml(part);
+    })
+    .join('');
+---
+
+<span class={className} set:html={renderInlineMath(text)} />

@@ -2,6 +2,7 @@
 import BasicLayout from '../../layouts/BasicLayout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BlogToc from '../../components/BlogToc.astro';
+import MathText from '../../components/MathText.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -19,6 +20,7 @@ interface Props {
 const { post } = Astro.props;
 const { Content, headings } = await post.render();
 const renderedTocHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const pageTitle = post.data.title.replace(/\$([^$]+)\$/g, '$1');
 
 const cleanTocText = (text: string) => {
   const mathExpressions: string[] = [];
@@ -62,7 +64,7 @@ const formatDate = (date: Date) =>
   });
 ---
 
-<BasicLayout title={`${post.data.title} | Xinsong Feng`} showProfile={false}>
+<BasicLayout title={`${pageTitle} | Xinsong Feng`} showProfile={false}>
   <article class="min-w-0 max-w-[44rem]">
     <header class="mb-9 border-b border-gray-200 pb-7">
       <p class="mb-4 text-sm font-medium text-gray-500">
@@ -72,7 +74,9 @@ const formatDate = (date: Date) =>
         <span class="mx-2">/</span>
         <span>{formatDate(post.data.date)}</span>
       </p>
-      <h2 class="mb-4 text-[2rem] font-semibold leading-tight text-gray-900 sm:text-[2.35rem]">{post.data.title}</h2>
+      <h2 class="mb-4 text-[2rem] font-semibold leading-tight text-gray-900 sm:text-[2.35rem]">
+        <MathText text={post.data.title} />
+      </h2>
       <p class="mb-0 max-w-2xl text-base leading-7 text-gray-600">{post.data.description}</p>
       {
         post.data.tags && post.data.tags.length > 0 && (
