@@ -18,34 +18,65 @@ const formatDate = (date: Date) =>
   });
 ---
 
-<article class="grid gap-2 py-4 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-6">
-  <p class="mb-0 pt-0.5 text-sm leading-6 text-gray-500">{formatDate(post.data.date)}</p>
-  <div class="min-w-0">
-    <h3 class="mb-1.5 text-[1.26rem] font-semibold leading-snug text-gray-900">
-      <a href={`/blog/${post.slug}/`} class="post-title-link">
+<article>
+  <details class="post-item py-3">
+    <summary class="post-summary grid cursor-pointer gap-2 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-6">
+      <span class="mb-0 pt-0.5 text-sm leading-6 text-gray-500">{formatDate(post.data.date)}</span>
+      <h3 class="post-title mb-0 text-[1.08rem] font-semibold leading-snug text-gray-900">
         <MathText text={post.data.title} />
-      </a>
-    </h3>
-    {
-      tags.length > 0 && (
-        <p class="mb-2 text-[0.72rem] font-semibold uppercase tracking-[0.11em] text-gray-400">
-          {tags.join(' / ')}
-        </p>
-      )
-    }
-    <p class="mb-0 max-w-3xl text-[0.96rem] leading-6 text-gray-600">{post.data.description}</p>
-  </div>
+      </h3>
+    </summary>
+
+    <div class="grid gap-2 pt-2 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-6">
+      <div class="hidden sm:block"></div>
+      <div class="min-w-0">
+        {
+          tags.length > 0 && (
+            <p class="mb-2 text-[0.72rem] font-semibold uppercase tracking-[0.11em] text-gray-400">
+              {tags.join(' / ')}
+            </p>
+          )
+        }
+        <p class="mb-2 max-w-3xl text-[0.95rem] leading-6 text-gray-600">{post.data.description}</p>
+        <a href={`/blog/${post.slug}/`} class="read-link text-sm font-medium">
+          Read post
+        </a>
+      </div>
+    </div>
+  </details>
 </article>
 
 <style>
-  .post-title-link {
+  .post-summary {
+    list-style: none;
+  }
+
+  .post-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .post-title {
     color: #111827;
-    text-decoration: none;
     transition: color 150ms ease;
   }
 
-  .post-title-link:hover {
+  .post-summary:hover .post-title {
     color: #4b5563;
-    text-decoration: none;
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
+  }
+
+  .post-title :global(.katex) {
+    font-size: 1em;
+  }
+
+  .read-link {
+    color: #111827;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  .read-link:hover {
+    color: #4b5563;
   }
 </style>
