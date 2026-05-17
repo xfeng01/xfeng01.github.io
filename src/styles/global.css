@@ -11,6 +11,15 @@ h1 {
 h2 {
   @apply text-2xl font-semibold mb-4;
 }
+.blog-content h2 {
+  @apply mt-10 text-3xl font-semibold leading-tight text-gray-900;
+}
+.blog-content h2:first-child {
+  @apply mt-0;
+}
+.blog-content h3 {
+  @apply mt-7 mb-3 text-xl font-semibold leading-snug text-gray-900;
+}
 p {
   @apply mb-4;
 }

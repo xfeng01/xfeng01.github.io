@@ -18,9 +18,9 @@ const { items } = Astro.props;
       <div class="max-h-[calc(100vh-10rem)] overflow-y-auto border-l border-gray-200 pl-3">
         <p class="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">On this page</p>
         <nav aria-label="Table of contents">
-          <ol class="m-0 list-none space-y-1.5 p-0">
+          <ul class="toc-list">
             {items.map((heading) => (
-              <li class={heading.depth === 3 ? "pl-2.5" : ""}>
+              <li class={heading.depth === 3 ? "toc-item toc-item-depth-3" : "toc-item"}>
                 <a
                   href={`#${heading.slug}`}
                   class={heading.depth === 3
@@ -37,9 +37,30 @@ const { items } = Astro.props;
                 </a>
               </li>
             ))}
-          </ol>
+          </ul>
         </nav>
       </div>
     </aside>
   )
 }
+
+<style>
+  .toc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc-item {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc-item-depth-3 {
+    padding-left: 0.625rem;
+  }
+</style>
