@@ -10,10 +10,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, 
 
 <BasicLayout title="Blog | Xinsong Feng" showProfile={false}>
   <section class="max-w-4xl">
-    <div class="border-b border-gray-200 pb-4">
-      <div>
-        <h2 class="mb-1 text-2xl font-semibold text-gray-900">Blog</h2>
-        <p class="mb-0 max-w-2xl text-sm leading-6 text-gray-600">
+    <div class="border-b border-gray-200 pb-5">
+      <div class="max-w-2xl">
+        <h2 class="mb-2 text-3xl font-semibold leading-tight text-gray-900">Blog</h2>
+        <p class="mb-0 text-base leading-7 text-gray-600">
           Research notes, paper summaries, and implementation details.
         </p>
       </div>
@@ -21,11 +21,11 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, 
 
     {
       posts.length === 0 ? (
-        <div class="border-b border-dashed border-gray-300 py-6 text-gray-600">
+        <div class="border-b border-dashed border-gray-300 py-8 text-gray-600">
           No posts yet.
         </div>
       ) : (
-        <div>
+        <div class="divide-y divide-gray-200">
           {posts.map((post) => <BlogPostCard post={post} />)}
         </div>
       )

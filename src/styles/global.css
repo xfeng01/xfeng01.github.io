@@ -3,7 +3,7 @@
 
 
 body {
-  @apply max-w-4xl mx-auto px-6 py-8 font-sans leading-relaxed text-gray-900;
+  @apply font-sans leading-relaxed text-gray-900;
 }
 h1 {
   @apply text-4xl font-bold mb-6;
@@ -12,13 +12,27 @@ h2 {
   @apply text-2xl font-semibold mb-4;
 }
 .blog-content h2 {
-  @apply mt-10 text-3xl font-semibold leading-tight text-gray-900;
+  @apply mt-11 mb-4 text-[1.7rem] font-semibold leading-tight text-gray-900;
 }
 .blog-content h2:first-child {
   @apply mt-0;
 }
 .blog-content h3 {
-  @apply mt-7 mb-3 text-xl font-semibold leading-snug text-gray-900;
+  @apply mt-8 mb-3 text-[1.22rem] font-semibold leading-snug text-gray-900;
+}
+.blog-content p {
+  @apply mb-5 text-[1.04rem] leading-8 text-gray-800;
+}
+.blog-content li {
+  @apply text-[1.04rem] leading-8 text-gray-800;
+}
+.blog-content ul,
+.blog-content ol {
+  @apply mb-6 space-y-3;
+}
+.blog-content li > ol,
+.blog-content li > ul {
+  @apply mt-3 mb-0;
 }
 p {
   @apply mb-4;

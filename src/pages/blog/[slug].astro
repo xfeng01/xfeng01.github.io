@@ -63,22 +63,22 @@ const formatDate = (date: Date) =>
 ---
 
 <BasicLayout title={`${post.data.title} | Xinsong Feng`} showProfile={false}>
-  <article class="min-w-0 max-w-3xl">
-    <header class="mb-10 border-b border-gray-200 pb-6">
-      <p class="mb-4 text-sm font-medium text-gray-400">
+  <article class="min-w-0 max-w-[44rem]">
+    <header class="mb-9 border-b border-gray-200 pb-7">
+      <p class="mb-4 text-sm font-medium text-gray-500">
         <a href="/blog" class="no-underline transition-colors hover:text-gray-900" style="color: #9ca3af;">
           Blog
         </a>
         <span class="mx-2">/</span>
         <span>{formatDate(post.data.date)}</span>
       </p>
-      <h2 class="mb-3 text-4xl font-semibold leading-tight text-gray-900">{post.data.title}</h2>
-      <p class="mb-0 max-w-2xl text-lg leading-8 text-gray-600">{post.data.description}</p>
+      <h2 class="mb-4 text-[2rem] font-semibold leading-tight text-gray-900 sm:text-[2.35rem]">{post.data.title}</h2>
+      <p class="mb-0 max-w-2xl text-base leading-7 text-gray-600">{post.data.description}</p>
       {
         post.data.tags && post.data.tags.length > 0 && (
-          <div class="mt-4 flex flex-wrap gap-2">
+          <div class="mt-5 flex flex-wrap gap-x-3 gap-y-2">
             {post.data.tags.map((tag) => (
-              <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium uppercase tracking-[0.14em] text-gray-600">
+              <span class="text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-gray-400">
                 {tag}
               </span>
             ))}
