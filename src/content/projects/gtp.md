@@ -6,6 +6,7 @@ image: "/gtp.svg"
 date: 2025-09-24
 description: "We propose Generative Trajectory Policies (GTPs), an ODE-based framework that unifies generative policies in offline RL, overcoming the performance–efficiency trade-off and achieving state-of-the-art results on D4RL benchmarks."
 paper: "https://arxiv.org/abs/2510.11499"
+code: "https://github.com/wmd3i/gtp"
 ---
 
 Generative models have emerged as a powerful class of policies for offline reinforcement learning (RL) due to their ability to capture complex, multi-modal behaviors. 
