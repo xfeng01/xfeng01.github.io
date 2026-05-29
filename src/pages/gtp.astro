@@ -74,6 +74,21 @@ $$`,
   },
 ];
 
+const methodFigures = [
+  {
+    title: 'Stable score approximation',
+    image: '/gtp/stable-score-approximation.webp',
+    alt: 'Stable score approximation diagram for GTP training',
+    caption: 'A data-anchored approximate score provides stable trajectory supervision without repeatedly solving the ODE.',
+  },
+  {
+    title: 'Value-driven guidance',
+    image: '/gtp/value-driven-guidance.webp',
+    alt: 'Value-driven guidance diagram for GTP policy improvement',
+    caption: 'Advantage weighting shifts the learned trajectory toward higher-value actions while staying aligned with data.',
+  },
+];
+
 const bcRows = [
   {
     suite: 'Gym',
@@ -115,6 +130,33 @@ const rlRows = [
       { name: 'D-QL', score: '69.6' },
     ],
     note: 'Best average on the sparse-reward AntMaze suite.',
+  },
+];
+
+const visualResults = [
+  {
+    title: 'Original dataset',
+    image: '/gtp/multi-goal-dataset.webp',
+    alt: 'Original multi-goal dataset trajectories',
+    description: 'The behavior data contains four clear modes toward the four goals.',
+  },
+  {
+    title: 'Diffusion-QL',
+    image: '/gtp/multi-goal-diffusion-ql.webp',
+    alt: 'Diffusion-QL trajectories in the multi-goal environment',
+    description: 'Diffusion-style sampling covers the modes, but trajectories are visibly noisy.',
+  },
+  {
+    title: 'Consistency-AC',
+    image: '/gtp/multi-goal-consistency-ac.webp',
+    alt: 'Consistency-AC trajectories in the multi-goal environment',
+    description: 'Fast consistency sampling can distort the multimodal structure.',
+  },
+  {
+    title: 'GTP',
+    image: '/gtp/multi-goal-gtp.webp',
+    alt: 'GTP trajectories in the multi-goal environment',
+    description: 'GTP preserves all four goal-reaching modes with compact trajectories.',
   },
 ];
 
@@ -268,6 +310,22 @@ $$`,
           </div>
         ))}
       </div>
+      <div class="mt-5 grid gap-4 md:grid-cols-2">
+        {methodFigures.map((item) => (
+          <figure class="rounded-md border border-gray-200 bg-white p-3">
+            <img
+              src={item.image}
+              alt={item.alt}
+              loading="lazy"
+              class="w-full rounded border border-gray-100 bg-white"
+            />
+            <figcaption class="mt-2">
+              <div class="text-center text-sm font-semibold text-gray-800">{item.title}</div>
+              <p class="mx-auto mb-0 mt-1 max-w-sm text-center text-xs leading-5 text-gray-600">{item.caption}</p>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
     </section>
 
     <section id="results" class="mt-10 border-t border-gray-200 pt-8">
@@ -328,6 +386,35 @@ $$`,
       </div>
       <p class="mb-0 mt-3 text-sm leading-6 text-gray-600">
         Scores are normalized D4RL averages reported in the paper. Full per-task results, ablations, and additional baselines are in the PDF.
+      </p>
+    </section>
+
+    <section class="mt-10 border-t border-gray-200 pt-8">
+      <h3 class="mb-3 text-2xl font-semibold text-gray-900">Policy Visualization</h3>
+      <p class="mb-5 max-w-3xl text-sm leading-6 text-gray-600">
+        A 2D multi-goal environment gives a qualitative view of policy expressiveness. The target dataset is multimodal,
+        and the learned policy should preserve all goal-reaching modes rather than collapsing to a single direction.
+      </p>
+      <div class="grid gap-4 md:grid-cols-2">
+        {visualResults.map((item) => (
+          <figure class="rounded-md border border-gray-200 bg-white p-3">
+            <img
+              src={item.image}
+              alt={item.alt}
+              loading="lazy"
+              class="w-full rounded border border-gray-100 bg-white"
+            />
+            <figcaption class="mt-2 text-center">
+              <div class="text-sm font-semibold text-gray-800">{item.title}</div>
+              <p class="mx-auto mb-0 mt-1 max-w-sm text-xs leading-5 text-gray-600">{item.description}</p>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <p class="mb-0 mt-4 rounded-md border border-gray-200 bg-gray-50 p-4 text-sm leading-6 text-gray-700">
+        The key point is mode preservation: in this toy environment, a strong generative policy should not collapse to one
+        goal or smear probability mass across the space. GTP keeps the four-way structure while avoiding long iterative
+        diffusion sampling.
       </p>
     </section>
 
