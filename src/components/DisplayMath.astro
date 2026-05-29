@@ -1,0 +1,26 @@
+---
+import katex from 'katex';
+
+interface Props {
+  text: string;
+  class?: string;
+}
+
+const { text, class: className } = Astro.props;
+
+const source = text.trim();
+const displayBlocks = Array.from(source.matchAll(/\$\$([\s\S]*?)\$\$/g), (match) => match[1].trim());
+const expressions = displayBlocks.length > 0 ? displayBlocks : [source];
+
+const rendered = expressions
+  .map((expression) =>
+    katex.renderToString(expression, {
+      displayMode: true,
+      throwOnError: false,
+      strict: false,
+    }),
+  )
+  .join('');
+---
+
+<div class={className} set:html={rendered} />

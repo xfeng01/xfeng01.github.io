@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, image, paper, authors, pub, description, code, poster, blog } = project.data;
+const { title, image, paper, authors, pub, description, code, poster, blog, page } = project.data;
 const yourName = "Xinsong Feng";
 const { Content } = await project.render();
 
@@ -27,7 +27,13 @@ const imageId = `image-${project.slug}`;
   )}
   <div class="w-full md:w-2/3">
     <h3 class="text-base font-semibold mb-1 text-gray-900">
-      {title}
+      {page ? (
+        <a href={page} class="no-underline hover:underline" style="color: #111827;">
+          {title}
+        </a>
+      ) : (
+        title
+      )}
     </h3>
     <p class="text-sm text-gray-600 mb-1">
       {authors.map((author: string, index: number) => (
@@ -55,6 +61,15 @@ const imageId = `image-${project.slug}`;
       >
         ABSTRACT
       </button>
+      {page && (
+        <a 
+          href={page}
+          class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
+          style="color: #111827; text-decoration: none;"
+        >
+          PAGE
+        </a>
+      )}
       {paper && (
         <a 
           href={paper} 

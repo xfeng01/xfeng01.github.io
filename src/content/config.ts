@@ -18,6 +18,7 @@ const projectsCollection = defineCollection({
     code: z.string().optional(),
     poster: z.string().optional(),
     blog: z.string().optional(),
+    page: z.string().optional(),
   }),
 });
 
