@@ -1,7 +1,9 @@
 ---
 title: "Some Basic Thoughts on Consistency in Continuous and Discrete Diffusion Language Models"
-description: ""
+description: "A note on why continuous diffusion language models may express global consistency more naturally than discrete masked diffusion."
 date: 2026-06-02
+lang: zh
+translationKey: continuous-vs-discrete
 tags:
   - Diffusion Language Models
 ---
