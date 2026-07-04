@@ -5,7 +5,10 @@ pub: "TMLR, 2026"
 image: "/cmfo.png"
 date: 2025-10-02
 description: "We propose CMFO (Constrained Markov Flow Optimizer), which unifies flow-matching generative models and reinforcement learning to solve constrained optimization problems with improved efficiency and feasibility."
-# paper: "https://arxiv.org/abs/2502.05537"
+paper: "https://openreview.net/pdf?id=QW0ZX4zRC2"
+# poster: "/cmfo_poster.pdf"
+code: "https://github.com/wmd3i/CMFO"
+# page: "/gtp"
 ---
 
 Previous learning-to-optimize (L2O) methods on constrained optimization problems often treat neural networks as initializers that generate approximate solutions requiring substantial post-hoc refinements. 
