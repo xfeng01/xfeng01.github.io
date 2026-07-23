@@ -52,6 +52,7 @@ const cleanTocText = (text: string) => {
   });
 
   return textWithMathPlaceholders
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
     .replace(/[*`]/g, '')
     .replace(/(^|[\s([{])_([^_]+)_($|[\s)\]}.,:;!?])/g, '$1$2$3')
     .replace(/@@MATH(\d+)@@/g, (_, index) => mathExpressions[Number(index)] ?? '')
@@ -65,12 +66,15 @@ const rawTocItems = Array.from(post.body.matchAll(markdownHeadingPattern), (matc
   text: cleanTocText(match[2]),
 }));
 
-const tocItems = rawTocItems
+const MAX_DETAILED_TOC_ITEMS = 12;
+const allTocItems = rawTocItems
   .map((item, index) => ({
     ...item,
     slug: renderedTocHeadings[index]?.slug ?? '',
   }))
   .filter((item) => item.slug);
+
+const compactToc = allTocItems.length > MAX_DETAILED_TOC_ITEMS;
 
 const formatDate = (date: Date) =>
   date.toLocaleDateString('en-US', {
@@ -130,7 +134,7 @@ const formatDate = (date: Date) =>
     </div>
   </article>
 
-  <BlogToc items={tocItems} />
+  <BlogToc items={allTocItems} compact={compactToc} />
 </BasicLayout>
 
 <style>

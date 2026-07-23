@@ -7,31 +7,66 @@ interface TocItem {
 
 interface Props {
   items: TocItem[];
+  compact?: boolean;
 }
 
-const { items } = Astro.props;
+interface TocSection {
+  heading: TocItem;
+  children: TocItem[];
+}
+
+const { items, compact = false } = Astro.props;
+const sections: TocSection[] = [];
+
+for (const item of items) {
+  if (item.depth === 2) {
+    sections.push({ heading: item, children: [] });
+  } else {
+    sections.at(-1)?.children.push(item);
+  }
+}
 ---
 
 {
-  items.length > 0 && (
-    <aside class="hidden xl:block xl:fixed xl:right-6 xl:top-32 xl:w-56 2xl:right-8 2xl:w-60">
+  sections.length > 0 && (
+    <aside
+      class={`hidden xl:block xl:fixed xl:right-6 xl:top-32 xl:w-56 2xl:right-8 2xl:w-60${compact ? " toc-compact" : ""}`}
+      data-blog-toc
+      data-compact={compact ? "true" : "false"}
+    >
       <div class="max-h-[calc(100vh-10rem)] overflow-y-auto border-l border-gray-200 pl-3">
         <p class="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">On this page</p>
         <nav aria-label="Table of contents">
           <ul class="toc-list">
-            {items.map((heading) => (
-              <li class={heading.depth === 3 ? "toc-item toc-item-depth-3" : "toc-item"}>
+            {sections.map((section, index) => (
+              <li
+                class={`toc-section${compact && index === 0 ? " is-active" : ""}`}
+                data-toc-section={section.heading.slug}
+              >
                 <a
-                  href={`#${heading.slug}`}
-                  class={heading.depth === 3 ? "toc-link toc-link-depth-3" : "toc-link"}
-                  title={heading.text}
+                  href={`#${section.heading.slug}`}
+                  class="toc-link"
+                  title={section.heading.text}
                 >
-                  <span
-                    style="-webkit-line-clamp: 2; -webkit-box-orient: vertical; display: -webkit-box; overflow: hidden;"
-                  >
-                    {heading.text}
-                  </span>
+                  <span class="toc-label">{section.heading.text}</span>
                 </a>
+                {
+                  section.children.length > 0 && (
+                    <ul class="toc-sublist">
+                      {section.children.map((heading) => (
+                        <li class="toc-item toc-item-depth-3">
+                          <a
+                            href={`#${heading.slug}`}
+                            class="toc-link toc-link-depth-3"
+                            title={heading.text}
+                          >
+                            <span class="toc-label">{heading.text}</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )
+                }
               </li>
             ))}
           </ul>
@@ -57,8 +92,19 @@ const { items } = Astro.props;
     padding: 0;
   }
 
-  .toc-item-depth-3 {
-    padding-left: 0.875rem;
+  .toc-section {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc-sublist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0.35rem 0 0.05rem;
+    padding: 0 0 0 0.875rem;
   }
 
   .toc-link {
@@ -72,6 +118,13 @@ const { items } = Astro.props;
     transition: color 150ms ease;
   }
 
+  .toc-label {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    overflow: hidden;
+  }
+
   .toc-link-depth-3 {
     color: #6b7280;
     font-size: 0.78rem;
@@ -81,4 +134,69 @@ const { items } = Astro.props;
   .toc-link:hover {
     color: #111827;
   }
+
+  .toc-compact .toc-sublist {
+    display: none;
+  }
+
+  .toc-compact .toc-section.is-active > .toc-sublist {
+    display: flex;
+  }
+
+  .toc-compact .toc-section.is-active > .toc-link {
+    color: #111827;
+    font-weight: 600;
+  }
 </style>
+
+<script>
+  const initializeCompactToc = () => {
+    document
+      .querySelectorAll<HTMLElement>('[data-blog-toc][data-compact="true"]')
+      .forEach((toc) => {
+        const sections = Array.from(toc.querySelectorAll<HTMLElement>('[data-toc-section]'))
+          .map((element) => ({
+            element,
+            heading: document.getElementById(element.dataset.tocSection ?? ''),
+          }))
+          .filter((section) => section.heading);
+
+        if (sections.length === 0) return;
+
+        const updateActiveSection = () => {
+          let activeSection = sections[0];
+
+          for (const section of sections) {
+            if (section.heading && section.heading.getBoundingClientRect().top <= 180) {
+              activeSection = section;
+            }
+          }
+
+          for (const section of sections) {
+            section.element.classList.toggle('is-active', section === activeSection);
+          }
+        };
+
+        let frameRequested = false;
+        const requestUpdate = () => {
+          if (frameRequested) return;
+          frameRequested = true;
+          window.requestAnimationFrame(() => {
+            updateActiveSection();
+            frameRequested = false;
+          });
+        };
+
+        updateActiveSection();
+        window.addEventListener('scroll', requestUpdate, { passive: true });
+        window.addEventListener('resize', requestUpdate);
+        window.addEventListener('hashchange', requestUpdate);
+      });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeCompactToc, { once: true });
+  } else {
+    initializeCompactToc();
+  }
+</script>

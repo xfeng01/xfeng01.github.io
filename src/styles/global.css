@@ -80,3 +80,29 @@ blockquote {
 blockquote p:last-child {
   margin-bottom: 0;
 }
+
+.blog-content table {
+  @apply my-6 w-full border-collapse text-left text-[0.9rem];
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.blog-content th,
+.blog-content td {
+  @apply border border-gray-200 px-3 py-2 align-top leading-6;
+  min-width: 7rem;
+}
+
+.blog-content th {
+  @apply bg-gray-50 font-semibold text-gray-900;
+}
+
+.blog-content td {
+  @apply text-gray-700;
+}
+
+.blog-content tbody tr:nth-child(even) {
+  @apply bg-gray-50/60;
+}
