@@ -11,9 +11,9 @@
 import BasicLayout from '../layouts/BasicLayout.astro';
 ---
 
-<BasicLayout title="Vault | Xinsong Feng" showProfile={false} noindex={true}>
+<BasicLayout title="Vault | Xinsong Feng" showProfile={false} noindex={true} width="max-w-[50rem]">
   <!-- 口令闸门 -->
-  <section id="gate" class="max-w-4xl">
+  <section id="gate">
     <div class="border-b border-gray-200 pb-5">
       <div class="max-w-2xl">
         <h2 class="mb-2 text-3xl font-semibold leading-tight text-gray-900">Vault</h2>
@@ -45,7 +45,7 @@ import BasicLayout from '../layouts/BasicLayout.astro';
   </section>
 
   <!-- 索引页，对应 /blog -->
-  <section id="index-view" class="hidden max-w-4xl">
+  <section id="index-view" class="hidden">
     <div class="border-b border-gray-200 pb-5">
       <div class="flex items-start justify-between gap-4">
         <div class="max-w-2xl">
@@ -66,7 +66,7 @@ import BasicLayout from '../layouts/BasicLayout.astro';
   </section>
 
   <!-- 文章页，对应 /blog/[slug] -->
-  <article id="entry-view" class="hidden min-w-0 max-w-[46rem]">
+  <article id="entry-view" class="hidden min-w-0">
     <header class="mb-7 border-b border-gray-200 pb-5">
       <div class="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.85rem] font-medium text-gray-500">
         <a href="#" class="vault-crumb no-underline">Vault</a>
