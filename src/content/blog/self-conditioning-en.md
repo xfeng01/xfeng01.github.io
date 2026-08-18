@@ -1,5 +1,5 @@
 ---
-title: "Some Basic Thoughts on Self-Conditioning"
+title: "Some Thoughts on Self-Conditioning"
 description: "A note on self-conditioning."
 date: 2026-07-20
 lang: en

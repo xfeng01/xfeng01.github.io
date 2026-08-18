@@ -1,6 +1,6 @@
 ---
-title: "Some Basic Thoughts on Attention Mechanisms and the KV-Cache"
-description: "Some notes on attention machanisms."
+title: "Some Thoughts on Attention Mechanisms and the KV-Cache"
+description: "Some notes on attention mechanisms."
 date: 2024-05-15
 tags:
   - LLM

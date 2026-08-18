@@ -1,5 +1,5 @@
 ---
-title: "Some Basic Thoughts on Consistency in Continuous and Discrete Diffusion Language Models"
+title: "Some Thoughts on Consistency in Continuous and Discrete Diffusion Language Models"
 description: "A note on why continuous diffusion language models may express global consistency more naturally than discrete masked diffusion."
 date: 2026-06-02
 lang: zh

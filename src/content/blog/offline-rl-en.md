@@ -1,5 +1,5 @@
 ---
-title: "Some Basic Thoughts on Offline RL: The Core Problem, Common Solutions, and Generative Policies"
+title: "Some Thoughts on Offline RL: The Core Problem, Common Solutions, and Generative Policies"
 description: "Offline RL is about reliable policy improvement under dataset support constraints."
 date: 2025-10-03
 lang: en
