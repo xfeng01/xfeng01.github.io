@@ -1,0 +1,237 @@
+---
+// 私密空间。
+//
+// 这个页面本身是公开的，但它什么内容都不含 —— 内容全在 /vault.json 里，
+// 是一坨 AES-GCM 密文。口令只存在于你脑子里，解密全程在浏览器本地完成。
+// 内容由 `npm run vault` 生成，见 scripts/build-vault.mjs。
+import BasicLayout from '../layouts/BasicLayout.astro';
+---
+
+<BasicLayout title="Vault" showProfile={false} noindex={true}>
+  <div class="min-w-0 max-w-[52rem]">
+    <!-- 口令闸门 -->
+    <section id="gate" class="max-w-md">
+      <h2 class="mb-2 text-[1.72rem] font-semibold leading-tight text-gray-900">Vault</h2>
+      <p class="mb-6 text-[0.96rem] leading-6 text-gray-600">
+        This page is encrypted. Enter the passphrase to unlock.
+      </p>
+
+      <form id="gate-form" class="flex flex-col gap-3">
+        <input
+          id="passphrase"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Passphrase"
+          class="w-full rounded-md border border-gray-300 px-3 py-2 text-[0.95rem] text-gray-900 outline-none transition-colors focus:border-gray-900"
+        />
+        <div class="flex items-center gap-3">
+          <button
+            id="unlock"
+            type="submit"
+            class="rounded-md bg-gray-900 px-4 py-2 text-[0.9rem] font-medium text-white transition-opacity hover:opacity-85 disabled:opacity-50"
+          >
+            Unlock
+          </button>
+          <span id="status" class="text-[0.85rem] text-gray-500"></span>
+        </div>
+      </form>
+    </section>
+
+    <!-- 解密后的内容 -->
+    <section id="vault" class="hidden">
+      <header class="mb-7 flex items-baseline justify-between gap-4 border-b border-gray-200 pb-5">
+        <div>
+          <h2 class="mb-1 text-[1.72rem] font-semibold leading-tight text-gray-900">Vault</h2>
+          <p id="vault-meta" class="mb-0 text-[0.85rem] text-gray-500"></p>
+        </div>
+        <button
+          id="lock"
+          type="button"
+          class="shrink-0 rounded-md border border-gray-300 px-3 py-1.5 text-[0.82rem] font-medium text-gray-600 transition-colors hover:border-gray-900 hover:text-gray-900"
+        >
+          Lock
+        </button>
+      </header>
+
+      <div class="flex flex-col gap-8 md:flex-row-reverse md:gap-10">
+        <nav id="note-list" class="shrink-0 md:w-56" aria-label="Notes"></nav>
+        <article id="note-body" class="blog-content min-w-0 flex-1 text-gray-800"></article>
+      </div>
+    </section>
+  </div>
+</BasicLayout>
+
+<script>
+  const SESSION_KEY = 'vault:passphrase';
+
+  const gate = document.getElementById('gate')!;
+  const gateForm = document.getElementById('gate-form') as HTMLFormElement;
+  const passphraseInput = document.getElementById('passphrase') as HTMLInputElement;
+  const unlockButton = document.getElementById('unlock') as HTMLButtonElement;
+  const statusLine = document.getElementById('status')!;
+  const vault = document.getElementById('vault')!;
+  const vaultMeta = document.getElementById('vault-meta')!;
+  const noteList = document.getElementById('note-list')!;
+  const noteBody = document.getElementById('note-body')!;
+  const lockButton = document.getElementById('lock') as HTMLButtonElement;
+
+  type Note = {
+    slug: string;
+    title: string;
+    date: string | null;
+    tags: string[];
+    description: string;
+    html: string;
+  };
+
+  const base64ToBytes = (value: string) =>
+    Uint8Array.from(atob(value), (char) => char.charCodeAt(0));
+
+  async function gunzip(bytes: Uint8Array) {
+    const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    return new Uint8Array(await new Response(stream).arrayBuffer());
+  }
+
+  async function deriveKey(passphrase: string, salt: Uint8Array, iterations: number, hash: string) {
+    const baseKey = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(passphrase),
+      'PBKDF2',
+      false,
+      ['deriveKey'],
+    );
+
+    return crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt, iterations, hash },
+      baseKey,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['decrypt'],
+    );
+  }
+
+  async function unlock(passphrase: string): Promise<Note[]> {
+    const response = await fetch('/vault.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Vault data not found.');
+
+    const envelope = await response.json();
+    const key = await deriveKey(
+      passphrase,
+      base64ToBytes(envelope.salt),
+      envelope.kdf.iterations,
+      envelope.kdf.hash,
+    );
+
+    let plaintext: Uint8Array;
+    try {
+      const decrypted = await crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: base64ToBytes(envelope.iv) },
+        key,
+        base64ToBytes(envelope.data),
+      );
+      plaintext = new Uint8Array(decrypted);
+    } catch {
+      // AES-GCM 的认证标签对不上 —— 口令错了，或者密文被改过。
+      throw new Error('Wrong passphrase.');
+    }
+
+    if (envelope.compression === 'gzip') plaintext = await gunzip(plaintext);
+
+    return JSON.parse(new TextDecoder().decode(plaintext)).notes as Note[];
+  }
+
+  const formatDate = (value: string | null) =>
+    value
+      ? new Date(value).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          timeZone: 'UTC',
+        })
+      : '';
+
+  function render(notes: Note[]) {
+    gate.classList.add('hidden');
+    vault.classList.remove('hidden');
+    vaultMeta.textContent = `${notes.length} ${notes.length === 1 ? 'entry' : 'entries'}`;
+
+    noteList.innerHTML = '';
+    const links: HTMLButtonElement[] = [];
+
+    const show = (index: number) => {
+      const note = notes[index];
+      links.forEach((link, i) => {
+        link.classList.toggle('text-gray-900', i === index);
+        link.classList.toggle('font-semibold', i === index);
+        link.classList.toggle('text-gray-500', i !== index);
+      });
+
+      const date = formatDate(note.date);
+      const tags = note.tags.length
+        ? `<p class="mt-3 mb-0 text-[0.72rem] font-semibold uppercase tracking-[0.11em] text-gray-400">${note.tags.join(' / ')}</p>`
+        : '';
+
+      noteBody.innerHTML =
+        `<header class="mb-6 border-b border-gray-200 pb-4">` +
+        (date ? `<p class="mb-2 text-[0.85rem] font-medium text-gray-500">${date}</p>` : '') +
+        `<h3 class="mb-0 text-[1.4rem] font-semibold leading-tight text-gray-900">${note.title}</h3>` +
+        (note.description
+          ? `<p class="mt-2 mb-0 text-[0.94rem] leading-6 text-gray-600">${note.description}</p>`
+          : '') +
+        tags +
+        `</header>` +
+        note.html;
+
+      noteBody.scrollIntoView({ block: 'nearest' });
+    };
+
+    notes.forEach((note, index) => {
+      const link = document.createElement('button');
+      link.type = 'button';
+      link.className =
+        'block w-full text-left text-[0.88rem] leading-5 text-gray-500 transition-colors hover:text-gray-900 py-1.5';
+      link.textContent = note.title;
+      link.addEventListener('click', () => show(index));
+      links.push(link);
+      noteList.appendChild(link);
+    });
+
+    if (notes.length) show(0);
+  }
+
+  async function attempt(passphrase: string, { remember = true } = {}) {
+    unlockButton.disabled = true;
+    statusLine.textContent = 'Decrypting…';
+
+    try {
+      const notes = await unlock(passphrase);
+      // 存在 sessionStorage：刷新不用重输，关掉标签页就没了。
+      if (remember) sessionStorage.setItem(SESSION_KEY, passphrase);
+      render(notes);
+    } catch (error) {
+      sessionStorage.removeItem(SESSION_KEY);
+      statusLine.textContent = error instanceof Error ? error.message : String(error);
+      passphraseInput.select();
+    } finally {
+      unlockButton.disabled = false;
+    }
+  }
+
+  gateForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const passphrase = passphraseInput.value;
+    if (passphrase) attempt(passphrase);
+  });
+
+  lockButton.addEventListener('click', () => {
+    sessionStorage.removeItem(SESSION_KEY);
+    location.reload();
+  });
+
+  const remembered = sessionStorage.getItem(SESSION_KEY);
+  if (remembered) {
+    attempt(remembered, { remember: false });
+  } else {
+    passphraseInput.focus();
+  }
+</script>

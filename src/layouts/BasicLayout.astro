@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-const { title = "Xinsong Feng", showProfile = true } = Astro.props;
+const { title = "Xinsong Feng", showProfile = true, noindex = false } = Astro.props;
 
 const pageShellClass = showProfile
   ? "mx-auto min-h-screen w-full max-w-5xl px-6 py-8 sm:px-8 lg:px-10"
@@ -44,6 +44,7 @@ export const info = {
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="generator" content={Astro.generator} />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">

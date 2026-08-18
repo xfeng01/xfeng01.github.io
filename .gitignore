@@ -13,6 +13,9 @@ yarn-error.log*
 pnpm-debug.log*
 
 
+# 私密空间的明文内容（只有 public/vault.json 里的密文才进仓库）
+private/
+
 # environment variables
 .env
 .env.production
