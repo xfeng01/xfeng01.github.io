@@ -96,6 +96,69 @@ export const info = {
     <footer class={footerClass}>
       © {new Date().getFullYear()} Xinsong Feng
     </footer>
-	
+
+    <script>
+      /*
+       * 站内跳转快捷键，GitHub / Linear 那套「g 前缀」序列键：
+       *   g 然后 h  →  首页
+       *   g 然后 b  →  /blog
+       *   g 然后 v  →  /vault
+       *
+       * 刻意不用 Ctrl/Cmd 组合：Ctrl+V 是粘贴（会劫持密室的口令输入），
+       * Ctrl+B 在 Firefox 是书签侧栏。序列键不占用任何原生快捷键。
+       */
+      const ROUTES: Record<string, string> = {
+        h: '/',
+        b: '/blog',
+        v: '/vault',
+      };
+      const PENDING_TIMEOUT = 1000;
+
+      let pending = false;
+      let timer: number | undefined;
+
+      const clearPending = () => {
+        pending = false;
+        if (timer !== undefined) window.clearTimeout(timer);
+        timer = undefined;
+      };
+
+      // 光标在输入框里就完全让行，否则会吃掉正在输入的字符
+      const isTyping = (target: EventTarget | null) => {
+        const element = target as HTMLElement | null;
+        if (!element) return false;
+        if (element.isContentEditable) return true;
+        return ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName);
+      };
+
+      const samePage = (href: string) =>
+        window.location.pathname.replace(/\/+$/, '') === href.replace(/\/+$/, '');
+
+      document.addEventListener('keydown', (event) => {
+        // 带修饰键的一律不管，交回浏览器
+        if (event.ctrlKey || event.metaKey || event.altKey || isTyping(event.target)) {
+          clearPending();
+          return;
+        }
+
+        const key = event.key.toLowerCase();
+
+        if (pending) {
+          const href = ROUTES[key];
+          clearPending();
+          // 按了 g 之后如果不是这几个键，就当作取消，不拦截
+          if (href && !samePage(href)) {
+            event.preventDefault();
+            window.location.href = href;
+          }
+          return;
+        }
+
+        if (key === 'g') {
+          pending = true;
+          timer = window.setTimeout(clearPending, PENDING_TIMEOUT);
+        }
+      });
+    </script>
   </body>
 </html>

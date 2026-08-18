@@ -11,8 +11,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   });
 ---
 
-<BasicLayout title="Blog | Xinsong Feng" showProfile={false}>
-  <section class="max-w-4xl">
+<BasicLayout title="Blog | Xinsong Feng" showProfile={false} width="max-w-4xl">
+  <section>
     <div class="border-b border-gray-200 pb-5">
       <div class="max-w-2xl">
         <h2 class="mb-2 text-3xl font-semibold leading-tight text-gray-900">Blog</h2>
