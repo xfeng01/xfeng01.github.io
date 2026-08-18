@@ -58,6 +58,18 @@ const { items } = Astro.props;
           // 表现就是「点了 5 Trend Analysis，加粗却出现在它的子标题上」。
           if (item.heading.getBoundingClientRect().top <= 40) active = item;
         }
+
+        // 页面滚到底时，末尾那几个标题永远到不了顶部 —— 可滚动距离不够了。
+        // 只靠上面那条规则，高亮会永久卡在倒数第二个标题上。
+        // 这时改取最后一个已经进入视口的标题。
+        const reachedBottom =
+          window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+        if (reachedBottom) {
+          for (const item of items) {
+            if (item.heading.getBoundingClientRect().top < window.innerHeight) active = item;
+          }
+        }
+
         for (const item of items) {
           item.element.classList.toggle('is-active', item === active);
         }
