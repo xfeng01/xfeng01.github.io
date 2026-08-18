@@ -4,95 +4,343 @@
 // 这个页面本身是公开的，但它什么内容都不含 —— 内容全在 /vault.json 里，
 // 是一坨 AES-GCM 密文。口令只存在于你脑子里，解密全程在浏览器本地完成。
 // 内容由 `npm run vault` 生成，见 scripts/build-vault.mjs。
+//
+// 结构刻意对齐博客：解锁后是索引页（同 /blog），点进去是文章页
+// （同 /blog/[slug]，含右侧固定 TOC）。用 location.hash 做路由，
+// 所以浏览器的前进/后退都能用。
 import BasicLayout from '../layouts/BasicLayout.astro';
 ---
 
-<BasicLayout title="Vault" showProfile={false} noindex={true}>
-  <div class="min-w-0 max-w-[52rem]">
-    <!-- 口令闸门 -->
-    <section id="gate" class="max-w-md">
-      <h2 class="mb-2 text-[1.72rem] font-semibold leading-tight text-gray-900">Vault</h2>
-      <p class="mb-6 text-[0.96rem] leading-6 text-gray-600">
-        This page is encrypted. Enter the passphrase to unlock.
-      </p>
+<BasicLayout title="Vault | Xinsong Feng" showProfile={false} noindex={true}>
+  <!-- 口令闸门 -->
+  <section id="gate" class="max-w-4xl">
+    <div class="border-b border-gray-200 pb-5">
+      <div class="max-w-2xl">
+        <h2 class="mb-2 text-3xl font-semibold leading-tight text-gray-900">Vault</h2>
+        <p class="mb-0 text-base leading-7 text-gray-600">
+          This page is encrypted. Everything is decrypted locally in your browser.
+        </p>
+      </div>
+    </div>
 
-      <form id="gate-form" class="flex flex-col gap-3">
-        <input
-          id="passphrase"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Passphrase"
-          class="w-full rounded-md border border-gray-300 px-3 py-2 text-[0.95rem] text-gray-900 outline-none transition-colors focus:border-gray-900"
-        />
-        <div class="flex items-center gap-3">
-          <button
-            id="unlock"
-            type="submit"
-            class="rounded-md bg-gray-900 px-4 py-2 text-[0.9rem] font-medium text-white transition-opacity hover:opacity-85 disabled:opacity-50"
-          >
-            Unlock
-          </button>
-          <span id="status" class="text-[0.85rem] text-gray-500"></span>
-        </div>
-      </form>
-    </section>
+    <form id="gate-form" class="max-w-sm pt-7">
+      <label for="passphrase" class="mb-2 block text-sm font-medium text-gray-700">Passphrase</label>
+      <input
+        id="passphrase"
+        type="password"
+        autocomplete="current-password"
+        class="w-full rounded-md border border-gray-300 px-3 py-2 text-[0.95rem] text-gray-900 outline-none transition-colors focus:border-gray-900"
+      />
+      <div class="mt-4 flex items-center gap-3">
+        <button
+          id="unlock"
+          type="submit"
+          class="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-85 disabled:opacity-50"
+        >
+          Unlock
+        </button>
+        <span id="status" class="text-sm text-gray-500"></span>
+      </div>
+    </form>
+  </section>
 
-    <!-- 解密后的内容 -->
-    <section id="vault" class="hidden">
-      <header class="mb-7 flex items-baseline justify-between gap-4 border-b border-gray-200 pb-5">
-        <div>
-          <h2 class="mb-1 text-[1.72rem] font-semibold leading-tight text-gray-900">Vault</h2>
-          <p id="vault-meta" class="mb-0 text-[0.85rem] text-gray-500"></p>
+  <!-- 索引页，对应 /blog -->
+  <section id="index-view" class="hidden max-w-4xl">
+    <div class="border-b border-gray-200 pb-5">
+      <div class="flex items-start justify-between gap-4">
+        <div class="max-w-2xl">
+          <h2 class="mb-2 text-3xl font-semibold leading-tight text-gray-900">Vault</h2>
+          <p id="index-subtitle" class="mb-0 text-base leading-7 text-gray-600"></p>
         </div>
         <button
-          id="lock"
           type="button"
-          class="shrink-0 rounded-md border border-gray-300 px-3 py-1.5 text-[0.82rem] font-medium text-gray-600 transition-colors hover:border-gray-900 hover:text-gray-900"
+          data-lock
+          class="mt-1 shrink-0 rounded-md border border-gray-300 px-3 py-1.5 text-[0.8rem] font-medium text-gray-600 transition-colors hover:border-gray-900 hover:text-gray-900"
         >
           Lock
         </button>
-      </header>
-
-      <div class="flex flex-col gap-8 md:flex-row-reverse md:gap-10">
-        <nav id="note-list" class="shrink-0 md:w-56" aria-label="Notes"></nav>
-        <article id="note-body" class="blog-content min-w-0 flex-1 text-gray-800"></article>
       </div>
-    </section>
-  </div>
+    </div>
+
+    <div id="entry-list" class="divide-y divide-gray-200"></div>
+  </section>
+
+  <!-- 文章页，对应 /blog/[slug] -->
+  <article id="entry-view" class="hidden min-w-0 max-w-[46rem]">
+    <header class="mb-7 border-b border-gray-200 pb-5">
+      <div class="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.85rem] font-medium text-gray-500">
+        <a href="#" class="vault-crumb no-underline">Vault</a>
+        <span>/</span>
+        <span id="entry-date"></span>
+        <!-- display:contents，让注入的语言链接直接参与外层的 flex 布局 -->
+        <span id="entry-langs" class="contents"></span>
+        <span class="text-gray-300">/</span>
+        <button type="button" data-lock class="vault-crumb cursor-pointer">Lock</button>
+      </div>
+      <h2 id="entry-title" class="mb-3 text-[1.72rem] font-semibold leading-tight text-gray-900 sm:text-[2rem]"></h2>
+      <p id="entry-description" class="mb-0 max-w-2xl text-[0.96rem] leading-6 text-gray-600"></p>
+      <p id="entry-tags" class="mt-3 mb-0 text-[0.72rem] font-semibold uppercase tracking-[0.11em] text-gray-400"></p>
+    </header>
+
+    <div id="entry-body" class="blog-content text-gray-800"></div>
+  </article>
+
+  <!--
+    右侧固定 TOC，对应 BlogToc.astro。
+    显示/隐藏走 .vault-toc-off，不要去动这里的 hidden ——
+    hidden 和 xl:block 是配套的，摘掉 hidden 会让 TOC 在移动端漏出来。
+  -->
+  <aside
+    id="entry-toc"
+    class="vault-toc-off hidden xl:fixed xl:right-6 xl:top-32 xl:block xl:w-56 2xl:right-8 2xl:w-60"
+  >
+    <div class="max-h-[calc(100vh-10rem)] overflow-y-auto border-l border-gray-200 pl-3">
+      <p class="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">On this page</p>
+      <nav aria-label="Table of contents">
+        <ul id="toc-list" class="vault-toc-list"></ul>
+      </nav>
+    </div>
+  </aside>
 </BasicLayout>
+
+<!--
+  下面这些样式必须是 global 的：内容由 JS 用 innerHTML 生成，
+  拿不到 Astro 给作用域样式加的那个 data 属性。
+-->
+<style is:global>
+  /* TOC 的开关。用 !important 是因为要盖过 Tailwind 的 xl:block。 */
+  .vault-toc-off {
+    display: none !important;
+  }
+
+  .vault-summary {
+    list-style: none;
+  }
+
+  .vault-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .vault-title {
+    color: #111827;
+    transition: color 150ms ease;
+  }
+
+  .vault-summary:hover .vault-title {
+    color: #4b5563;
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
+  }
+
+  .vault-title .katex {
+    font-size: 1em;
+  }
+
+  .vault-read-link {
+    color: #111827;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  .vault-read-link:hover {
+    color: #4b5563;
+  }
+
+  .vault-crumb {
+    background: none;
+    border: 0;
+    color: #9ca3af;
+    font: inherit;
+    padding: 0;
+    transition: color 150ms ease;
+  }
+
+  .vault-crumb:hover {
+    color: #111827;
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
+  }
+
+  /* 语言切换链接，同 BlogArticle.astro 里的 .language-link */
+  .vault-language-link {
+    color: #9ca3af;
+    transition: color 150ms ease;
+  }
+
+  .vault-language-link:hover {
+    color: #111827;
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
+  }
+
+  .vault-toc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .vault-toc-section {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .vault-toc-sublist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0.35rem 0 0.05rem;
+    padding: 0 0 0 0.875rem;
+  }
+
+  .vault-toc-item {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .vault-toc-link {
+    color: #4b5563;
+    display: block;
+    font-size: 0.86rem;
+    font-weight: 500;
+    line-height: 1.45;
+    overflow: hidden;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .vault-toc-link:hover {
+    color: #111827;
+  }
+
+  .vault-toc-label {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    overflow: hidden;
+  }
+
+  .vault-toc-link-depth-3 {
+    color: #6b7280;
+    font-size: 0.78rem;
+    font-weight: 400;
+  }
+
+  /* 条目多的时候折叠三级标题，只展开当前所在的小节 —— 同 BlogToc 的 compact 模式 */
+  .vault-toc-compact .vault-toc-sublist {
+    display: none;
+  }
+
+  .vault-toc-compact .vault-toc-section.is-active > .vault-toc-sublist {
+    display: flex;
+  }
+
+  .vault-toc-compact .vault-toc-section.is-active > .vault-toc-link {
+    color: #111827;
+    font-weight: 600;
+  }
+</style>
 
 <script>
   const SESSION_KEY = 'vault:passphrase';
+  const MAX_DETAILED_TOC_ITEMS = 12;
 
-  const gate = document.getElementById('gate')!;
-  const gateForm = document.getElementById('gate-form') as HTMLFormElement;
-  const passphraseInput = document.getElementById('passphrase') as HTMLInputElement;
-  const unlockButton = document.getElementById('unlock') as HTMLButtonElement;
-  const statusLine = document.getElementById('status')!;
-  const vault = document.getElementById('vault')!;
-  const vaultMeta = document.getElementById('vault-meta')!;
-  const noteList = document.getElementById('note-list')!;
-  const noteBody = document.getElementById('note-body')!;
-  const lockButton = document.getElementById('lock') as HTMLButtonElement;
-
+  type TocItem = { depth: number; slug: string; text: string };
+  type Lang = 'en' | 'zh';
   type Note = {
     slug: string;
+    lang: Lang;
+    translationKey: string;
     title: string;
+    titleHtml: string;
     date: string | null;
     tags: string[];
     description: string;
+    descriptionHtml: string;
     html: string;
+    toc: TocItem[];
   };
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+
+  const gate = $('gate');
+  const gateForm = $<HTMLFormElement>('gate-form');
+  const passphraseInput = $<HTMLInputElement>('passphrase');
+  const unlockButton = $<HTMLButtonElement>('unlock');
+  const statusLine = $('status');
+
+  const indexView = $('index-view');
+  const indexSubtitle = $('index-subtitle');
+  const entryList = $('entry-list');
+
+  const entryView = $('entry-view');
+  const entryDate = $('entry-date');
+  const entryTitle = $('entry-title');
+  const entryDescription = $('entry-description');
+  const entryTags = $('entry-tags');
+  const entryBody = $('entry-body');
+
+  const entryLangs = $('entry-langs');
+  const entryToc = $('entry-toc');
+  const tocList = $('toc-list');
+
+  let notes: Note[] = [];
+
+  /* ---------- 语言，语义对齐 src/utils/blog.ts ---------- */
+
+  const LANG_LABELS: Record<Lang, string> = { en: 'English', zh: '中文' };
+  const LANG_ORDER: Lang[] = ['en', 'zh'];
+
+  // hash 的形状刻意照搬博客的 URL：en 用 #key，zh 用 #zh/key。
+  const hashFor = (note: Note) =>
+    note.lang === 'zh'
+      ? `#zh/${encodeURIComponent(note.translationKey)}`
+      : `#${encodeURIComponent(note.translationKey)}`;
+
+  const translationsOf = (note: Note) =>
+    notes.filter((candidate) => candidate.translationKey === note.translationKey);
+
+  // 索引页每个 translationKey 只出一条，优先英文版。
+  // （博客是直接过滤掉非英文的，那样会让只有中文版的条目彻底消失 ——
+  //  在私密空间里弄丢东西代价太大，所以这里退回该组的第一篇。）
+  function indexEntries() {
+    const seen = new Set<string>();
+    const entries: Note[] = [];
+
+    for (const note of notes) {
+      if (seen.has(note.translationKey)) continue;
+      seen.add(note.translationKey);
+      const group = translationsOf(note);
+      entries.push(group.find((candidate) => candidate.lang === 'en') ?? group[0]);
+    }
+
+    return entries;
+  }
+
+  /* ---------- 解密 ---------- */
 
   const base64ToBytes = (value: string) =>
     Uint8Array.from(atob(value), (char) => char.charCodeAt(0));
 
   async function gunzip(bytes: Uint8Array) {
-    const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const stream = new Blob([bytes as unknown as BlobPart])
+      .stream()
+      .pipeThrough(new DecompressionStream('gzip'));
     return new Uint8Array(await new Response(stream).arrayBuffer());
   }
 
-  async function deriveKey(passphrase: string, salt: Uint8Array, iterations: number, hash: string) {
+  async function decryptVault(passphrase: string): Promise<Note[]> {
+    const response = await fetch('/vault.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Vault data not found.');
+
+    const envelope = await response.json();
     const baseKey = await crypto.subtle.importKey(
       'raw',
       new TextEncoder().encode(passphrase),
@@ -100,26 +348,17 @@ import BasicLayout from '../layouts/BasicLayout.astro';
       false,
       ['deriveKey'],
     );
-
-    return crypto.subtle.deriveKey(
-      { name: 'PBKDF2', salt, iterations, hash },
+    const key = await crypto.subtle.deriveKey(
+      {
+        name: 'PBKDF2',
+        salt: base64ToBytes(envelope.salt),
+        iterations: envelope.kdf.iterations,
+        hash: envelope.kdf.hash,
+      },
       baseKey,
       { name: 'AES-GCM', length: 256 },
       false,
       ['decrypt'],
-    );
-  }
-
-  async function unlock(passphrase: string): Promise<Note[]> {
-    const response = await fetch('/vault.json', { cache: 'no-store' });
-    if (!response.ok) throw new Error('Vault data not found.');
-
-    const envelope = await response.json();
-    const key = await deriveKey(
-      passphrase,
-      base64ToBytes(envelope.salt),
-      envelope.kdf.iterations,
-      envelope.kdf.hash,
     );
 
     let plaintext: Uint8Array;
@@ -140,6 +379,8 @@ import BasicLayout from '../layouts/BasicLayout.astro';
     return JSON.parse(new TextDecoder().decode(plaintext)).notes as Note[];
   }
 
+  /* ---------- 渲染 ---------- */
+
   const formatDate = (value: string | null) =>
     value
       ? new Date(value).toLocaleDateString('en-US', {
@@ -150,64 +391,228 @@ import BasicLayout from '../layouts/BasicLayout.astro';
         })
       : '';
 
-  function render(notes: Note[]) {
-    gate.classList.add('hidden');
-    vault.classList.remove('hidden');
-    vaultMeta.textContent = `${notes.length} ${notes.length === 1 ? 'entry' : 'entries'}`;
+  // 索引页的条目，结构对齐 BlogPostCard.astro
+  function renderIndex() {
+    const entries = indexEntries();
+    indexSubtitle.textContent = `${entries.length} encrypted ${entries.length === 1 ? 'entry' : 'entries'}, decrypted locally.`;
+    entryList.innerHTML = entries
+      .map((note) => {
+        const tags = note.tags.length
+          ? `<p class="mb-2 text-[0.72rem] font-semibold uppercase tracking-[0.11em] text-gray-400">${note.tags.join(' / ')}</p>`
+          : '';
+        const description = note.descriptionHtml
+          ? `<p class="mb-2 max-w-3xl text-[0.95rem] leading-6 text-gray-600">${note.descriptionHtml}</p>`
+          : '';
 
-    noteList.innerHTML = '';
-    const links: HTMLButtonElement[] = [];
+        return `<article>
+  <details class="py-3">
+    <summary class="vault-summary grid cursor-pointer gap-2 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-6">
+      <span class="mb-0 pt-0.5 text-sm leading-6 text-gray-500">${formatDate(note.date)}</span>
+      <h3 class="vault-title mb-0 text-[1.08rem] font-semibold leading-snug text-gray-900">${note.titleHtml}</h3>
+    </summary>
+    <div class="grid gap-2 pt-2 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-6">
+      <div class="hidden sm:block"></div>
+      <div class="min-w-0">
+        ${tags}${description}
+        <a href="${hashFor(note)}" class="vault-read-link">Read entry</a>
+      </div>
+    </div>
+  </details>
+</article>`;
+      })
+      .join('');
+  }
 
-    const show = (index: number) => {
-      const note = notes[index];
-      links.forEach((link, i) => {
-        link.classList.toggle('text-gray-900', i === index);
-        link.classList.toggle('font-semibold', i === index);
-        link.classList.toggle('text-gray-500', i !== index);
-      });
+  // 右侧 TOC，结构对齐 BlogToc.astro
+  function renderToc(note: Note) {
+    const items = note.toc ?? [];
+    if (items.length === 0) {
+      entryToc.classList.add('vault-toc-off');
+      return;
+    }
 
-      const date = formatDate(note.date);
-      const tags = note.tags.length
-        ? `<p class="mt-3 mb-0 text-[0.72rem] font-semibold uppercase tracking-[0.11em] text-gray-400">${note.tags.join(' / ')}</p>`
-        : '';
+    const sections: Array<{ heading: TocItem; children: TocItem[] }> = [];
+    for (const item of items) {
+      if (item.depth === 2) sections.push({ heading: item, children: [] });
+      else sections.at(-1)?.children.push(item);
+    }
 
-      noteBody.innerHTML =
-        `<header class="mb-6 border-b border-gray-200 pb-4">` +
-        (date ? `<p class="mb-2 text-[0.85rem] font-medium text-gray-500">${date}</p>` : '') +
-        `<h3 class="mb-0 text-[1.4rem] font-semibold leading-tight text-gray-900">${note.title}</h3>` +
-        (note.description
-          ? `<p class="mt-2 mb-0 text-[0.94rem] leading-6 text-gray-600">${note.description}</p>`
-          : '') +
-        tags +
-        `</header>` +
-        note.html;
+    const compact = items.length > MAX_DETAILED_TOC_ITEMS;
+    entryToc.classList.toggle('vault-toc-compact', compact);
 
-      noteBody.scrollIntoView({ block: 'nearest' });
+    tocList.innerHTML = sections
+      .map((section, index) => {
+        const children = section.children.length
+          ? `<ul class="vault-toc-sublist">${section.children
+              .map(
+                (child) =>
+                  `<li class="vault-toc-item"><a href="${hashFor(note)}::${child.slug}" class="vault-toc-link vault-toc-link-depth-3" data-target="${child.slug}"><span class="vault-toc-label">${child.text}</span></a></li>`,
+              )
+              .join('')}</ul>`
+          : '';
+
+        return `<li class="vault-toc-section${compact && index === 0 ? ' is-active' : ''}" data-toc-section="${section.heading.slug}">
+  <a href="${hashFor(note)}::${section.heading.slug}" class="vault-toc-link" data-target="${section.heading.slug}"><span class="vault-toc-label">${section.heading.text}</span></a>
+  ${children}
+</li>`;
+      })
+      .join('');
+
+    entryToc.classList.remove('vault-toc-off');
+  }
+
+  // 语言切换，结构对齐 BlogArticle.astro 的 languageLinks：
+  // 只有该 translationKey 下确实存在多个语言版本时才显示。
+  function renderLanguageLinks(note: Note) {
+    const group = translationsOf(note);
+    const links = LANG_ORDER.map((lang) => {
+      const entry = group.find((candidate) => candidate.lang === lang);
+      return entry ? { entry, lang } : null;
+    }).filter((link): link is { entry: Note; lang: Lang } => link !== null);
+
+    if (links.length < 2) {
+      entryLangs.innerHTML = '';
+      return;
+    }
+
+    const rendered = links
+      .map(({ entry, lang }, index) => {
+        const separator = index > 0 ? '<span class="text-gray-300">/</span>' : '';
+        const label = LANG_LABELS[lang];
+        const body =
+          entry.slug === note.slug
+            ? `<span class="text-gray-900">${label}</span>`
+            : `<a href="${hashFor(entry)}" class="vault-language-link no-underline">${label}</a>`;
+        return separator + body;
+      })
+      .join('');
+
+    entryLangs.innerHTML =
+      `<span class="text-gray-300">/</span>` +
+      `<nav class="inline-flex items-center gap-1" aria-label="Language versions">${rendered}</nav>`;
+  }
+
+  function renderEntry(note: Note) {
+    entryDate.textContent = formatDate(note.date);
+    renderLanguageLinks(note);
+    entryTitle.innerHTML = note.titleHtml;
+    entryDescription.innerHTML = note.descriptionHtml;
+    entryDescription.classList.toggle('hidden', !note.descriptionHtml);
+    entryTags.textContent = note.tags.join(' / ');
+    entryTags.classList.toggle('hidden', note.tags.length === 0);
+    entryBody.innerHTML = note.html;
+    renderToc(note);
+  }
+
+  /* ---------- TOC 滚动高亮，同 BlogToc 的 compact 行为 ---------- */
+
+  let detachScrollSpy: (() => void) | null = null;
+
+  function attachScrollSpy() {
+    detachScrollSpy?.();
+    if (!entryToc.classList.contains('vault-toc-compact')) return;
+
+    const sections = Array.from(tocList.querySelectorAll<HTMLElement>('[data-toc-section]'))
+      .map((element) => ({
+        element,
+        heading: document.getElementById(element.dataset.tocSection ?? ''),
+      }))
+      .filter((section) => section.heading);
+
+    if (sections.length === 0) return;
+
+    const update = () => {
+      let active = sections[0];
+      for (const section of sections) {
+        if (section.heading!.getBoundingClientRect().top <= 180) active = section;
+      }
+      for (const section of sections) {
+        section.element.classList.toggle('is-active', section === active);
+      }
     };
 
-    notes.forEach((note, index) => {
-      const link = document.createElement('button');
-      link.type = 'button';
-      link.className =
-        'block w-full text-left text-[0.88rem] leading-5 text-gray-500 transition-colors hover:text-gray-900 py-1.5';
-      link.textContent = note.title;
-      link.addEventListener('click', () => show(index));
-      links.push(link);
-      noteList.appendChild(link);
-    });
+    let queued = false;
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        update();
+        queued = false;
+      });
+    };
 
-    if (notes.length) show(0);
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    detachScrollSpy = () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      detachScrollSpy = null;
+    };
   }
+
+  /* ---------- 路由：#slug 看文章，#slug::heading 跳到小节 ---------- */
+
+  function show(view: 'gate' | 'index' | 'entry') {
+    gate.classList.toggle('hidden', view !== 'gate');
+    indexView.classList.toggle('hidden', view !== 'index');
+    entryView.classList.toggle('hidden', view !== 'entry');
+    if (view !== 'entry') {
+      entryToc.classList.add('vault-toc-off');
+      detachScrollSpy?.();
+    }
+  }
+
+  // 记住当前展示的是哪篇。点 TOC 里的锚点时 hash 会变，
+  // 但文章没换 —— 这时只滚动，不重渲染（否则 KaTeX 会整篇重排闪一下）。
+  let currentSlug: string | null = null;
+
+  function route() {
+    if (notes.length === 0) return;
+
+    // #key / #zh/key，可选再跟 ::heading
+    const [routePart, headingId] = location.hash.replace(/^#/, '').split('::');
+    const isZh = routePart.startsWith('zh/');
+    const key = decodeURIComponent(isZh ? routePart.slice(3) : routePart);
+    const lang: Lang = isZh ? 'zh' : 'en';
+    const note = key
+      ? notes.find((candidate) => candidate.translationKey === key && candidate.lang === lang)
+      : undefined;
+
+    if (!note) {
+      currentSlug = null;
+      show('index');
+      return;
+    }
+
+    const isSameEntry = currentSlug === note.slug;
+    if (!isSameEntry) {
+      renderEntry(note);
+      currentSlug = note.slug;
+      show('entry');
+      attachScrollSpy();
+    }
+
+    // 等一帧，让 KaTeX 撑开的高度稳定后再滚，否则锚点会偏。
+    requestAnimationFrame(() => {
+      if (headingId) document.getElementById(headingId)?.scrollIntoView({ block: 'start' });
+      else if (!isSameEntry) window.scrollTo({ top: 0 });
+    });
+  }
+
+  /* ---------- 解锁流程 ---------- */
 
   async function attempt(passphrase: string, { remember = true } = {}) {
     unlockButton.disabled = true;
     statusLine.textContent = 'Decrypting…';
 
     try {
-      const notes = await unlock(passphrase);
-      // 存在 sessionStorage：刷新不用重输，关掉标签页就没了。
+      notes = await decryptVault(passphrase);
+      // 存 sessionStorage：刷新不用重输，关掉标签页就没了。
       if (remember) sessionStorage.setItem(SESSION_KEY, passphrase);
-      render(notes);
+      statusLine.textContent = '';
+      renderIndex();
+      route();
     } catch (error) {
       sessionStorage.removeItem(SESSION_KEY);
       statusLine.textContent = error instanceof Error ? error.message : String(error);
@@ -219,19 +624,24 @@ import BasicLayout from '../layouts/BasicLayout.astro';
 
   gateForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    const passphrase = passphraseInput.value;
-    if (passphrase) attempt(passphrase);
+    if (passphraseInput.value) attempt(passphraseInput.value);
   });
 
-  lockButton.addEventListener('click', () => {
-    sessionStorage.removeItem(SESSION_KEY);
-    location.reload();
+  document.querySelectorAll<HTMLButtonElement>('[data-lock]').forEach((button) => {
+    button.addEventListener('click', () => {
+      sessionStorage.removeItem(SESSION_KEY);
+      location.hash = '';
+      location.reload();
+    });
   });
+
+  window.addEventListener('hashchange', route);
 
   const remembered = sessionStorage.getItem(SESSION_KEY);
   if (remembered) {
     attempt(remembered, { remember: false });
   } else {
+    show('gate');
     passphraseInput.focus();
   }
 </script>

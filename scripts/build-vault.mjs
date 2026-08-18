@@ -17,6 +17,7 @@
 import { createMarkdownProcessor, parseFrontmatter } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import katex from 'katex';
 import { webcrypto as crypto } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
@@ -36,6 +37,65 @@ const compress = !process.argv.includes('--no-compress');
 const fail = (message) => {
   console.error(`\n✗ ${message}\n`);
   process.exit(1);
+};
+
+const escapeHtml = (value) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+// 标题和摘要里的 $...$ 在构建时就渲染成 KaTeX，
+// 和 src/components/MathText.astro 的做法保持一致。
+const renderInlineMath = (source) =>
+  String(source)
+    .split(/(\$[^$]+\$)/g)
+    .map((part) =>
+      part.startsWith('$') && part.endsWith('$') && part.length > 2
+        ? katex.renderToString(part.slice(1, -1), {
+            displayMode: false,
+            throwOnError: false,
+            strict: false,
+          })
+        : escapeHtml(part),
+    )
+    .join('');
+
+// 把标题里的行内公式、链接、强调标记洗掉，只留可读文本。
+// 逻辑对齐 src/components/BlogArticle.astro 里的 cleanTocText。
+const cleanTocText = (text) => {
+  const mathExpressions = [];
+  const withPlaceholders = text.replace(/\$([^$]+)\$/g, (_, expression) => {
+    const normalized = String(expression)
+      .replace(/\\([a-zA-Z]+)/g, '$1')
+      .replace(/\s+/g, ' ')
+      .trim();
+    mathExpressions.push(normalized);
+    return `@@MATH${mathExpressions.length - 1}@@`;
+  });
+
+  return withPlaceholders
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/[*`]/g, '')
+    .replace(/(^|[\s([{])_([^_]+)_($|[\s)\]}.,:;!?])/g, '$1$2$3')
+    .replace(/@@MATH(\d+)@@/g, (_, index) => mathExpressions[Number(index)] ?? '')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
+// 用原始 markdown 的标题文本（洗干净）配上渲染器生成的 slug，两边顺序一一对应。
+const buildToc = (markdown, renderedHeadings) => {
+  const rendered = renderedHeadings.filter((h) => h.depth === 2 || h.depth === 3);
+  const raw = Array.from(markdown.matchAll(/^(#{2,3})\s+(.*)$/gm), (match) => ({
+    depth: match[1].length,
+    text: cleanTocText(match[2]),
+  }));
+
+  return raw
+    .map((item, index) => ({ ...item, slug: rendered[index]?.slug ?? "" }))
+    .filter((item) => item.slug);
 };
 
 async function collectMarkdownFiles(dir) {
@@ -170,14 +230,28 @@ async function main() {
     const raw = await readFile(file, 'utf8');
     const { frontmatter, content } = parseFrontmatter(raw);
     const rendered = await processor.render(content);
+    const title = frontmatter.title ?? path.basename(relative).replace(/\.mdx?$/, '');
+    const description = frontmatter.description ?? '';
+    const slug = relative.replace(/\.mdx?$/, '');
+    // 语言和译文分组的语义完全对齐 src/utils/blog.ts：
+    // lang 缺省是 en，translationKey 缺省退回文件名。
+    const lang = frontmatter.lang === 'zh' ? 'zh' : 'en';
+    const translationKey = frontmatter.translationKey ?? slug;
 
     notes.push({
-      slug: relative.replace(/\.mdx?$/, ''),
-      title: frontmatter.title ?? path.basename(relative).replace(/\.mdx?$/, ''),
+      slug,
+      lang,
+      translationKey,
+      title,
+      // 页面是用 innerHTML 渲染的，所以这里把安全的 HTML 一并备好，
+      // 前端不需要再做转义或数学渲染。
+      titleHtml: renderInlineMath(title),
       date: frontmatter.date ? new Date(frontmatter.date).toISOString() : null,
-      tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
-      description: frontmatter.description ?? '',
+      tags: Array.isArray(frontmatter.tags) ? frontmatter.tags.map(String) : [],
+      description,
+      descriptionHtml: renderInlineMath(description),
       html: rendered.code,
+      toc: buildToc(content, rendered.metadata.headings ?? []),
     });
 
     console.log(`  · ${relative}`);
