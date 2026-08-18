@@ -86,18 +86,14 @@ import BasicLayout from '../layouts/BasicLayout.astro';
   </article>
 
   <!--
-    右侧固定 TOC，对应 BlogToc.astro。
+    浮动目录。结构和类名与 BlogToc.astro 完全一致，样式共用 src/styles/toc.css。
     显示/隐藏走 .vault-toc-off，不要去动这里的 hidden ——
-    hidden 和 xl:block 是配套的，摘掉 hidden 会让 TOC 在移动端漏出来。
+    hidden 和 xl:block 是配套的，摘掉 hidden 会让目录在移动端漏出来。
   -->
-  <aside
-    id="entry-toc"
-    class="vault-toc-off hidden xl:fixed xl:right-6 xl:top-32 xl:block xl:w-56 2xl:right-8 2xl:w-60"
-  >
-    <div class="max-h-[calc(100vh-10rem)] overflow-y-auto border-l border-gray-200 pl-3">
-      <p class="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">On this page</p>
+  <aside id="entry-toc" class="toc vault-toc-off hidden xl:block" data-toc>
+    <div class="toc-panel">
       <nav aria-label="Table of contents">
-        <ul id="toc-list" class="vault-toc-list"></ul>
+        <ul id="toc-list" class="toc-list"></ul>
       </nav>
     </div>
   </aside>
@@ -175,82 +171,10 @@ import BasicLayout from '../layouts/BasicLayout.astro';
     text-underline-offset: 0.16em;
   }
 
-  .vault-toc-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .vault-toc-section {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .vault-toc-sublist {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    list-style: none;
-    margin: 0.35rem 0 0.05rem;
-    padding: 0 0 0 0.875rem;
-  }
-
-  .vault-toc-item {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .vault-toc-link {
-    color: #4b5563;
-    display: block;
-    font-size: 0.86rem;
-    font-weight: 500;
-    line-height: 1.45;
-    overflow: hidden;
-    text-decoration: none;
-    transition: color 150ms ease;
-  }
-
-  .vault-toc-link:hover {
-    color: #111827;
-  }
-
-  .vault-toc-label {
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    display: -webkit-box;
-    overflow: hidden;
-  }
-
-  .vault-toc-link-depth-3 {
-    color: #6b7280;
-    font-size: 0.78rem;
-    font-weight: 400;
-  }
-
-  /* 条目多的时候折叠三级标题，只展开当前所在的小节 —— 同 BlogToc 的 compact 模式 */
-  .vault-toc-compact .vault-toc-sublist {
-    display: none;
-  }
-
-  .vault-toc-compact .vault-toc-section.is-active > .vault-toc-sublist {
-    display: flex;
-  }
-
-  .vault-toc-compact .vault-toc-section.is-active > .vault-toc-link {
-    color: #111827;
-    font-weight: 600;
-  }
 </style>
 
 <script>
   const SESSION_KEY = 'vault:passphrase';
-  const MAX_DETAILED_TOC_ITEMS = 12;
 
   type TocItem = { depth: number; slug: string; text: string };
   type Lang = 'en' | 'zh';
@@ -423,7 +347,8 @@ import BasicLayout from '../layouts/BasicLayout.astro';
       .join('');
   }
 
-  // 右侧 TOC，结构对齐 BlogToc.astro
+  // 浮动目录。生成的标签和类名必须和 BlogToc.astro 完全一致 ——
+  // 两边共用 src/styles/toc.css 那一份样式。
   function renderToc(note: Note) {
     const items = note.toc ?? [];
     if (items.length === 0) {
@@ -431,31 +356,15 @@ import BasicLayout from '../layouts/BasicLayout.astro';
       return;
     }
 
-    const sections: Array<{ heading: TocItem; children: TocItem[] }> = [];
-    for (const item of items) {
-      if (item.depth === 2) sections.push({ heading: item, children: [] });
-      else sections.at(-1)?.children.push(item);
-    }
-
-    const compact = items.length > MAX_DETAILED_TOC_ITEMS;
-    entryToc.classList.toggle('vault-toc-compact', compact);
-
-    tocList.innerHTML = sections
-      .map((section, index) => {
-        const children = section.children.length
-          ? `<ul class="vault-toc-sublist">${section.children
-              .map(
-                (child) =>
-                  `<li class="vault-toc-item"><a href="${hashFor(note)}::${child.slug}" class="vault-toc-link vault-toc-link-depth-3" data-target="${child.slug}"><span class="vault-toc-label">${child.text}</span></a></li>`,
-              )
-              .join('')}</ul>`
-          : '';
-
-        return `<li class="vault-toc-section${compact && index === 0 ? ' is-active' : ''}" data-toc-section="${section.heading.slug}">
-  <a href="${hashFor(note)}::${section.heading.slug}" class="vault-toc-link" data-target="${section.heading.slug}"><span class="vault-toc-label">${section.heading.text}</span></a>
-  ${children}
-</li>`;
-      })
+    tocList.innerHTML = items
+      .map(
+        (item) =>
+          `<li class="toc-item toc-item-depth-${item.depth}" data-toc-item="${item.slug}">` +
+          `<a href="${hashFor(note)}::${item.slug}" class="toc-link">` +
+          `<span class="toc-label">${item.text}</span>` +
+          `<span class="toc-dash" aria-hidden="true"></span>` +
+          `</a></li>`,
+      )
       .join('');
 
     entryToc.classList.remove('vault-toc-off');
@@ -510,24 +419,28 @@ import BasicLayout from '../layouts/BasicLayout.astro';
 
   function attachScrollSpy() {
     detachScrollSpy?.();
-    if (!entryToc.classList.contains('vault-toc-compact')) return;
 
-    const sections = Array.from(tocList.querySelectorAll<HTMLElement>('[data-toc-section]'))
+    const items = Array.from(tocList.querySelectorAll<HTMLElement>('[data-toc-item]'))
       .map((element) => ({
         element,
-        heading: document.getElementById(element.dataset.tocSection ?? ''),
+        heading: document.getElementById(element.dataset.tocItem ?? ''),
       }))
-      .filter((section) => section.heading);
+      .filter((item): item is { element: HTMLElement; heading: HTMLElement } => item.heading !== null);
 
-    if (sections.length === 0) return;
+    if (items.length === 0) return;
 
+    // 标出视口里最靠上的那个标题（h2 / h3 一视同仁）：
+    // 折叠态用它把对应的短横线点黑，展开态用它加粗对应条目。
     const update = () => {
-      let active = sections[0];
-      for (const section of sections) {
-        if (section.heading!.getBoundingClientRect().top <= 180) active = section;
+      let active = items[0];
+      for (const item of items) {
+        // 40 是刻意压小的。之前用 180 会出错：点某个 h2 跳过去后，
+        // 它正下方的 h3 往往也落在 180px 内，于是高亮被下一条抢走 ——
+        // 表现就是「点了 5 Trend Analysis，加粗却出现在它的子标题上」。
+        if (item.heading.getBoundingClientRect().top <= 40) active = item;
       }
-      for (const section of sections) {
-        section.element.classList.toggle('is-active', section === active);
+      for (const item of items) {
+        item.element.classList.toggle('is-active', item === active);
       }
     };
 

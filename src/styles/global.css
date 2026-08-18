@@ -1,5 +1,7 @@
 @import "katex/dist/katex.min.css";
 @import "tailwindcss";
+/* 博客和私密空间共用的浮动目录样式 */
+@import "./toc.css";
 
 
 body {

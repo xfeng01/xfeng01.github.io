@@ -66,15 +66,12 @@ const rawTocItems = Array.from(post.body.matchAll(markdownHeadingPattern), (matc
   text: cleanTocText(match[2]),
 }));
 
-const MAX_DETAILED_TOC_ITEMS = 12;
 const allTocItems = rawTocItems
   .map((item, index) => ({
     ...item,
     slug: renderedTocHeadings[index]?.slug ?? '',
   }))
   .filter((item) => item.slug);
-
-const compactToc = allTocItems.length > MAX_DETAILED_TOC_ITEMS;
 
 const formatDate = (date: Date) =>
   date.toLocaleDateString('en-US', {
@@ -134,7 +131,7 @@ const formatDate = (date: Date) =>
     </div>
   </article>
 
-  <BlogToc items={allTocItems} compact={compactToc} />
+  <BlogToc items={allTocItems} />
 </BasicLayout>
 
 <style>

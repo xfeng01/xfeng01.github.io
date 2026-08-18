@@ -1,4 +1,5 @@
 ---
+// 浮动目录。样式在 src/styles/toc.css，和私密空间共用一份。
 interface TocItem {
   depth: number;
   slug: string;
@@ -7,66 +8,23 @@ interface TocItem {
 
 interface Props {
   items: TocItem[];
-  compact?: boolean;
 }
 
-interface TocSection {
-  heading: TocItem;
-  children: TocItem[];
-}
-
-const { items, compact = false } = Astro.props;
-const sections: TocSection[] = [];
-
-for (const item of items) {
-  if (item.depth === 2) {
-    sections.push({ heading: item, children: [] });
-  } else {
-    sections.at(-1)?.children.push(item);
-  }
-}
+const { items } = Astro.props;
 ---
 
 {
-  sections.length > 0 && (
-    <aside
-      class={`hidden xl:block xl:fixed xl:right-6 xl:top-32 xl:w-56 2xl:right-8 2xl:w-60${compact ? " toc-compact" : ""}`}
-      data-blog-toc
-      data-compact={compact ? "true" : "false"}
-    >
-      <div class="max-h-[calc(100vh-10rem)] overflow-y-auto border-l border-gray-200 pl-3">
-        <p class="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">On this page</p>
+  items.length > 0 && (
+    <aside class="toc hidden xl:block" data-toc>
+      <div class="toc-panel">
         <nav aria-label="Table of contents">
           <ul class="toc-list">
-            {sections.map((section, index) => (
-              <li
-                class={`toc-section${compact && index === 0 ? " is-active" : ""}`}
-                data-toc-section={section.heading.slug}
-              >
-                <a
-                  href={`#${section.heading.slug}`}
-                  class="toc-link"
-                  title={section.heading.text}
-                >
-                  <span class="toc-label">{section.heading.text}</span>
+            {items.map((item) => (
+              <li class={`toc-item toc-item-depth-${item.depth}`} data-toc-item={item.slug}>
+                <a href={`#${item.slug}`} class="toc-link">
+                  <span class="toc-label">{item.text}</span>
+                  <span class="toc-dash" aria-hidden="true" />
                 </a>
-                {
-                  section.children.length > 0 && (
-                    <ul class="toc-sublist">
-                      {section.children.map((heading) => (
-                        <li class="toc-item toc-item-depth-3">
-                          <a
-                            href={`#${heading.slug}`}
-                            class="toc-link toc-link-depth-3"
-                            title={heading.text}
-                          >
-                            <span class="toc-label">{heading.text}</span>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  )
-                }
               </li>
             ))}
           </ul>
@@ -76,127 +34,55 @@ for (const item of items) {
   )
 }
 
-<style>
-  .toc-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .toc-item {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .toc-section {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .toc-sublist {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    list-style: none;
-    margin: 0.35rem 0 0.05rem;
-    padding: 0 0 0 0.875rem;
-  }
-
-  .toc-link {
-    color: #4b5563;
-    display: block;
-    font-size: 0.86rem;
-    font-weight: 500;
-    line-height: 1.45;
-    overflow: hidden;
-    text-decoration: none;
-    transition: color 150ms ease;
-  }
-
-  .toc-label {
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    display: -webkit-box;
-    overflow: hidden;
-  }
-
-  .toc-link-depth-3 {
-    color: #6b7280;
-    font-size: 0.78rem;
-    font-weight: 400;
-  }
-
-  .toc-link:hover {
-    color: #111827;
-  }
-
-  .toc-compact .toc-sublist {
-    display: none;
-  }
-
-  .toc-compact .toc-section.is-active > .toc-sublist {
-    display: flex;
-  }
-
-  .toc-compact .toc-section.is-active > .toc-link {
-    color: #111827;
-    font-weight: 600;
-  }
-</style>
-
 <script>
-  const initializeCompactToc = () => {
-    document
-      .querySelectorAll<HTMLElement>('[data-blog-toc][data-compact="true"]')
-      .forEach((toc) => {
-        const sections = Array.from(toc.querySelectorAll<HTMLElement>('[data-toc-section]'))
-          .map((element) => ({
-            element,
-            heading: document.getElementById(element.dataset.tocSection ?? ''),
-          }))
-          .filter((section) => section.heading);
+  // 滚动高亮：标出当前视口里最靠上的那个标题（h2 和 h3 一视同仁）。
+  // 折叠态靠它把对应的短横线点黑，展开态靠它加粗对应条目。
+  const initializeToc = () => {
+    document.querySelectorAll<HTMLElement>('[data-toc]').forEach((toc) => {
+      const items = Array.from(toc.querySelectorAll<HTMLElement>('[data-toc-item]'))
+        .map((element) => ({
+          element,
+          heading: document.getElementById(element.dataset.tocItem ?? ''),
+        }))
+        .filter((item): item is { element: HTMLElement; heading: HTMLElement } =>
+          item.heading !== null,
+        );
 
-        if (sections.length === 0) return;
+      if (items.length === 0) return;
 
-        const updateActiveSection = () => {
-          let activeSection = sections[0];
+      const update = () => {
+        let active = items[0];
+        for (const item of items) {
+          // 40 是刻意压小的。之前用 180 会出错：点某个 h2 跳过去后，
+          // 它正下方的 h3 往往也落在 180px 内，于是高亮被下一条抢走 ——
+          // 表现就是「点了 5 Trend Analysis，加粗却出现在它的子标题上」。
+          if (item.heading.getBoundingClientRect().top <= 40) active = item;
+        }
+        for (const item of items) {
+          item.element.classList.toggle('is-active', item === active);
+        }
+      };
 
-          for (const section of sections) {
-            if (section.heading && section.heading.getBoundingClientRect().top <= 180) {
-              activeSection = section;
-            }
-          }
+      let queued = false;
+      const onScroll = () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          update();
+          queued = false;
+        });
+      };
 
-          for (const section of sections) {
-            section.element.classList.toggle('is-active', section === activeSection);
-          }
-        };
-
-        let frameRequested = false;
-        const requestUpdate = () => {
-          if (frameRequested) return;
-          frameRequested = true;
-          window.requestAnimationFrame(() => {
-            updateActiveSection();
-            frameRequested = false;
-          });
-        };
-
-        updateActiveSection();
-        window.addEventListener('scroll', requestUpdate, { passive: true });
-        window.addEventListener('resize', requestUpdate);
-        window.addEventListener('hashchange', requestUpdate);
-      });
+      update();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      window.addEventListener('hashchange', onScroll);
+    });
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeCompactToc, { once: true });
+    document.addEventListener('DOMContentLoaded', initializeToc, { once: true });
   } else {
-    initializeCompactToc();
+    initializeToc();
   }
 </script>
