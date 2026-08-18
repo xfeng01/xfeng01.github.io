@@ -25,6 +25,14 @@
   }
 }
 
+/*
+ * 展开条件用 :has(:focus-visible) 而不是 :focus-within。
+ * 后者的问题：鼠标点了某个条目跳过去之后，那个 <a> 仍然带着 focus，
+ * 于是即使鼠标早就移开了，面板也一直摊着，非得再点一下别处才收回去。
+ * :focus-visible 只在浏览器判定该画焦点环时才命中（键盘 Tab 进来），
+ * 鼠标点击不算 —— 键盘可达性还在，鼠标点完就跟着 hover 一起收。
+ */
+
 /* 折叠态：没有背景和边框，那排短横线就直接浮在页面上 */
 .toc-panel {
   background-color: transparent;
@@ -42,7 +50,7 @@
 }
 
 .toc:hover .toc-panel,
-.toc:focus-within .toc-panel {
+.toc:has(:focus-visible) .toc-panel {
   background-color: #fff;
   border-color: #e5e7eb;
   box-shadow:
@@ -85,7 +93,7 @@
 
 /* 展开后行内边距已经把条目分开了，这里的 gap 就收紧 */
 .toc:hover .toc-list,
-.toc:focus-within .toc-list {
+.toc:has(:focus-visible) .toc-list {
   gap: 0.125rem;
 }
 
@@ -122,15 +130,15 @@
  * 负外边距让底色往面板的 padding 里溢出去一点，文字位置不变。
  */
 .toc:hover .toc-link,
-.toc:focus-within .toc-link {
+.toc:has(:focus-visible) .toc-link {
   margin: 0 -0.5rem;
   padding: 0.25rem 0.5rem;
 }
 
 .toc:hover .toc-link:hover,
 .toc:hover .toc-link:focus-visible,
-.toc:focus-within .toc-link:hover,
-.toc:focus-within .toc-link:focus-visible {
+.toc:has(:focus-visible) .toc-link:hover,
+.toc:has(:focus-visible) .toc-link:focus-visible {
   background-color: #f3f4f6;
 }
 
@@ -156,7 +164,7 @@
 }
 
 .toc:hover .toc-dash,
-.toc:focus-within .toc-dash {
+.toc:has(:focus-visible) .toc-dash {
   opacity: 0;
   width: 0;
 }
@@ -185,7 +193,7 @@
 }
 
 .toc:hover .toc-label,
-.toc:focus-within .toc-label {
+.toc:has(:focus-visible) .toc-label {
   height: auto;
   opacity: 1;
   width: 100%;
@@ -218,7 +226,7 @@
 }
 
 .toc:hover .toc-item.is-active .toc-link::before,
-.toc:focus-within .toc-item.is-active .toc-link::before {
+.toc:has(:focus-visible) .toc-item.is-active .toc-link::before {
   background-color: #111827;
   border-radius: 999px;
   bottom: 0.25rem;
