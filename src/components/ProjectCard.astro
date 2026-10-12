@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, image, paper, authors, pub, description, code, poster, blog, page } = project.data;
+const { title, image, paper, authors, coFirstAuthors = [], pub, description, code, poster, blog, page } = project.data;
 const yourName = "Xinsong Feng";
 const { Content } = await project.render();
 
@@ -38,10 +38,15 @@ const imageId = `image-${project.slug}`;
     <p class="text-sm text-gray-600 mb-1">
       {authors.map((author: string, index: number) => (
         <span class={author === yourName ? 'font-semibold underline' : ''}>
-          {author}{index < authors.length - 1 ? ', ' : ''}
+          {author}{coFirstAuthors.includes(author) && (
+            <sup title="Co-first author" aria-label="Co-first author">*</sup>
+          )}{index < authors.length - 1 ? ', ' : ''}
         </span>
       ))}
     </p>
+    {coFirstAuthors.length > 0 && (
+      <p class="text-xs text-gray-500 mb-1">* Equal contribution (co-first authors).</p>
+    )}
     <p class="text-sm text-gray-800 mb-2">
       <span class="italic">{pub}</span>
     </p>

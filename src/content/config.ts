@@ -10,6 +10,7 @@ const projectsCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     authors: z.array(z.string()),
+    coFirstAuthors: z.array(z.string()).optional(),
     pub: z.string(),
     date: z.date(),
     description: z.string().optional(),
