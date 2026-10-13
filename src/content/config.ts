@@ -17,6 +17,7 @@ const projectsCollection = defineCollection({
     image: z.string().optional(),
   paper: z.string().optional(),
     code: z.string().optional(),
+    models: z.string().optional(),
     poster: z.string().optional(),
     blog: z.string().optional(),
     page: z.string().optional(),

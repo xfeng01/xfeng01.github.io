@@ -6,8 +6,11 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, image, paper, authors, coFirstAuthors = [], pub, description, code, poster, blog, page } = project.data;
+const { title, image, paper, authors, coFirstAuthors = [], pub, description, code, models, poster, blog, page } = project.data;
 const yourName = "Xinsong Feng";
+// External project pages open in a new tab; internal ones (e.g. /gtp) stay in place
+const pageTarget = page?.startsWith('http') ? '_blank' : undefined;
+const pageRel = pageTarget ? 'noopener noreferrer' : undefined;
 const { Content } = await project.render();
 
 // Generate unique ID for this project card
@@ -28,7 +31,7 @@ const imageId = `image-${project.slug}`;
   <div class="w-full md:w-2/3">
     <h3 class="text-base font-semibold mb-1 text-gray-900">
       {page ? (
-        <a href={page} class="no-underline hover:underline" style="color: #111827;">
+        <a href={page} target={pageTarget} rel={pageRel} class="no-underline hover:underline" style="color: #111827;">
           {title}
         </a>
       ) : (
@@ -69,6 +72,8 @@ const imageId = `image-${project.slug}`;
       {page && (
         <a 
           href={page}
+          target={pageTarget}
+          rel={pageRel}
           class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
           style="color: #111827; text-decoration: none;"
         >
@@ -106,6 +111,17 @@ const imageId = `image-${project.slug}`;
           style="color: #111827; text-decoration: none;"
         >
           CODE
+        </a>
+      )}
+      {models && (
+        <a
+          href={models}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
+          style="color: #111827; text-decoration: none;"
+        >
+          MODELS
         </a>
       )}
       {blog && (
