@@ -14,16 +14,30 @@ const projects = (await getCollection('projects')).sort((a, b) => {
 ---
 
 <BasicLayout>
-	<AboutContent />
+	<!-- Capped so the text keeps a readable measure and never runs under the floated photo -->
+	<div class="about max-w-[35rem] text-[0.95rem] leading-[1.6] text-gray-700">
+		<AboutContent />
+	</div>
 
-	<section class="mt-12">
-		<h2 class="text-2xl font-bold mb-8 text-gray-900">Projects</h2>
-		<div class="space-y-0">
+	<section class="clear-both pt-10">
+		<h2 class="font-display !mb-3 !text-[1.75rem] text-gray-900">Projects</h2>
+		<div>
 			{projects.map((project) => (
 				<ProjectCard project={project} />
 			))}
 		</div>
 	</section>
 </BasicLayout>
+
+<style>
+	/* global.css sets an unlayered `p { mb-4 }` that margin utilities can't override, so tighten it here */
+	.about :global(p) {
+		margin-bottom: 0.75rem;
+	}
+
+	.about :global(p:last-child) {
+		margin-bottom: 0;
+	}
+</style>
 
 

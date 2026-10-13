@@ -9,155 +9,112 @@ const { project } = Astro.props;
 const { title, image, paper, authors, coFirstAuthors = [], pub, description, code, models, poster, blog, page } = project.data;
 const yourName = "Xinsong Feng";
 // External project pages open in a new tab; internal ones (e.g. /gtp) stay in place
-const pageTarget = page?.startsWith('http') ? '_blank' : undefined;
-const pageRel = pageTarget ? 'noopener noreferrer' : undefined;
+const pageExternal = Boolean(page?.startsWith('http'));
 const { Content } = await project.render();
+
+// Papers still under review get a muted venue badge; accepted ones get the accent color
+const isPending = /^submitted/i.test(pub);
+
+const links = [
+  { label: 'Page', href: page, external: pageExternal },
+  { label: 'Paper', href: paper, external: true },
+  { label: 'Poster', href: poster, external: true },
+  { label: 'Code', href: code, external: true },
+  { label: 'Models', href: models, external: true },
+  { label: 'Blog', href: blog, external: true },
+].filter((link) => link.href);
 
 // Generate unique ID for this project card
 const projectId = `project-${project.slug}`;
 const imageId = `image-${project.slug}`;
 ---
-<div class="flex flex-col md:flex-row items-start gap-6 mb-8">
+<article class="flex flex-col gap-3 border-t border-gray-200 py-4 sm:flex-row sm:items-start sm:gap-5">
   {image && (
-    <div class="w-full md:w-1/3 flex-shrink-0">
-      <img 
-        src={image} 
-        alt={`Image for ${title}`} 
-        class="rounded-md border border-gray-200 w-full cursor-pointer hover:opacity-90 transition-opacity" 
-        onclick={`openImage('${imageId}')`}
-      />
-    </div>
+    <button
+      type="button"
+      class="project-thumb aspect-[2/1] w-full flex-shrink-0 overflow-hidden rounded-lg border border-gray-200 bg-white p-1.5 sm:w-44"
+      aria-label={`Enlarge figure for ${title}`}
+      onclick={`openImage('${imageId}')`}
+    >
+      <img src={image} alt={`Image for ${title}`} class="h-full w-full object-contain" />
+    </button>
   )}
-  <div class="w-full md:w-2/3">
-    <h3 class="text-base font-semibold mb-1 text-gray-900">
+  <div class="w-full min-w-0 sm:flex-1">
+    <h3 class="mb-1 text-[1.0625rem] font-semibold leading-snug text-gray-900">
       {page ? (
-        <a href={page} target={pageTarget} rel={pageRel} class="no-underline hover:underline" style="color: #111827;">
+        <a href={page} target={pageExternal ? '_blank' : undefined} rel={pageExternal ? 'noopener noreferrer' : undefined} class="project-title">
           {title}
         </a>
       ) : (
         title
       )}
     </h3>
-    <p class="text-sm text-gray-600 mb-1">
+    <!-- global.css sets an unlayered `p { mb-4 }` that beats plain margin utilities, hence the `!` -->
+    <p class="text-sm text-gray-500 !mb-1.5">
       {authors.map((author: string, index: number) => (
-        <span class={author === yourName ? 'font-semibold underline' : ''}>
-          {author}{coFirstAuthors.includes(author) && (
+        <Fragment>
+          <span class={author === yourName ? 'font-semibold text-gray-900' : ''}>{author}</span>{coFirstAuthors.includes(author) && (
             <sup title="Co-first author" aria-label="Co-first author">*</sup>
           )}{index < authors.length - 1 ? ', ' : ''}
-        </span>
+        </Fragment>
       ))}
+      {coFirstAuthors.length > 0 && (
+        <span class="ml-1.5 text-xs text-gray-400 whitespace-nowrap">* equal contribution</span>
+      )}
     </p>
-    {coFirstAuthors.length > 0 && (
-      <p class="text-xs text-gray-500 mb-1">* Equal contribution (co-first authors).</p>
-    )}
-    <p class="text-sm text-gray-800 mb-2">
-      <span class="italic">{pub}</span>
-    </p>
-    
+
+    <!-- Venue + Links -->
+    <div class="mb-1.5 flex flex-wrap items-center gap-2">
+      <span class:list={['project-venue mr-1', isPending && 'project-venue-pending']}>{pub}</span>
+      <button
+        type="button"
+        class="project-link"
+        aria-expanded="false"
+        aria-controls={projectId}
+        onclick={`toggleAbstract('${projectId}', this)`}
+      >
+        Abstract
+      </button>
+      {links.map((link) => (
+        <a
+          href={link.href}
+          target={link.external ? '_blank' : undefined}
+          rel={link.external ? 'noopener noreferrer' : undefined}
+          class="project-link"
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+
     <!-- Short Description (always visible) -->
     {description && (
-      <p class="text-sm text-gray-700 mb-3 leading-relaxed">
+      <p class="text-sm leading-[1.5] text-gray-600 !mb-0">
         {description}
       </p>
     )}
-    
-    <!-- Buttons -->
-    <div class="flex flex-wrap gap-2 mb-3">
-      <button 
-        class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors text-gray-900"
-        onclick={`toggleAbstract('${projectId}')`}
-      >
-        ABSTRACT
-      </button>
-      {page && (
-        <a 
-          href={page}
-          target={pageTarget}
-          rel={pageRel}
-          class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
-          style="color: #111827; text-decoration: none;"
-        >
-          PAGE
-        </a>
-      )}
-      {paper && (
-        <a 
-          href={paper} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
-          style="color: #111827; text-decoration: none;"
-        >
-          PAPER
-        </a>
-      )}
-      {poster && (
-        <a 
-          href={poster} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
-          style="color: #111827; text-decoration: none;"
-        >
-          POSTER
-        </a>
-      )}
-      {code && (
-        <a 
-          href={code} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
-          style="color: #111827; text-decoration: none;"
-        >
-          CODE
-        </a>
-      )}
-      {models && (
-        <a
-          href={models}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
-          style="color: #111827; text-decoration: none;"
-        >
-          MODELS
-        </a>
-      )}
-      {blog && (
-        <a 
-          href={blog} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-100 transition-colors inline-block"
-          style="color: #111827; text-decoration: none;"
-        >
-          BLOG
-        </a>
-      )}
-    </div>
 
     <!-- Collapsible Abstract -->
-    <div id={projectId} class="hidden mt-3 p-4 bg-gray-50 border border-gray-200 rounded text-sm text-gray-700 leading-relaxed">
+    <div id={projectId} class="project-abstract hidden mt-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-relaxed text-gray-600">
       <Content />
     </div>
   </div>
-</div>
+</article>
 
 <!-- Image Lightbox -->
 {image && (
-  <div 
-    id={imageId} 
+  <div
+    id={imageId}
     class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
     onclick={`closeImage('${imageId}')`}
   >
-    <img 
-      src={image} 
-      alt={`Full size ${title}`} 
+    <img
+      src={image}
+      alt={`Full size ${title}`}
       class="max-w-full max-h-full object-contain"
       onclick="event.stopPropagation()"
     />
-    <button 
+    <button
       class="absolute top-4 right-4 text-white text-4xl font-light hover:text-gray-300"
       onclick={`closeImage('${imageId}')`}
     >
@@ -166,14 +123,79 @@ const imageId = `image-${project.slug}`;
   </div>
 )}
 
+<style>
+  .project-thumb {
+    cursor: zoom-in;
+    transition: border-color 150ms ease;
+  }
+
+  .project-thumb:hover {
+    border-color: #9ca3af;
+  }
+
+  .project-title {
+    color: #111827;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  /* 悬停效果和博客列表的标题（BlogPostCard.astro 的 .post-title）保持一致 */
+  .project-title:hover {
+    color: #4b5563;
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
+  }
+
+  .project-venue {
+    border-radius: 9999px;
+    background: #eff4ff;
+    padding: 0.0625rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    white-space: nowrap;
+    color: #1d4ed8;
+  }
+
+  .project-venue-pending {
+    background: #f3f4f6;
+    font-weight: 500;
+    color: #6b7280;
+  }
+
+  .project-link {
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #111827;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background-color 150ms ease;
+  }
+
+  .project-link:hover {
+    background-color: #f3f4f6;
+    text-decoration: none;
+  }
+
+  .project-abstract :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>
+
 <script>
-  function toggleAbstract(id: string) {
+  function toggleAbstract(id: string, trigger?: HTMLElement) {
     const element = document.getElementById(id);
     if (element) {
-      element.classList.toggle('hidden');
+      const isHidden = element.classList.toggle('hidden');
+      trigger?.setAttribute('aria-expanded', String(!isHidden));
     }
   }
-  
+
   function openImage(id: string) {
     const element = document.getElementById(id);
     if (element) {
@@ -181,7 +203,7 @@ const imageId = `image-${project.slug}`;
       document.body.style.overflow = 'hidden';
     }
   }
-  
+
   function closeImage(id: string) {
     const element = document.getElementById(id);
     if (element) {
@@ -189,7 +211,7 @@ const imageId = `image-${project.slug}`;
       document.body.style.overflow = 'auto';
     }
   }
-  
+
   // Make functions available globally
   (window as any).toggleAbstract = toggleAbstract;
   (window as any).openImage = openImage;
