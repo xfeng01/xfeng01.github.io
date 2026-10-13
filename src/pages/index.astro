@@ -11,6 +11,13 @@ const { Content: AboutContent } = await aboutEntry.render();
 const projects = (await getCollection('projects')).sort((a, b) => {
   return b.data.date.getTime() - a.data.date.getTime();
 });
+
+// First-author (or co-first) work gets a full card; the rest is listed as compact rows
+const yourName = "Xinsong Feng";
+const isFirstAuthor = (project: (typeof projects)[number]) =>
+  project.data.authors[0] === yourName || (project.data.coFirstAuthors ?? []).includes(yourName);
+const firstAuthorProjects = projects.filter(isFirstAuthor);
+const coAuthoredProjects = projects.filter((project) => !isFirstAuthor(project));
 ---
 
 <BasicLayout>
@@ -21,11 +28,22 @@ const projects = (await getCollection('projects')).sort((a, b) => {
 
 	<section class="clear-both pt-10">
 		<h2 class="font-display !mb-3 !text-[1.75rem] text-gray-900">Projects</h2>
+
+		<h3 class="mb-2 text-[0.72rem] font-semibold uppercase tracking-[0.11em] text-gray-500">First-author</h3>
 		<div>
-			{projects.map((project) => (
+			{firstAuthorProjects.map((project) => (
 				<ProjectCard project={project} />
 			))}
 		</div>
+
+		{coAuthoredProjects.length > 0 && (
+			<div class="mt-8">
+				<h3 class="mb-2 text-[0.72rem] font-semibold uppercase tracking-[0.11em] text-gray-500">Co-authored</h3>
+				{coAuthoredProjects.map((project) => (
+					<ProjectCard project={project} compact />
+				))}
+			</div>
+		)}
 	</section>
 </BasicLayout>
 

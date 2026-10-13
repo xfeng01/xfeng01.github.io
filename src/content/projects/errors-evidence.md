@@ -1,0 +1,10 @@
+---
+title: "When Are Errors Evidence? Deciding Whether to Revise, What to Keep, and How to Commit in Diffusion Language Models"
+authors: ["Xinsong Feng", "Jinjin He", "Peng Du", "Zhizhuo Yang", "Daniel M. Bikel", "Jiayun Wang"]
+pub: "Submitted to ACL ARR 2026"
+image: "/errors-evidence.png"
+date: 2026-10-13
+description: "We separate post-hoc correction in diffusion language models into three decisions: whether to revise, what to keep, and how to commit. Erasing suspicious tokens is safe when the prompt determines the answer, but when those tokens carry the only evidence, it makes faithful recovery impossible and can launder the error into a consistent but incorrect output."
+---
+
+Diffusion language models generate multiple tokens in parallel, but individually plausible predictions can combine into a globally inconsistent output. To address these inconsistencies, some approaches erase suspicious tokens and regenerate them, while others retain their original values as context for revision. We show that the better choice depends on where the evidence for the intended answer resides. When the prompt determines the answer, erasing loses nothing: on incorrect ParallelBench drafts, erasing and regenerating suspicious tokens repairs 75% of cases, versus 39% when they remain visible; the gap nearly closes after task-specific training. When suspicious tokens contain essential evidence, erasing them makes faithful recovery impossible: preserving this evidence recovers 74% of intended answers, whereas erasing it recovers none and produces consistent but incorrect answers in 62% of cases. We further show that independent correction is sufficient when the evidence determines the correct tokens, while joint refinement can help when tokens remain uncertain and interdependent. Finally, correction should be selective, via a learned judge or the corrector's training target. On ParallelBench, correcting every output can drop accuracy from 94.0% to 63.7%, whereas selective correction using a learned judge reaches 96.6% with 9.9 forward passes, comparable to token-by-token decoding with 32 passes.
