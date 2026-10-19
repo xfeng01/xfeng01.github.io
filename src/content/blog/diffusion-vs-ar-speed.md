@@ -2,6 +2,8 @@
 title: "Why $O(TL^2)$ Diffusion Can Beat $O(L)$ AR in Practice"
 description: "A hardware-efficiency perspective on why diffusion models can sometimes generate faster than autoregressive models despite worse theoretical complexity."
 date: 2026-03-06
+lang: en
+translationKey: diffusion-vs-ar-speed
 tags:
   - Diffusion
   - LLM
