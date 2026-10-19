@@ -28,9 +28,9 @@ tags:
 
 先看两个决定 GPU 运行速度的基本量。为了直观一点，可以把 GPU 想象成一个很大的数据加工工厂：
 
-- **Global memory（HBM/显存）**是工厂里的大仓库。容量很大，比如 80GB，model weights 和完整的 KV cache 都放在这里。
-- **Compute units（Tensor Cores）**是负责计算的工人，真正执行矩阵运算。
-- **On-chip cache（SRAM）**是工人旁边的工作台。空间很小，但拿取数据非常快。
+- **Global memory（HBM/显存）** 是工厂里的大仓库。容量很大，比如 80GB，model weights 和完整的 KV cache 都放在这里。
+- **Compute units（Tensor Cores）** 是负责计算的工人，真正执行矩阵运算。
+- **On-chip cache（SRAM）** 是工人旁边的工作台。空间很小，但拿取数据非常快。
 - **Peak compute throughput $\pi$** 表示工人每秒最多能做多少计算，也就是 GPU 的峰值 FLOPs/s。
 - **Memory bandwidth $\beta$** 表示每秒能从仓库搬多少数据，相当于给工作台送料的传送带速度。
 
