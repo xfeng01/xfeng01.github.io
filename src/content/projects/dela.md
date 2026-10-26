@@ -5,6 +5,7 @@ pub: "Submitted to ICLR 2027"
 image: "/dela.png"
 date: 2026-09-26
 description: "We introduce Diffusion Editing Language Adapter (DELA), a plug-in edit controller that separates draft-level control from token-level denoising in frozen diffusion language models. Explicit INSERT, DELETE, REMASK, and STOP actions enable controllable variable-length refinement, with cache-friendly drafting followed by targeted global edits."
+paper: "https://arxiv.org/abs/2610.32096"
 ---
 
 Diffusion language models (DLMs) support bidirectional denoising and iterative refinement, but generation remains largely controlled by token-level masking schedules.
