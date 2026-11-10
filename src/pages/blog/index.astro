@@ -6,32 +6,75 @@ import { getBlogPostLang } from '../../utils/blog';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .filter((post) => getBlogPostLang(post) === 'en')
-  .sort((a, b) => {
-    return b.data.date.getTime() - a.data.date.getTime();
-  });
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+// 按年份分组；posts 已经按时间倒序，所以分组和组内顺序也都是倒序
+const years: Array<{ year: number; posts: typeof posts }> = [];
+for (const post of posts) {
+  const year = post.data.date.getUTCFullYear();
+  const group = years.at(-1);
+
+  if (group?.year === year) {
+    group.posts.push(post);
+  } else {
+    years.push({ year, posts: [post] });
+  }
+}
 ---
 
 <BasicLayout title="Blog | Xinsong Feng" showProfile={false} width="max-w-4xl">
   <section>
-    <div class="border-b border-gray-200 pb-5">
-      <div class="max-w-2xl">
-        <h2 class="font-display !mb-2 !text-[1.75rem] leading-tight text-gray-900">Blog</h2>
-        <p class="mb-0 text-base leading-7 text-gray-600">
-          Research notes, paper summaries, and implementation details.
-        </p>
-      </div>
+    <div class="pb-5">
+      <h2 class="font-display !mb-2 !text-[1.75rem] leading-tight text-gray-900">Blog</h2>
+      <p class="blog-intro text-base leading-7 text-gray-600">
+        Research notes, paper summaries, and implementation details.
+      </p>
     </div>
 
     {
       posts.length === 0 ? (
-        <div class="border-b border-dashed border-gray-300 py-8 text-gray-600">
-          No posts yet.
-        </div>
+        <div class="border-t border-dashed border-gray-300 py-8 text-gray-600">No posts yet.</div>
       ) : (
-        <div class="divide-y divide-gray-200">
-          {posts.map((post) => <BlogPostCard post={post} />)}
-        </div>
+        years.map(({ year, posts: yearPosts }) => (
+          <section
+            class="grid border-t border-gray-200 py-2.5 sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-4"
+            aria-labelledby={`year-${year}`}
+          >
+            <h3 id={`year-${year}`} class="year-label font-display text-[1.25rem] text-gray-400">
+              {year}
+            </h3>
+            <div>
+              {yearPosts.map((post) => (
+                <BlogPostCard post={post} />
+              ))}
+            </div>
+          </section>
+        ))
       )
     }
   </section>
 </BasicLayout>
+
+<style>
+  /* global.css 里的 p 规则不在 layer 里，会压过 mb-0 */
+  .blog-intro {
+    margin-bottom: 0;
+  }
+
+  /* 上内边距和行高跟条目（BlogPostCard 的 py-2 + 标题行高）对齐，年份才能和第一篇标题落在同一行 */
+  .year-label {
+    margin: 0;
+    padding-top: 0.5rem;
+    line-height: 1.485rem;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  /* 宽屏下年份跟着滚动停在左栏顶部，读到哪一年一眼可见 */
+  @media (min-width: 40rem) {
+    .year-label {
+      position: sticky;
+      top: 0;
+      align-self: start;
+    }
+  }
+</style>

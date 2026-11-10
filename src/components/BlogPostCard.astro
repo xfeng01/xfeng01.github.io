@@ -8,77 +8,71 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const tags = post.data.tags ?? [];
 const href = getBlogPostHref(post);
 
-const formatDate = (date: Date) =>
+// 年份已经写在左侧的分组标签里，这里只留月和日
+const formatDay = (date: Date) =>
   date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
     timeZone: 'UTC',
   });
 ---
 
-<article>
-  <details class="post-item py-3">
-    <summary class="post-summary grid cursor-pointer gap-2 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-6">
-      <span class="mb-0 pt-0.5 text-sm leading-6 text-gray-500">{formatDate(post.data.date)}</span>
-      <h3 class="post-title mb-0 text-[1.08rem] font-semibold leading-snug text-gray-900">
-        <MathText text={post.data.title} />
-      </h3>
-    </summary>
+{/* 每篇固定两行：标题 + 日期，下面是单行截断的摘要 */}
+<article class="post-item relative grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 py-2">
+  <h3 class="post-title text-[1.08rem] font-semibold leading-snug">
+    <a href={href} class="post-link">
+      <MathText text={post.data.title} />
+    </a>
+  </h3>
+  <time datetime={post.data.date.toISOString().slice(0, 10)} class="post-date text-[0.8125rem] text-gray-500">
+    {formatDay(post.data.date)}
+  </time>
 
-    <div class="grid gap-2 pt-2 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-6">
-      <div class="hidden sm:block"></div>
-      <div class="min-w-0">
-        {
-          tags.length > 0 && (
-            <p class="mb-2 text-[0.72rem] font-semibold uppercase tracking-[0.11em] text-gray-400">
-              {tags.join(' / ')}
-            </p>
-          )
-        }
-        <p class="mb-2 max-w-3xl text-[0.95rem] leading-6 text-gray-600">{post.data.description}</p>
-        <a href={href} class="read-link text-sm font-medium">
-          Read post
-        </a>
-      </div>
-    </div>
-  </details>
+  <p class="post-description col-span-2 truncate text-[0.875rem] leading-[1.375rem] text-gray-500">
+    {post.data.description}
+  </p>
 </article>
 
 <style>
-  .post-summary {
-    list-style: none;
-  }
-
-  .post-summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .post-title {
+  .post-link {
     color: #111827;
+    text-decoration: none;
     transition: color 150ms ease;
   }
 
-  .post-summary:hover .post-title {
+  /* 把链接的点击区域铺满整个条目，这样点摘要、日期也能进文章 */
+  .post-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  /* 悬停效果和首页项目标题（ProjectCard.astro 的 .project-title）保持一致 */
+  .post-item:hover .post-link {
     color: #4b5563;
     text-decoration: underline;
     text-underline-offset: 0.16em;
+  }
+
+  .post-link:focus-visible {
+    outline: 2px solid #1d4ed8;
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 
   .post-title :global(.katex) {
     font-size: 1em;
   }
 
-  .read-link {
-    color: #111827;
-    text-decoration: underline;
-    text-underline-offset: 0.18em;
+  .post-date {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
 
-  .read-link:hover {
-    color: #4b5563;
+  /* global.css 里的 p 规则不在 layer 里，会压过 mb-0 */
+  .post-description {
+    margin: 0.05rem 0 0;
   }
 </style>
