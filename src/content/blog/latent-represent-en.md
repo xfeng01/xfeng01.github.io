@@ -2,6 +2,7 @@
 title: "What Should a Continuous Language Latent Represent?"
 description: "Lessons from trying to diffuse compressed language representations."
 date: 2026-08-17
+featured: true
 lang: en
 translationKey: latent-represent
 tags:

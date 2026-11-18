@@ -16,6 +16,8 @@ const pageTitle = post.data.title.replace(/\$([^$]+)\$/g, '$1');
 const tags = post.data.tags ?? [];
 const currentLang = getBlogPostLang(post);
 const translationKey = post.data.translationKey;
+// 和 BasicLayout 里 info.social 的邮箱保持一致
+const contactEmail = 'xsfeng@gatech.edu';
 const languageLabels = {
   en: 'English',
   zh: '中文',
@@ -129,6 +131,22 @@ const formatDate = (date: Date) =>
     <div class="blog-content text-gray-800">
       <Content />
     </div>
+
+    {/* 文末的讨论入口：欢迎读者带着任何想法来信 */}
+    <p class="article-contact mt-10 border-t border-gray-200 pt-4 text-[0.9rem] leading-6 text-gray-500">
+      {
+        currentLang === 'zh' ? (
+          <>
+            如果你有任何想讨论的想法，欢迎联系我：<a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+          </>
+        ) : (
+          <>
+            If you have any thoughts you'd like to discuss, feel free to reach out:{' '}
+            <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+          </>
+        )
+      }
+    </p>
   </article>
 
   <BlogToc items={allTocItems} />
@@ -138,6 +156,11 @@ const formatDate = (date: Date) =>
   .language-link {
     color: #9ca3af;
     transition: color 150ms ease;
+  }
+
+  /* global.css 里的 p 规则不在 layer 里，会压过 mb-0 */
+  .article-contact {
+    margin-bottom: 0;
   }
 
   .language-link:hover {

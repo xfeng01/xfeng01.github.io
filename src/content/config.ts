@@ -35,6 +35,8 @@ const blogCollection = defineCollection({
     lang: z.enum(['en', 'zh']).default('en'),
     translationKey: z.string().optional(),
     tags: z.array(z.string()).optional(),
+    // 出现在首页 Selected Writing 里；只看英文版本
+    featured: z.boolean().optional(),
   }),
 });
 

@@ -2,6 +2,7 @@
 title: "Does a Better Source Distribution Really Help Flow Matching?"
 description: "Some thinking on the source distribution of flow matching."
 date: 2026-11-10
+featured: true
 lang: en
 translationKey: source-of-flow-matching
 tags:

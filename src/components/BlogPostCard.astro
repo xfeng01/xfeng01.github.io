@@ -5,14 +5,16 @@ import { getBlogPostHref } from '../utils/blog';
 
 interface Props {
   post: CollectionEntry<'blog'>;
+  // 博客页按年份分组，年份写在左侧标签里；不分组的地方（如首页）要带上年份
+  showYear?: boolean;
 }
 
-const { post } = Astro.props;
+const { post, showYear = false } = Astro.props;
 const href = getBlogPostHref(post);
 
-// 年份已经写在左侧的分组标签里，这里只留月和日
 const formatDay = (date: Date) =>
   date.toLocaleDateString('en-US', {
+    year: showYear ? 'numeric' : undefined,
     month: 'short',
     day: 'numeric',
     timeZone: 'UTC',

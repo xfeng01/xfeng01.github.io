@@ -2,6 +2,7 @@
 title: "Diffusion for Language: Should the Basic Unit Really Be a Token?"
 description: "A note on diffusion language models as a signal-design problem: if diffusion is a refinement process, what representation should it refine?"
 date: 2026-05-29
+featured: true
 lang: en
 translationKey: continuous-dlm
 tags:

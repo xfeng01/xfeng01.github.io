@@ -2,6 +2,8 @@
 import BasicLayout from '../layouts/BasicLayout.astro';
 import { getEntry, getCollection } from 'astro:content';
 import ProjectCard from '../components/ProjectCard.astro';
+import BlogPostCard from '../components/BlogPostCard.astro';
+import { getBlogPostLang } from '../utils/blog';
 
 // Fetch content for the "About" section
 const aboutEntry = await getEntry('about', 'main');
@@ -18,11 +20,16 @@ const isFirstAuthor = (project: (typeof projects)[number]) =>
   project.data.authors[0] === yourName || (project.data.coFirstAuthors ?? []).includes(yourName);
 const firstAuthorProjects = projects.filter(isFirstAuthor);
 const coAuthoredProjects = projects.filter((project) => !isFirstAuthor(project));
+
+// Selected Writing: posts marked `featured: true` (English versions only), newest first
+const featuredPosts = (await getCollection('blog', ({ data }) => !data.draft && data.featured === true))
+  .filter((post) => getBlogPostLang(post) === 'en')
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
 <BasicLayout>
-	<!-- Capped so the text keeps a readable measure and never runs under the floated photo -->
-	<div class="about max-w-[35rem] text-[0.95rem] leading-[1.6] text-gray-700">
+	<!-- No width cap: text sits beside the floated photo, then flows under it at full width so the space below the photo isn't left empty -->
+	<div class="about text-[0.95rem] leading-[1.6] text-gray-700">
 		<AboutContent />
 	</div>
 
@@ -45,6 +52,17 @@ const coAuthoredProjects = projects.filter((project) => !isFirstAuthor(project))
 			</div>
 		)}
 	</section>
+
+	{featuredPosts.length > 0 && (
+		<section class="pt-10">
+			<h2 class="font-display !mb-3 !text-[1.75rem] text-gray-900">Selected Writing</h2>
+			<div class="border-t border-gray-200">
+				{featuredPosts.map((post) => (
+					<BlogPostCard post={post} showYear />
+				))}
+			</div>
+		</section>
+	)}
 </BasicLayout>
 
 <style>
@@ -56,6 +74,14 @@ const coAuthoredProjects = projects.filter((project) => !isFirstAuthor(project))
 	.about :global(p:last-child) {
 		margin-bottom: 0;
 	}
-</style>
+
+	/* Keep the short "questions I'm exploring" list as tight as the paragraphs around it */
+	.about :global(ul) {
+		margin-bottom: 0.75rem;
+	}
+
+	.about :global(li) {
+		margin: 0;
+	}</style>
 
 
