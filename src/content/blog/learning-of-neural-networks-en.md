@@ -22,6 +22,11 @@ The authors found that many seemingly unrelated neuronal responses can actually 
 
 This suggests that the seemingly complex and messy representations inside neural networks may be organized structures formed through recursive generalization, rather than arbitrary combinations of unrelated concepts. The article also makes another interesting observation: when model capacity is small, neurons tend to represent broader concepts; as capacity increases, those concepts may split into more specific features.
 
+<figure>
+  <img src="/blog/learning-of-neural-networks/recursive-generalization.svg" alt="Left: a tree branching to the right; a neuron's response grows from iy to diy to do it yourself, while gray side branches keep splitting. Right: with small capacity there is one broad feature; with larger capacity it splits into three more specific features." width="680" height="252" loading="lazy" />
+  <figcaption>Schematic. Left: a neuron first responds to <code>"iy"</code>, then extends to <code>"diy"</code>, and eventually responds to <code>"do it yourself"</code>; each existing feature may keep branching in related directions (gray branches indicate other possible generalizations). Right: when model capacity is small, neurons tend to represent broader concepts; as capacity increases, those concepts may split into more specific features.</figcaption>
+</figure>
+
 This makes me think that coarse-to-fine organization may be more than a hierarchy we design by hand. It may also be related to how neural networks naturally form representations.
 
 ## 2 Circuit Ecology: Why Does Recursive Generalization Emerge?
@@ -60,6 +65,11 @@ What interests me more now is a broader question: **In what order should a gener
 - Learned latent variables or certain continuous representation directions
 
 Even the order itself need not be a fixed, discrete permutation. In continuous diffusion, different kinds of information can evolve simultaneously, while their uncertainty may be resolved at different rates. Generation order can therefore also be a continuous, dynamic process of information resolution. From this perspective, autoregressive generation, discrete diffusion, continuous diffusion, coarse-to-fine generation, and hierarchical generation can all be viewed as different ways of organizing information generation.
+
+<figure>
+  <img src="/blog/learning-of-neural-networks/resolution-order.svg" alt="Three rows for global, mid-scale and local-detail information; shading is the remaining uncertainty over generation progress. Left: each row drops to zero in a single step, one after another. Right: all rows decay smoothly and overlap in time, with global information resolved earliest and local detail latest." width="680" height="250" loading="lazy" />
+  <figcaption>Schematic. Shading shows the remaining uncertainty of each kind of information. Left: a fixed discrete order, where each kind of information is determined at a single step. Right: a continuous process of information resolution, where different kinds of information evolve simultaneously but their uncertainty is resolved at different rates.</figcaption>
+</figure>
 
 A natural question then is: **what makes a good generation order?** I currently lean toward the following hypothesis:
 

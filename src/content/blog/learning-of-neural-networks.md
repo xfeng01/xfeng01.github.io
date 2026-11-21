@@ -24,6 +24,11 @@ tags:
 
 这意味着，神经网络内部看似复杂、混乱的表示，可能并不是许多不相关概念的任意组合，而是通过递归泛化形成的一种有组织的结构。文章中还有一个很有意思的观察：当模型容量较小时，神经元往往表示更宽泛的概念；当容量增加时，这些概念可能进一步分化为更具体的特征。
 
+<figure>
+  <img src="/blog/learning-of-neural-networks/recursive-generalization.svg" alt="左：一棵向右分叉的树，神经元的响应从 iy 扩展到 diy，再到 do it yourself，旁边的灰色分支不断细分。右：容量较小时是一个宽泛的特征，容量增加后分化为三个更具体的特征。" width="680" height="252" loading="lazy" />
+  <figcaption>示意图。左：一个神经元最初响应 <code>"iy"</code>，随后扩展到 <code>"diy"</code>，最终能够响应 <code>"do it yourself"</code>；每个已有的特征都可能沿相关方向继续分叉（灰色分支示意其他可能的泛化方向）。右：模型容量较小时，神经元往往表示更宽泛的概念；容量增加时，这些概念可能分化为更具体的特征。</figcaption>
+</figure>
+
 这让我觉得，Coarse-to-Fine 也许不仅是一种人为设计的层次结构，还可能与神经网络自然形成表示的方式有关。
 
 ## 2 Circuit Ecology：为什么会产生 Recursive Generalization？
@@ -61,6 +66,11 @@ tags:
 - Learned latent variables 或某些连续的表示方向
 
 甚至这个 order 也不一定是一个固定的离散排列。对于 Continuous Diffusion，不同的信息可以同时演化，但它们的不确定性可能以不同的速度被解决。因此，Generation Order 也可以是一种连续的、动态的 Information Resolution Process。从这个角度来看，Autoregressive、Discrete Diffusion、Continuous Diffusion、Coarse-to-Fine 和 Hierarchical Generation，都可以被看作组织信息生成的不同方式。
+
+<figure>
+  <img src="/blog/learning-of-neural-networks/resolution-order.svg" alt="三行分别代表全局、中等尺度和局部细节信息，阴影表示随生成进程剩余的不确定性。左：每一行依次在某一步突然降为零。右：各行同时平滑下降、在时间上互相重叠，全局信息最早被解决，局部细节最晚。" width="680" height="250" loading="lazy" />
+  <figcaption>示意图。阴影表示每类信息剩余的不确定性。左：固定的离散顺序，每类信息在某一步被一次性确定。右：连续的 Information Resolution Process，不同信息同时演化，但不确定性以不同的速度被解决。</figcaption>
+</figure>
 
 那么，一个自然的问题就是：**什么样的 Generation Order 才是好的？** 我目前比较倾向于下面这个设想：
 > **The learnability of a generative model depends not only on its architecture and objective, but also on the order in which different dependencies are resolved.**
