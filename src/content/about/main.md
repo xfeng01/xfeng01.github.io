@@ -27,6 +27,7 @@ My research interests include reinforcement learning, generative models, and lar
 Some questions I'm currently exploring:
 
 - What makes a generative process learnable?
+- How should the dependency structure of data determine the order of generation?
 - How do representations shape learning and generation?
 
 I enjoy exchanging research ideas and sharing what I've learned. Feel free to reach out if you'd like to discuss research or explore potential collaborations.
