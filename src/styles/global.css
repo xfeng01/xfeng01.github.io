@@ -115,3 +115,17 @@ blockquote p:last-child {
 .blog-content tbody tr:nth-child(even) {
   @apply bg-gray-50/60;
 }
+
+.blog-content figure {
+  @apply my-7;
+}
+
+.blog-content figure img {
+  @apply mx-auto block h-auto w-full;
+  max-width: 680px;
+}
+
+.blog-content figcaption {
+  @apply mx-auto mt-3 text-[0.86rem] leading-6 text-gray-500;
+  max-width: 680px;
+}

@@ -42,6 +42,11 @@ tags:
 
 当然，Recursive Generalization 描述的是学习过程中神经元如何发展，而 Coarse-to-Fine Generation 描述的是生成时信息如何被逐步确定。它们并不是一回事。但两者确实存在一种值得研究的结构性联系：**先建立可以复用的共享结构，再在这个结构的基础上处理更加具体的信息。** 例如，在视频生成中，不同帧之间具有大量共享依赖：场景布局、物体身份、运动状态，以及长期的时序关系。假设存在一个 coarse representation，能够捕获这些全局共享信息。那么在给定这个 representation 后，不同帧、不同空间区域之间的剩余依赖可能显著减弱。这意味着，我们可以先生成全局状态，再在其条件下生成局部细节。相比之下，如果所有变量从一开始就联合生成，模型可能需要在整个采样过程中不断协调这些全局依赖。这也许可以解释为什么 Coarse-to-Fine Generation 对视频、长文本等需要长期 consistency 的任务尤其有吸引力。
 
+<figure>
+  <img src="/blog/learning-of-neural-networks/shared-dependencies.svg" alt="左：五帧联合生成，任意两帧之间都有依赖连线，包括长程依赖。右：先生成 coarse representation z，再由 z 指向每一帧，帧之间只剩相邻帧之间的虚线弱依赖。" width="680" height="240" loading="lazy" />
+  <figcaption>示意图。左：所有帧联合生成，任意两帧之间的依赖（包括长程依赖）都需要在采样过程中协调。右：先确定一个捕获全局共享信息的 coarse representation <em>z</em>，再在其条件下生成各帧，帧之间剩余的依赖（虚线）可能显著减弱。</figcaption>
+</figure>
+
 但这里真正重要的，我认为不是空间尺度意义上的 Coarse-to-Fine，而是：**Can we resolve shared dependencies first, so that the remaining generation becomes easier?** 如果某种 coarse representation 可以解释大量变量之间的依赖，那么先确定它，也许能够显著简化后续的条件生成。不过，这是否真的能够改善生成模型的 learnability，仍然需要独立验证。
 
 ## 4 Coarse-to-Fine 本质上是一个更广义的 Generation Order 问题
