@@ -2,6 +2,7 @@
 title: "From Recursive Generalization to Generation Order: Some Thoughts on Neural Network Learning and Generation"
 description: "A note on 'neural networks are already clean'."
 date: 2026-11-20
+featured: true
 lang: en
 translationKey: recursive-generalization
 tags:
